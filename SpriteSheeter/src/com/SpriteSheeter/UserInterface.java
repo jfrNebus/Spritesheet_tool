@@ -1464,4 +1464,12 @@ class UserInterface implements KeyListener {
         ok.setVisible(true);
         cancel.setVisible(true);
     }
+
+
+    void bloqueTest(){
+        System.out.println("test");
+    }
+
+
+
 }
