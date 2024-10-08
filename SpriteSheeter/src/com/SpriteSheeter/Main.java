@@ -1,4 +1,5 @@
-package com.SpriteSheeter;//https://opengameart.org/content/the-field-of-the-floating-islands
+package com.SpriteSheeter;
+//https://opengameart.org/content/the-field-of-the-floating-islands
 //https://kenney.nl/assets/cursor-pixel-pack
 /*
 DONE cargar mapas ya creados
@@ -24,16 +25,13 @@ DONE agrega al archivo guardado la ruta al spritesheet
 
 todo Maneja la excepción cuando el archivo txt no tiene ruta
 
-//Changegit
-
+H:\Mi unidad\Z Variado\Java\SpriteSheeter\SpriteSheeter\Resources\tiles.png
+G:\Mi unidad\Z Variado\Java\SpriteSheeter\SpriteSheeter\Resources\tiles.png
  */
 
 
 public class Main {
     public static void main(String[] args) {
-//      C:\Users\codin\Desktop
-//      G:\Mi unidad\Z Variado\Java\SpriteSheeter\SpriteSheeter\Resources\sewer_1.png
-//      H:\Mi unidad\Z Variado\Java\SpriteSheeter\SpriteSheeter\Resources\sewer_1.png
         UserInterface userInterface = new UserInterface();
         userInterface.getStartValues();
         userInterface.setUpEverything();
