@@ -1,21 +1,16 @@
 
 # Late todo list:
 
- 
- :heavy_check_mark:
 
--[x] hola :+1:
+-[x] Save canvas.
+     - Save Layers
+     - Save sprite sheet path
+-[x] Load saved canvas.
+-[ ] Set alfa sprites on those locations which id array data has sprite ids not availables in the sprite sheet.
+     - Still considering if it is really needed.
+-[x] Load an empty canvas / sprite sheet in case there's no user initial parameters.
+- 
 
-@octocat :+1: This PR looks great - it's ready to merge! :shipit:
-
-DONE cargar mapas ya creados
-DONE guardar mapas
-DONE ambas ideas se lograrán, seguramente, generando el mapa a partir del codigo
-
-DONE generar sprites en blanco cuando al cargar un mapa a partir del código, algún id no
-DONE esté presente en el spritesheet.
-
-DONE generar una hoja en blanco de x medidas al introducir algún comando.
 
 DONE ImageIO.write(subimage, "png", new File("outputPath"));
 
