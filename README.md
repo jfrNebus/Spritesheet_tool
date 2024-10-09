@@ -1,11 +1,13 @@
 # Sprite sheet tool, by jfrNebus
 
-### Introducción :ceuta_melilla:
+### Introducción /  Introduction 
+
+:ceuta_melilla:
 
 SpriteSheeter es una herramienta desarrollada para hacerme la vida un poco más facil a la hora de trabajar en otro
 proyecto en el que he trabajado durante un tiempo. 
 
-Empecé a trabajar en un juego 2D de gráficos de tipo pixel art. Empecé a desarrollarlo para Android. Cree una interfaz 
+Empecé a trabajar en un juego 2D de gráficos de tipo pixel art. Lo estaba desarrollando para Android. Cree una interfaz 
 de usuario básica. Estaba formada por una imagen que constituía el mapa, y que cubría toda la pantalla; una imagen más 
 pequeña ubicada encima del mapa, que hacía las veces de mini mapa; una imagen ubicada en el centro de la pantalla 
 mostrando una versión extremadamente primitiva de personaje; cuatro botones de movimiento, los encargados de mover el 
@@ -22,11 +24,11 @@ en ese proyecto, que a su vez era un descanso que me estaba tomando de un tercer
 dicha herramienta.
 
 
-### Introduction :uk:
+:uk:
 
-SpriteSheeter is a tool developed to make my life easier while working in my main project.
+SpriteSheeter is a tool developed to make my life easier while working in my main project. I started working in a 2D 
+graphics pixel art game. It's developed for Android. I built a basic user interface. It has 
 
-I started working in a 2D graphics pixel a
 
 
 
