@@ -1,6 +1,6 @@
 # Sprite sheet tool, by jfrNebus
 
-### Introducción :ceuta_melilla: / introduction
+### Introducción :ceuta_melilla:
 
 SpriteSheeter es una herramienta desarrollada para hacerme la vida un poco más facil a la hora de trabajar en otro
 proyecto en el que he trabajado durante un tiempo. 
@@ -21,6 +21,12 @@ mapa era muy tediosa y que necesitaba una herramienta para gestionarlo. Y es aqu
 en ese proyecto, que a su vez era un descanso que me estaba tomando de un tercer proyecto inicial, para desarrollar 
 dicha herramienta.
 
+
+### Introduction :uk:
+
+SpriteSheeter is a tool developed to make my life easier while working in my main project.
+
+I started working in a 2D graphics pixel a
 
 
 
