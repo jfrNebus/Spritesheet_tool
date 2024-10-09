@@ -1,22 +1,15 @@
 # Late todo list:
 
+-[x] 
+-[x] Check the layer name system, and the regex involved.
+-[x] Layer system. Layer selector.
 -[x] Save canvas.
-     - Save Layers
-     - Save sprite sheet path
+  - Save Layers
+  - Save sprite sheet path
 -[x] Load saved canvas.
 -[ ] Set alfa sprites on those locations which id array data has sprite ids not availables in the sprite sheet.
-     - Still considering if it is really needed.
+  - Still considering if it is really needed.
 -[x] Load an empty canvas / sprite sheet in case there's no user initial parameters.
-- 
-
-
-DONE ImageIO.write(subimage, "png", new File("outputPath"));
-
-DONE hacer que la lista de sprites no se mueva cuando se usen las teclas de dirección: Se solventó quitandole el fócus
-DONE a los botones de los sprites
-
-DONE Crea capas y un selector de capas.
-
-DONE revisa el tema de los nombres de capa y las restricciones por regex
-
-DONE agrega al archivo guardado la ruta al spritesheet
+-[x] Save canvas as a ".png" file.
+-[x] Remove the movement of sprites buttons when movement keys are pressed.
+  - Fixed by setting buttons as not focusable.
