@@ -4,11 +4,14 @@
 > El proyecto no está terminado. Aun queda mucho código que limpiar y que corregir.
 > 
 > The proyect is still under developement. There's still a lot of code to clean and fix.
+>
+> For english speakers [Link Text](###intro)
 
+<br>
 
-### Introducción / Introduction 
+### :es:
 
-:ceuta_melilla:
+### Introducción
 
 SpriteSheeter es una herramienta desarrollada para hacerme la vida un poco más facil a la hora de trabajar en otro
 proyecto en el que he trabajado durante un tiempo. 
@@ -29,27 +32,9 @@ necesitaba una herramienta para gestionarlo. Y es aquí, donde surge la idea de 
 su vez era un descanso que me estaba tomando de un tercer proyecto inicial, para desarrollar dicha herramienta.
 
 
-:uk:
-
-SpriteSheeter is a tool developed to make my life easier while working in my main project. I started working in a 2D 
-graphics pixel art game which it's developed for Android. I built a basic user interface. It has a main picture object
-which covers the full screen, and that works as the game map; an smaller picture over the main map that serves as a
-mini map; a picture in the middle of the screen placing the character; four directional buttons to move the main map
-under the character; and two extra buttons to control the zoom made over the map.
-
-Although the project was in a very early stage, I developed a system to get individual objects, sprites, out of the
-provided sprite sheet. In addition, this system allow me to set the size of a new canvas, fitting the its resolution
-to the screen's resolution, keeping in mind the DPI value of the screen.
-
-The proyect was left unfinished, and it was only few weeks ago when I got it back. The first thing i thought about,
-when i was trying to remember how the code works, was that the way to make the map was really annoying and that i
-needed a tool to deal with it. Here's when I make a break on the game proyect, which was already a break from a third 
-proyect, to develope this tool.
-
-<br>
 <br>
 
-### La herramienta / the tool
+### La herramienta
 
 Nunca he mirado de qué forma se crea un juego 2D de gráficos tipo pixel art. Lo única información al respecto que he 
 recibido de internet, es que la idea principal es trocear la imagen del sprite sheet en imagenes más pequeñas para 
@@ -65,6 +50,29 @@ en función de las filas y columnas del sprite sheet.
 
 Entendiendo esto, se puede construir una imagen más grande, a partir de imagenes pequeñas, mediante las ID de cada
 sprite.
+
+<br>
+<br>
+<br>
+
+### :uk:
+
+### Intro
+
+SpriteSheeter is a tool developed to make my life easier while working in my main project. I started working in a 2D 
+graphics pixel art game which it's developed for Android. I built a basic user interface. It has a main picture object
+which covers the full screen, and that works as the game map; an smaller picture over the main map that serves as a
+mini map; a picture in the middle of the screen placing the character; four directional buttons to move the main map
+under the character; and two extra buttons to control the zoom made over the map.
+
+Although the project was in a very early stage, I developed a system to get individual objects, sprites, out of the
+provided sprite sheet. In addition, this system allow me to set the size of a new canvas, fitting the its resolution
+to the screen's resolution, keeping in mind the DPI value of the screen.
+
+The proyect was left unfinished, and it was only few weeks ago when I got it back. The first thing i thought about,
+when i was trying to remember how the code works, was that the way to make the map was really annoying and that i
+needed a tool to deal with it. Here's when I make a break on the game proyect, which was already a break from a third 
+proyect, to develope this tool.
 
 
 
