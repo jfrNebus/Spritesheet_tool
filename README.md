@@ -45,15 +45,29 @@ simplemente me puse a pensar en lo que necesitaba para obtener el objetivo. Segu
 ahorrado tiempo, pero así lo hice. 
 
 Al final terminé con un sistema que dividía el sprite sheet en imágenes más pequeñas que podía usar como sprites. El 
-sistema los creaba de forma anónima, con lo que la identidad la recibían por parte de una colección de tipo Map, que
-asignaría a cada sprite un elemento _key_ cuyo valor sería un número. De esta forma, el primer sprite de la esquina
-superior izquierda sería el sprite 0, el siguiente sprite de esa primera fila sería el sprite 1, y así sucesivamente, 
-en función de las filas y columnas del sprite sheet.
+sistema los creaba de forma anónima, la identidad la recibían por parte de una colección de tipo Map, que asignaría a cada sprite un elemento _key_ cuyo valor sería un número. De esta forma, el primer sprite de la esquina superior izquierda sería el sprite 0, el siguiente sprite de esa primera fila sería el sprite 1, y así sucesivamente, en función de las filas y columnas del sprite sheet. Entendiendo esto, se puede construir una imagen más grande, a partir de imagenes pequeñas, mediante el ID de cada sprite.
 
-Entendiendo esto, se puede construir una imagen más grande, a partir de imagenes pequeñas, mediante las ID de cada
-sprite.
+<br>
+<br>
 
-![My Image](docs/SpriteSheet_to_sprite.png)
+<p align="center">
+  <img src="docs/sprites_example.png" />
+</p>
+
+Imaginemos que lo que se ve en la imagen anterior es, un arbol... 😵. El arbol de la derecha es el sprite sheet, tiene un modelo de cada sprite que forma el arbol. A base de repetir algunos de esos sprites hemos creado un arbol mayor en la imagen de la derecha. Si construimos el sistema adecuado, uno que permita, a partir de un listado de ids, construir una imagen con los sprites correspondientes a cada id, podremos crear mapas a partir de arrays bidimensionales, teniendo un único elemento multimedia, el sprite sheet original.
+
+```
+int[][] newMap = {
+{0, 1, 2},
+{3, 4, 5},
+{3, 4, 5},
+{6, 7, 8},
+{9, 10, 11},
+{9, 10, 11},
+{12, 13, 14},
+};
+```
+
 
 <br>
 <br>
