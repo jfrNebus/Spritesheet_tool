@@ -9,6 +9,8 @@
 
 <br>
 
+<hr> 
+
 ### 🇪🇸
 
 ### Introducción
@@ -51,9 +53,13 @@ en función de las filas y columnas del sprite sheet.
 Entendiendo esto, se puede construir una imagen más grande, a partir de imagenes pequeñas, mediante las ID de cada
 sprite.
 
+![My Image](docs/SpriteSheet_to_sprite.png)
+
 <br>
 <br>
 <br>
+
+<hr> 
 
 ### 🇬🇧
 
