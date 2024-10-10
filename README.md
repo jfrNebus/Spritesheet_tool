@@ -46,6 +46,8 @@ when i was trying to remember how the code works, was that the way to make the m
 needed a tool to deal with it. Here's when I make a break on the game proyect, which was already a break from a third 
 proyect, to develope this tool.
 
+<br>
+<br>
 
 ### La herramienta / the tool
 
