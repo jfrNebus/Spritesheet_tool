@@ -9,7 +9,7 @@
 
 <br>
 
-### :es:
+### 🇪🇸
 
 ### Introducción
 
@@ -34,7 +34,7 @@ su vez era un descanso que me estaba tomando de un tercer proyecto inicial, para
 
 <br>
 
-### La herramienta
+### La herramienta 🧰
 
 Nunca he mirado de qué forma se crea un juego 2D de gráficos tipo pixel art. Lo única información al respecto que he 
 recibido de internet, es que la idea principal es trocear la imagen del sprite sheet en imagenes más pequeñas para 
@@ -55,7 +55,7 @@ sprite.
 <br>
 <br>
 
-### :uk:
+### 🇬🇧
 
 ### Intro
 
