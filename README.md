@@ -54,7 +54,7 @@ sistema los creaba de forma anónima, la identidad la recibían por parte de una
   <img src="docs/sprites_example.png" />
 </p>
 
-Imaginemos que lo que se ve en la imagen anterior es, un arbol... 😵. El arbol de la derecha es el sprite sheet, tiene un modelo de cada sprite que forma el arbol. A base de repetir algunos de esos sprites hemos creado un arbol mayor en la imagen de la derecha. Si construimos el sistema adecuado, uno que permita, a partir de un listado de ids, construir una imagen con los sprites correspondientes a cada id, podremos crear mapas a partir de arrays bidimensionales, teniendo un único elemento multimedia, el sprite sheet original.
+Imaginemos que lo que se ve en la imagen anterior es, un arbol... 😵. El arbol de la izquierda es el sprite sheet, tiene un modelo de cada sprite que forma el arbol. A base de repetir algunos de esos sprites hemos creado un arbol mayor en la imagen de la derecha. Si construimos el sistema adecuado, uno que permita, a partir de un listado de ids, construir una imagen con los sprites correspondientes a cada id, podremos crear mapas a partir de arrays bidimensionales, teniendo un único elemento multimedia, el sprite sheet original.
 
 ```
 int[][] newMap = {
