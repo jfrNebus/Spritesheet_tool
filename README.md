@@ -154,19 +154,39 @@ descartado.
  
  <br>
   
-
+ <p align="center", background="black">
+  <img src="docs/Main_window.png"/>
+ </p>
 
 A la vista queda que no soy ningún profesional a la hora de crear interfaces de usuario 😆. Pese a ello, cumple
 con lo que buscaba.
 
 Se observan una serie de partes bien definidas. A la izquierda tenemos un apartado en el que se muestran un conjunto
-de botones con la imagen de cada sprite, de un sprite sheet dado. En este caso se está usando el 
+de botones con la imagen de cada sprite, del sprite sheet facilitado. En este caso se está usando el 
 [sprite sheet](SpriteSheeter/Resources/tiles.png) del artista ![Buch](docs/CreditsToBuch.txt). Haciendo clic en 
-cada uno de ellos, podremos imprimir dicho sprite en la ubicación en la que se encuentre el cuadrado rojo, del canvas 
-que aparece en la parte derecha de programa. En el medio, tendremos una lista con los botones de acción de cada
-capa. Cada check box radial ocultará la capa a la que acompañe, y cada botón de capa establecerá la capa actual sobre
-la que se imprimirá cada sprite, cuando se seleccione con el ratón en la lista de sprites.
+cada uno de ellos, podremos imprimir dicho sprite en el cuadrado rojo dentro del canvas que aparece en la parte derecha 
+de programa. En el medio, tendremos una lista con los botones de acción de cada capa. Cada check box radial ocultará la 
+capa a la que acompañe, y cada botón de capa establecerá la capa actual sobre la que se imprimirá cada sprite, cuando 
+se seleccione con el ratón en la lista de sprites.
 
+Podremos mover el cursor, el cuadrado rojo, sobre el mapa, mediante las teclas de dirección o mediante las teclas _a w
+s d_. Adicionalmente, manteniendo la tecla Shift y presionando alguna de las teclas dereccionales mencionadas 
+anteriormente, podremos mover el sprite sheet dentro del apartado _Sprites list_. Presionando Shift más la tecla +,
+aumentaremos el tamaño de visualización de los sprite dentro de la lista de sprites; ocurrirá lo contrario si la 
+combinación de teclas es Shift y la tecla -. Podremos modificar el tamaño del canvas si presionamos la tecla Ctrl y
+las teclas + y -. La tecla Enter modificará el estado del cursor, pasando de color rojo a color verde. Esto indica,
+que se imprimirá automáticamente, el último sprite que hayamos seleccionado con el ratón en la lista de sprites, en 
+cualquier ubicación a la que movamos el cursor, hasta que el cursor vuelva a ser de color rojo. 
+
+En la parte superior izquierda encontramos un menú desplegable que nos permitirá gestionar las capas, pudiendo 
+borrar o eliminar la capa actual, o todas las capas a la vez; importar o exportar un archivo de texto _.txt_ para poder
+guardar el trabajo realizado; exportar en formato _png_ el canvas actual, siendo que las capas ocultas no se imprimirán; 
+o leer una pequeña leyenda donde se nos informa de los atajos de teclado.
+
+Por último, en la parte inferior encontramos una serie de botones para controlar el nivel de zoom aplicado sobre la 
+lista de sprites y sobre el mapa; un bloque de texto donde podremos escribir el nombre de las capas que deseemos 
+agregar, o el texto exportado cuando se selecciona la opción de exportar código; y el botón de nueva capa, que creará
+una nueva capa tomando como nombre el texto que hayamos introducido en formato ASCII.
 
 
 <br>
