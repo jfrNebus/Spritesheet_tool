@@ -154,9 +154,7 @@ descartado.
  
  <br>
   
- <p align="center", background="black">
-  <img src="docs/Main_window.png"/>
- </p>
+
 
 A la vista queda que no soy ningún profesional a la hora de crear interfaces de usuario 😆. Pese a ello, cumple
 con lo que buscaba.
