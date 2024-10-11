@@ -42,10 +42,14 @@ Nunca he mirado de qué forma se crea un juego 2D de gráficos tipo pixel art. L
 recibido de internet, es que la idea principal es trocear la imagen del sprite sheet en imagenes más pequeñas para 
 usarlas como objetos dentro del código. Es decir, solo existe un único elemento multimedia. Desde este punto en adelante, 
 simplemente me puse a pensar en lo que necesitaba para obtener el objetivo. Seguramente, mirando más información hubise 
-ahorrado tiempo, pero así lo hice. 
+ahorrado tiempo.
 
 Al final terminé con un sistema que dividía el sprite sheet en imágenes más pequeñas que podía usar como sprites. El 
-sistema los creaba de forma anónima, la identidad la recibían por parte de una colección de tipo Map, que asignaría a cada sprite un elemento _key_ cuyo valor sería un número. De esta forma, el primer sprite de la esquina superior izquierda sería el sprite 0, el siguiente sprite de esa primera fila sería el sprite 1, y así sucesivamente, en función de las filas y columnas del sprite sheet. Entendiendo esto, se puede construir una imagen más grande, a partir de imagenes pequeñas, mediante el ID de cada sprite.
+sistema los creaba de forma anónima, la identidad la recibían por parte de una colección de tipo Map, que asignaría a
+cada sprite un elemento _key_ cuyo valor sería un número. De esta forma, el primer sprite de la esquina superior izquierda
+sería el sprite 0, el siguiente sprite de esa primera fila sería el sprite 1, y así sucesivamente, en función de las filas
+y columnas del sprite sheet. Entendiendo esto, se puede construir una imagen más grande, a partir de imagenes pequeñas, 
+mediante el ID de cada sprite.
 
 <br>
 <br>
@@ -54,7 +58,11 @@ sistema los creaba de forma anónima, la identidad la recibían por parte de una
   <img src="docs/sprites_example.png" />
 </p>
 
-Imaginemos que lo que se ve en la imagen anterior es, un arbol... 😵. El arbol de la izquierda es el sprite sheet, tiene un modelo de cada sprite que forma el arbol. A base de repetir algunos de esos sprites hemos creado un arbol mayor en la imagen de la derecha. Si construimos el sistema adecuado, uno que permita, a partir de un listado de ids, construir una imagen con los sprites correspondientes a cada id, podremos crear mapas a partir de arrays bidimensionales, teniendo un único elemento multimedia, el sprite sheet original.
+Imaginemos que lo que se ve en la imagen anterior es, un arbol... 😵. El arbol de la izquierda es el sprite sheet, tiene
+un modelo de cada sprite que forma el arbol. A base de repetir algunos de esos sprites se ha creado un arbol mayor en la
+imagen de la derecha. Si construimos el sistema adecuado, uno que permita, a partir de un listado de ids, crear una 
+imagen con los sprites correspondientes a cada id, podremos crear mapas a partir de arrays bidimensionales, teniendo un 
+único elemento multimedia, el sprite sheet original.
 
 ```
 int[][] newMap = {
@@ -67,6 +75,12 @@ int[][] newMap = {
 {12, 13, 14},
 };
 ```
+
+El sistema iteraría sobre el array newMap, siendo que cada array dentro newMap representaría una fila del canvas, y
+cada elemento de cada fila serían los sprites de la misma. De esta forma, todos los elementos número 0 de cada array
+forman la columna 0, los elementos número 1 forman la columna 1, y los elementos número 2 forman la columna 2. Este 
+ejemplo es fácil de seguir, es un mapa pequeño, crear arrays bidimensionales se complica cuando el mapa a crear es
+más grande.
 
 
 <br>
