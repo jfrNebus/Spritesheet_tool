@@ -79,9 +79,20 @@ int[][] newMap = {
 El sistema iteraría sobre el array newMap, siendo que cada array dentro newMap representaría una fila del canvas, y
 cada elemento de cada fila serían los sprites de la misma. De esta forma, todos los elementos número 0 de cada array
 forman la columna 0, los elementos número 1 forman la columna 1, y los elementos número 2 forman la columna 2. Este 
-ejemplo es fácil de seguir, es un mapa pequeño, crear arrays bidimensionales se complica cuando el mapa a crear es
-más grande.
+ejemplo es fácil de seguir, es una imagen pequeña, crear arrays bidimensionales se complica cuando el mapa a crear es
+más grande y/o complejo.
 
+<p style="Background:black">
+ <br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;default_layer&emsp;&emsp;&emsp;&emsp;&emsp;new_layer&emsp;&emsp;&emsp;&emsp;&emsp;
+new_layer_2&emsp;&emsp;&emsp;&emsp;&emsp;new_layer_3&emsp;&emsp;&emsp;&emsp;&emsp;full canvas
+ <p align="center", background="black">
+  <br>
+  <img src="docs/default_layer.png" width="160" height="160"/> <img src="docs/new_layer.png" width="160" height="160"/>
+  <img src="docs/new_layer_2.png" width="160" height="160"/> <img src="docs/new_layer_3.png" width="160" height="160"/> 
+  <img src="docs/full_canvas.png" width="160" height="160"/>
+ </p>
+</p>
 
 <br>
 <br>
