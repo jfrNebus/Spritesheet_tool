@@ -818,9 +818,9 @@ class UserInterface implements KeyListener {
         JRadioButton radioButton = new JRadioButton();
         radioButton.addKeyListener(this);
         radioButton.setFocusable(true);
-        radioButton.addChangeListener(new ChangeListener() {
+        radioButton.addActionListener(new ActionListener() {
             @Override
-            public void stateChanged(ChangeEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 if (radioButton.isSelected()) {
                     spriteSheet.hideLayer(finalLayerName);
                 } else {

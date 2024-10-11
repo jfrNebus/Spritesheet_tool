@@ -208,9 +208,7 @@ public class SpriteSheet {
     }
 
     public void hideLayer(String layerName) {
-//        if (!HIDDEN_LAYERS.contains(layerName)) {
         HIDDEN_LAYERS.add(layerName);
-//        }
     }
 
     public void showLayer(String layerName) {

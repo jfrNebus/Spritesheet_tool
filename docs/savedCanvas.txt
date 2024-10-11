@@ -1,6 +1,6 @@
 //Sprites in side = 5
 
-##H:\Mi unidad\Z Variado\Java\SpriteSheeter\SpriteSheeter\Resources\tiles.png##
+##G:\Mi unidad\Z Variado\Java\SpriteSheeter\SpriteSheeter\Resources\tiles.png##
 
 -
 //Layer: default_layer
