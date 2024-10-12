@@ -178,11 +178,11 @@ cualquier ubicación a la que se mueva el cursor, hasta que el cursor vuelva a s
 
 En la parte superior izquierda se encuentra un menú desplegable que permitirá realizar diversas acciones. Se podrán
 gestionar las capas, pudiendo borrar o eliminar la capa actual, o todas las capas a la vez; importar o exportar un
-archivo de texto _.txt_ para poder guardar el trabajo realizado; exportar en formato _png_ el canvas actual, siendo
-que las capas ocultas no se imprimirán; o leer una pequeña leyenda donde se informa de los atajos de teclado.
+archivo de texto _.txt_ para poder guardar o cargar el trabajo realizado; exportar en formato _.png_ el canvas actual,
+siendo que las capas ocultas no se imprimirán; o leer una pequeña leyenda donde se informa de los atajos de teclado.
 
-Por último, en la parte inferior se encuentran una serie de botones para controlar el nivel de zoom aplicado sobre la 
-lista de sprites y sobre el mapa; un bloque de texto donde podremos escribir el nombre de las capas que deseemos 
+Por último, en la parte inferior izquierda se encuentran una serie de botones para controlar el nivel de zoom aplicado 
+sobre la lista de sprites y sobre el mapa; un bloque de texto donde podremos escribir el nombre de las capas que deseemos 
 agregar, o donde se mostrará el texto generado cuando se seleccione la opción de exportar código; y el botón de nueva 
 capa, que creará una nueva capa tomando como nombre el texto que hayamos introducido, en formato ASCII, en el campo
 de texto.
@@ -193,9 +193,9 @@ de texto.
  
 <br>
 
-El objetivo final de la aplicación no es conseguir la imagen final, la imagen final que se muestra en el canvas es solo
-la guía para que aquel que está creando el mapa pueda visualizar lo que está creando. El objetivo final es obtener el bloque
-de codigo generado en el archivo _.txt_ al seleccionar la opción _Export code_. 
+El objetivo final de la aplicación no es conseguir la imagen final, el canvas es solo la guía para que aquel que está 
+creando el mapa. El objetivo final es obtener el bloque de codigo generado en el archivo _.txt_ al seleccionar la opción
+_Export code_. 
 
 ```
 //Sprites in side = 5
@@ -249,11 +249,12 @@ int[][] new_layer_3 = {
 -
 ```
 
-Este es el contenido del archivo _.txt_ para la imagen _**Test Canvas**_ arriba mostrada. El campo ``"##Path##"`` mostrará
+Este es el contenido del archivo _.txt_ para la imagen _**Test Canvas**_ arriba mostrada. El campo ##Path## mostrará
 la ruta hacia el directorio donde tengamos almacenado el sprite sheet en nuestro equipo. La línea "//Sprites in side = 5",
-y las líneas "//_nombre de capa_=_sucesión de numeros_", son las que se usan para reconstruir el trabajo, al importar el archivo. 
-Y finalmente, la declaración del array, así como el comentario con el nombre de capa, es lo que se copiará y pegará en la declaración
-de mapas en el proyecto del juego mencionado en la introducción.
+la línea donde se muestra la ruta al directorio del sprite sheet, y las líneas "//nombre_de_capa=sucesión_de_numeros", 
+son las que se usan para reconstruir el trabajo, al importar el archivo. Y finalmente, la declaración del array, así como 
+el comentario con el nombre de capa, es lo que se copiará y pegará en la declaración de mapas en el proyecto del juego 
+mencionado en la introducción.
 
 <br>
 
@@ -262,13 +263,18 @@ de mapas en el proyecto del juego mencionado en la introducción.
 <br>
 
 No es un proyecto brillante, aun hay muchas cosas que pulir, estructuras que mejorar, funcionalidad que se le podría añadir o retirar, 
-fallos que corregir, y un largo etc de consideraciones que cualquier experto podría agregar. Es más, es posible, que ni si quiera sea
-necesaria esta herramienta, porque la forma de crear mapas para los juegos a los que hago referencia, no sea como la que yo he pensado.
-No obstante, aun cuando ya existen herramientas como esta, mejor desarrolladas, este proyecto me ha servido para seguir mejorando, para
-seguir practicando la gestión de un layout, la exploración y manejo de archivos, continuar mejorando mis buenas prácticas, etc. Además, 
-si acaso en algún momento continuo desarrollando dicho juego, cosa que no es mi prioridad, me será de gran ayuda 😃
+fallos que corregir, objetivos pendientes en la lista _todo_, y un largo etc de consideraciones que cualquier experto podría agregar. 
+Es más, es posible que ni si quiera sea necesaria esta herramienta, porque la forma de crear mapas para este juego no sea como la que
+yo he pensado. No obstante, aun cuando ya existen herramientas como esta, mejor desarrolladas, este proyecto me ha servido para seguir 
+mejorando, para seguir practicando la gestión de un layout, la exploración y manejo de archivos, continuar mejorando mis buenas prácticas,
+etc. Además, si acaso en algún momento continuo desarrollando dicho juego, cosa que no es mi prioridad, me será de gran ayuda 😃
 
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>
@@ -281,6 +287,9 @@ si acaso en algún momento continuo desarrollando dicho juego, cosa que no es mi
 <br>
 
 ### 🇬🇧
+
+> [!IMPORTANT]
+> English is not my mother language and I try to not use translators, bear with me 😅. Be ready to wild mistakes haha
 
 ### Intro
 
@@ -433,26 +442,24 @@ by using the key Ctrl together with the keys + and -. The Intro key will change 
 behaviour, which will print in the canvas, the last mouse clicked sprite in the _Sprites List, each time the cursor is moved
 to a new location. This behaviour will remain till the intro key is pressed again, setting the cursor state back to red mode.
 
-En la parte superior izquierda se encuentra un menú desplegable que permitirá realizar diversas acciones. Se podrán
-gestionar las capas, pudiendo borrar o eliminar la capa actual, o todas las capas a la vez; importar o exportar un
-archivo de texto _.txt_ para poder guardar el trabajo realizado; exportar en formato _png_ el canvas actual, siendo
-que las capas ocultas no se imprimirán; o leer una pequeña leyenda donde se informa de los atajos de teclado.
+In the top left corner of the window there's a dropdown menu. This menu offers the option to clear or delete the current layer,
+or all the layers at onces; the option to import or export a _.txt_ file in order to save or load the work done; it allows to
+export the current canvas as a _.png_ file, keeping in mind that any hidden layer won't be printed; or the option to read a
+brief list of keyboard shortcuts.
 
-Por último, en la parte inferior se encuentran una serie de botones para controlar el nivel de zoom aplicado sobre la 
-lista de sprites y sobre el mapa; un bloque de texto donde podremos escribir el nombre de las capas que deseemos 
-agregar, o donde se mostrará el texto generado cuando se seleccione la opción de exportar código; y el botón de nueva 
-capa, que creará una nueva capa tomando como nombre el texto que hayamos introducido, en formato ASCII, en el campo
-de texto.
+Finally, in the bottom left part of the window there are buttons to control the zoom level applied to the sprite sheet and
+to the canvas; a text field where the name of new layers will be written, or where the text generated when the option to export
+code has been selected will be written; and the new layer button, which will generate the new layer, setting as its name 
+the text written in the text block, in ASCII format.
 
 <br>
 
-### El fruto 🍓🍌🥝
+### The fruit 🍓🍌🥝
  
 <br>
 
-El objetivo final de la aplicación no es conseguir la imagen final, la imagen final que se muestra en el canvas es solo
-la guía para que aquel que está creando el mapa pueda visualizar lo que está creando. El objetivo final es obtener el bloque
-de codigo generado en el archivo _.txt_ al seleccionar la opción _Export code_. 
+The goal of this program is not to get the final image, the canvas is there just to guide the one who is creating the 
+picture. The final goal is to get the code bloc written in the _.txt_ file, once the _Export code_ option is selected.
 
 ```
 //Sprites in side = 5
@@ -506,23 +513,24 @@ int[][] new_layer_3 = {
 -
 ```
 
-Este es el contenido del archivo _.txt_ para la imagen _**Test Canvas**_ arriba mostrada. El campo ``"##Path##"`` mostrará
-la ruta hacia el directorio donde tengamos almacenado el sprite sheet en nuestro equipo. La línea "//Sprites in side = 5",
-y las líneas "//_nombre de capa_=_sucesión de numeros_", son las que se usan para reconstruir el trabajo, al importar el archivo. 
-Y finalmente, la declaración del array, así como el comentario con el nombre de capa, es lo que se copiará y pegará en la declaración
-de mapas en el proyecto del juego mencionado en la introducción.
+The previous code was written in the _.txt_ file generated for the _**Test canvas**_ picture shown above. The field ##Path## 
+will show the path to the directory where the sprite sheet is located. The line "//Sprites in side = 5", the line showing the
+path to the sprite sheet, and the lines "//name_of_layer=array_of_numbers", are the lines that will be used to rebuild 
+the sprite sheet, the layer list, and the canvas, when the file has been imported. And finally, all the arrays and the 
+commented layer names, are the fields that will be copied and pasted in the game project.
 
 <br>
 
-### Conclusión 🙌
+### Conclusion 🙌
 
 <br>
 
-No es un proyecto brillante, aun hay muchas cosas que pulir, estructuras que mejorar, funcionalidad que se le podría añadir o retirar, 
-fallos que corregir, y un largo etc de consideraciones que cualquier experto podría agregar. Es más, es posible, que ni si quiera sea
-necesaria esta herramienta, porque la forma de crear mapas para los juegos a los que hago referencia, no sea como la que yo he pensado.
-No obstante, aun cuando ya existen herramientas como esta, mejor desarrolladas, este proyecto me ha servido para seguir mejorando, para
-seguir practicando la gestión de un layout, la exploración y manejo de archivos, continuar mejorando mis buenas prácticas, etc. Además, 
-si acaso en algún momento continuo desarrollando dicho juego, cosa que no es mi prioridad, me será de gran ayuda 😃
+This proyect is not a masterpiece, there are still lots of points in the _todo_ list and mistakes to fix and to improve.
+There are features to be added or to be removed, and a long etc of considerations that any professional could add to it.
+Actually, this tool could even be not needed, because maybe the way to make game maps is not like the one I got. Nevertheless,
+even when there are already professional tools to achieve the goal of this program, this project allowed me to keep improving my
+coding skills and my poor layout programming. It allowed me to learn a bit more about how to browse and deal with files, and it 
+allowed me to keep improving my _best practices_. And, in case I am in the mood to keep developing this game, which is not my 
+priority, this tool will be a great help 😃.
 
 
