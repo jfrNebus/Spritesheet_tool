@@ -35,8 +35,7 @@ herramienta para gestionarlo.
 
 Nunca he mirado de qué forma se crea un juego 2D de gráficos tipo pixel art. Lo única información al respecto que he 
 recibido de internet, es que la idea principal es trocear la imagen del sprite sheet en imagenes más pequeñas para 
-usarlas como objetos dentro del código. Es decir, solo existe un único elemento multimedia. Desde este punto en adelante, 
-simplemente me puse a pensar en lo que necesitaba para obtener el objetivo.
+usarlas como objetos dentro del código. Es decir, solo existe un único elemento multimedia.
 
 Entendemos como sprite sheet aquella imagen que está compuesta por imágenes más pequeñas, que representan un elemento de
 cada tipo posible dentro del juego. En un sprite sheet también podemos encontrar el conjunto de frames que forman una
@@ -157,7 +156,7 @@ con lo que buscaba.
 
 Lo primero que se nos muestra al ejecutar la aplicación, es una ventana pequeña donde se podrá seleccionar, mediante
 un cuadro de busqueda al hacer clic sobre el campo de texto del apartado _path_, la imagen que deseamos usar como 
-sprite sheet. Adicionalmente, se tendrá que establecer el lado en pixels de cada spritre, y el lado en pixels del 
+sprite sheet. Adicionalmente, se tendrá que establecer el lado en pixels de cada sprite, y el lado en pixels del 
 canvas con el que vamos a trabajar. 
 
 Una vez se han rellenado los campos solicitados y se accede a la pantalla principal, se observan una serie de partes 
@@ -262,11 +261,12 @@ de mapas en el proyecto del juego mencionado en la introducción.
 
 <br>
 
-No es un proyecto brillante, aun hay muchas cosas que pulir, estructuras que mejor, funcionalidad que se le podría añadir o retirar, 
-fallos que corregir, y un largo etc de consideraciones que cualquier experto podría agregar. No obstante, aun cuando ya existen
-herramientas como esta, mejor desarrolladas, este proyecto me ha servido para seguir mejorando, para seguir practicando la gestión de 
-un layout, la exploración y manejo de archivos, continuar mejorando mis buenas prácticas, etc. Además, si acaso en algún momento continuo
-desarrollando dicho juego, cosa que no es mi prioridad, me será de gran ayuda 😃
+No es un proyecto brillante, aun hay muchas cosas que pulir, estructuras que mejorar, funcionalidad que se le podría añadir o retirar, 
+fallos que corregir, y un largo etc de consideraciones que cualquier experto podría agregar. Es más, es posible, que ni si quiera sea
+necesaria esta herramienta, porque la forma de crear mapas para los juegos a los que hago referencia, no sea como la que yo he pensado.
+No obstante, aun cuando ya existen herramientas como esta, mejor desarrolladas, este proyecto me ha servido para seguir mejorando, para
+seguir practicando la gestión de un layout, la exploración y manejo de archivos, continuar mejorando mis buenas prácticas, etc. Además, 
+si acaso en algún momento continuo desarrollando dicho juego, cosa que no es mi prioridad, me será de gran ayuda 😃
 
 
 <br>
@@ -284,21 +284,245 @@ desarrollando dicho juego, cosa que no es mi prioridad, me será de gran ayuda �
 
 ### Intro
 
-SpriteSheeter is a tool developed to make my life easier while working in my main project. I started working in a 2D 
-graphics pixel art game which it's developed for Android. I built a basic user interface. It has a main picture object
-which covers the full screen, and that works as the game map; an smaller picture over the main map that serves as a
-mini map; a picture in the middle of the screen placing the character; four directional buttons to move the main map
-under the character; and two extra buttons to control the zoom made over the map.
-
-Although the project was in a very early stage, I developed a system to get individual objects, sprites, out of the
-provided sprite sheet. In addition, this system allow me to set the size of a new canvas, fitting the its resolution
-to the screen's resolution, keeping in mind the DPI value of the screen.
+SpriteSheeter is a tool meant to be able to deal in an easier way with an issue related with a project i am 
+occasionally working on.
+I started working in a 2D graphics pixel art game, which it's developed for Android, with a test mode basic user
+interface. Although the project was in a very early stage, I developed a system to get individual objects, sprites, 
+out of the provided sprite sheet. In addition, this system allow me to set the size of a new canvas, fitting the its
+resolution to the screen's resolution, keeping in mind the DPI value of the screen.
 
 The proyect was left unfinished, and it was only few weeks ago when I got it back. The first thing i thought about,
-when i was trying to remember how the code works, was that the way to make the map was really annoying and that i
-needed a tool to deal with it. Here's when I make a break on the game proyect, which was already a break from a third 
-proyect, to develope this tool.
+when i was trying to remember how the code works, was that the way to make the map was really annoying and that I
+needed a tool to deal with it.
 
+<br>
 
+### The problem :finnadie:
+
+I've never searched on internet how to make a 2D graphics pixel art game. I just got the idea of splitting into sameller
+images the sprite sheet, to be able able to use the inside the code. This means that there's just one image in the 
+resources folder in the pryect.
+
+A sprite sheet is an image that's made up of smaller images that represent every possible element in the game. In a sprite
+sheet, we can also find all the frames needed to make an animation. This way, in a game like Mario Bros, the ground is 
+created by repeating a single stone sprite, and the floating brick platforms are created from a single brick sprite.
+
+I finally got a syste which splits the sprite sheet into smaller images that can be used as sprites. The system creates
+annonymus sprites, they get their id from the map where they are stored, which assigns a number _key_ to them. This way, 
+the top left corner sprite is the sprite number 0, the next one in that row is the sprite number 1, and so on, considering
+all the rows and columns in the sprite sheet. Understanding this idea, a bigger picture can be created, from smaller pics,
+knowing their id.
+
+<br>
+<br>
+
+<p align="center">
+  <img src="docs/sprites_example.png" />
+</p>
+
+Let's consider the previous drawing, a tree... 😵. The left tree is the sprite sheet, it holds all the sprites needed to 
+draw it. By repeating some of those sprites we made a bigger tree in the right part of the picture. If we make a system
+which is able to make a picture from an id list, where each of those ids in the list represents an specific sprite, we will
+be able to make maps out of two-dimensional arrays, with just one media image, the original sprite sheet.
+
+```
+int[][] newMap = {
+{0, 1, 2},
+{3, 4, 5},
+{3, 4, 5},
+{6, 7, 8},
+{9, 10, 11},
+{9, 10, 11},
+{12, 13, 14},
+};
+```
+
+The sistem iterates over the array newMap, each array inside newMap represents a row in the canvas, and its elements
+represent each sprite in that row. All the elements in the position 0 at each row array, are the sprites in the column
+number 0; the sprites in the position number 1 at each array are the elements in the column numer 1, and all the sprites
+in the position 2 at each array are the elements in the column number 2. This example is easy to follow, it is a small
+image, creating two-dimensional arrays get complicated when the map to be created is either big or complex. 
+
+<br>
+
+<p align="center", background="black">
+ <b>Test canvas</b>
+ <br>
+ <br>
+ <img src="docs/default_layer.png" width="160" height="160"/> <img src="docs/new_layer.png" width="160" height="160"/>
+ <img src="docs/new_layer_2.png" width="160" height="160"/> <img src="docs/new_layer_3.png" width="160" height="160"/> 
+ <img src="docs/full_canvas.png" width="160" height="160"/>
+</p>
+
+<br>
+
+The last picture on the right shown above, is created by mixing all the previous layers shown on its left. Each layer has
+its own sprites.
+
+<br>
+
+```
+int[][] default_layer = {
+{169,169,169,169,169},
+{169,169,169,169,169},
+{169,169,169,169,169},
+{169,169,169,169,169},
+{169,169,169,169,169}
+};
+
+int[][] new_layer = {
+{0,0,0,0,0},
+{104,104,104,108,56},
+{209,209,209,159,56},
+{311,311,311,312,0},
+{412,412,412,413,0}
+};
+
+int[][] new_layer_2 = {
+{216,216,216,0,0},
+{216,377,378,0,0},
+{216,428,429,474,475},
+{216,216,216,525,526},
+{0,0,0,0,0}
+};
+
+int[][] new_layer_3 = {
+{71,72,216,216,66},
+{122,123,124,0,0},
+{173,174,0,0,0},
+{224,227,0,0,0},
+{0,0,0,0,0}
+};
+
+```
+
+<br>
+
+it's easy to realize that, trying to make all the two-dimensional array of such an easy picture, 80x80 pixels with 5 
+sprites on each row, each sprite 16 pixels side size, becomes quite complicated. It's something not to even to consider, 
+if the map to be created has to be several hundreds of sprites big.
+
+<br>
+
+### The tool 🧰
+ 
+<br>
+  
+ <p align="center", background="black">
+  <img src="docs/Main_window.png"/>
+ </p>
+
+Yep, I am absolutely not a professional making user interfaces 😆. Nevertheless, it works!
+
+The first thing shown when the program starts, is an small window where you can set the path where the sprite sheet 
+is located in the machine, through a search window that pops up by clicking on the path text box, or by pasting the path
+string on the path text box itself. In addition, the amount of side pixels of each spite, as well as the side pixels of 
+the canvas values must be set.
+
+Once all the starting fields are filled and committed, a new window, with clearly defined parts, will appear. On the left
+side, there's an area where all the buttons, with each sprite of the sprite sheet as icon, are located. For this example it
+is being used the [sprite sheet](SpriteSheeter/Resources/tiles.png) whos author is ![Buch](docs/CreditsToBuch.txt). By 
+clicking on them, each sprite will be printed in the red square which is inside the canvas on the right part of the program,
+squared in black. In between the sprite list and the canvas, there's located a list with each layer's buttons. Each radial
+check box will hide the layer which it is attached to, and each layer's button will set the canvas where the sprites will
+be drawn.
+
+The cursor will be moved by using the directional keys, or by using the keys _a w s d_. Using the key Shift together with
+the keys + or - will get the sprite sheet zoomed in and out inside the _Sprites list_ area. Same will happen to the canvas
+by using the key Ctrl together with the keys + and -. The Intro key will change the cursor's state, toggling the green
+behaviour, which will print in the canvas, the last mouse clicked sprite in the _Sprites List, each time the cursor is moved
+to a new location. This behaviour will remain till the intro key is pressed again, setting the cursor state back to red mode.
+
+En la parte superior izquierda se encuentra un menú desplegable que permitirá realizar diversas acciones. Se podrán
+gestionar las capas, pudiendo borrar o eliminar la capa actual, o todas las capas a la vez; importar o exportar un
+archivo de texto _.txt_ para poder guardar el trabajo realizado; exportar en formato _png_ el canvas actual, siendo
+que las capas ocultas no se imprimirán; o leer una pequeña leyenda donde se informa de los atajos de teclado.
+
+Por último, en la parte inferior se encuentran una serie de botones para controlar el nivel de zoom aplicado sobre la 
+lista de sprites y sobre el mapa; un bloque de texto donde podremos escribir el nombre de las capas que deseemos 
+agregar, o donde se mostrará el texto generado cuando se seleccione la opción de exportar código; y el botón de nueva 
+capa, que creará una nueva capa tomando como nombre el texto que hayamos introducido, en formato ASCII, en el campo
+de texto.
+
+<br>
+
+### El fruto 🍓🍌🥝
+ 
+<br>
+
+El objetivo final de la aplicación no es conseguir la imagen final, la imagen final que se muestra en el canvas es solo
+la guía para que aquel que está creando el mapa pueda visualizar lo que está creando. El objetivo final es obtener el bloque
+de codigo generado en el archivo _.txt_ al seleccionar la opción _Export code_. 
+
+```
+//Sprites in side = 5
+
+##PATH##
+
+-
+//Layer: default_layer
+int[][] default_layer = {
+{169,169,169,169,169},
+{169,169,169,169,169},
+{169,169,169,169,169},
+{169,169,169,169,169},
+{169,169,169,169,169}
+};
+//default_layer:169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 
+-
+-
+//Layer: new_layer
+int[][] new_layer = {
+{0,0,0,0,0},
+{104,104,104,108,56},
+{209,209,209,159,56},
+{311,311,311,312,0},
+{412,412,412,413,0}
+};
+//new_layer:0 0 0 0 0 104 104 104 108 56 209 209 209 159 56 311 311 311 312 0 412 412 412 413 0 
+-
+-
+//Layer: new_layer_2
+int[][] new_layer_2 = {
+{216,216,216,0,0},
+{216,377,378,0,0},
+{216,428,429,474,475},
+{216,216,216,525,526},
+{0,0,0,0,0}
+};
+//new_layer_2:216 216 216 0 0 216 377 378 0 0 216 428 429 474 475 216 216 216 525 526 0 0 0 0 0 
+-
+-
+//Layer: new_layer_3
+int[][] new_layer_3 = {
+{71,72,216,216,66},
+{122,123,124,0,0},
+{173,174,0,0,0},
+{224,227,0,0,0},
+{0,0,0,0,0}
+};
+//new_layer_3:71 72 216 216 66 122 123 124 0 0 173 174 0 0 0 224 227 0 0 0 0 0 0 0 0 
+-
+-
+```
+
+Este es el contenido del archivo _.txt_ para la imagen _**Test Canvas**_ arriba mostrada. El campo ``"##Path##"`` mostrará
+la ruta hacia el directorio donde tengamos almacenado el sprite sheet en nuestro equipo. La línea "//Sprites in side = 5",
+y las líneas "//_nombre de capa_=_sucesión de numeros_", son las que se usan para reconstruir el trabajo, al importar el archivo. 
+Y finalmente, la declaración del array, así como el comentario con el nombre de capa, es lo que se copiará y pegará en la declaración
+de mapas en el proyecto del juego mencionado en la introducción.
+
+<br>
+
+### Conclusión 🙌
+
+<br>
+
+No es un proyecto brillante, aun hay muchas cosas que pulir, estructuras que mejorar, funcionalidad que se le podría añadir o retirar, 
+fallos que corregir, y un largo etc de consideraciones que cualquier experto podría agregar. Es más, es posible, que ni si quiera sea
+necesaria esta herramienta, porque la forma de crear mapas para los juegos a los que hago referencia, no sea como la que yo he pensado.
+No obstante, aun cuando ya existen herramientas como esta, mejor desarrolladas, este proyecto me ha servido para seguir mejorando, para
+seguir practicando la gestión de un layout, la exploración y manejo de archivos, continuar mejorando mis buenas prácticas, etc. Además, 
+si acaso en algún momento continuo desarrollando dicho juego, cosa que no es mi prioridad, me será de gran ayuda 😃
 
 
