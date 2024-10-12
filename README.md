@@ -5,7 +5,7 @@
 > 
 > The proyect is still under developement. There's still a lot of code to clean and fix.
 >
-> For english speakers [click here](#🇬🇧) 🇬🇧
+> For english speakers [click here](#intro) 🇬🇧
 
 <br>
 
@@ -288,10 +288,14 @@ etc. Además, si acaso en algún momento continuo desarrollando dicho juego, cos
 
 ### 🇬🇧
 
+### Intro
+
+<br>
+
 > [!IMPORTANT]
 > English is not my mother language and I try to not use translators, bear with me 😅. Be ready to wild mistakes haha
 
-### Intro
+<br>
 
 SpriteSheeter is a tool meant to be able to deal in an easier way with an issue related with a project i am 
 occasionally working on.
