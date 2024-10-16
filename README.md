@@ -81,7 +81,7 @@ complejo.
 
 <br>
 
-<p align="center", background="black">
+<p align="center">
  <b>Test canvas</b>
  <br>
  <br>
