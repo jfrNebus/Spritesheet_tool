@@ -25,8 +25,6 @@ DONE agrega al archivo guardado la ruta al spritesheet
 
 todo Maneja la excepción cuando el archivo txt no tiene ruta
 
-H:\Mi unidad\Z Variado\Java\SpriteSheeter\SpriteSheeter\Resources\tiles.png
-G:\Mi unidad\Z Variado\Java\SpriteSheeter\SpriteSheeter\Resources\tiles.png
  */
 
 
