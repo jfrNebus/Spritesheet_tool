@@ -5,7 +5,7 @@
 > 
 > The proyect is still under developement. There's still a lot of code to clean and fix.
 >
-> For english speakers [click here](#intro 🇬🇧) 🇬🇧
+> For english speakers [click here](#intro🇬🇧) 🇬🇧
 
 <br>
 
