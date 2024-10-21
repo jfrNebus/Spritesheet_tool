@@ -5,7 +5,7 @@
 > 
 > The proyect is still under developement. There's still a lot of code to clean and fix.
 >
-> For english speakers [click here](#Intro_🇬🇧) 🇬🇧
+> For english speakers [click here](#intro) 🇬🇧
 
 <br>
 
@@ -286,7 +286,8 @@ cosa que no es mi prioridad, me será de gran ayuda
 
 <br>
 
-### Intro 🇬🇧
+
+<h3 id="intro">Intro 🇬🇧</h3>
 
 <br>
 
