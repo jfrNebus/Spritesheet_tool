@@ -11,9 +11,9 @@
 
 <hr> 
 
-### 🇪🇸
+<br>
 
-### Introducción
+### Introducción 🇪🇸
 
 SpriteSheeter es una herramienta pasada para poder gestionar de una forma más sencilla, un aspecto de uno de los proyectos en los que estoy 
 trabajando.
@@ -286,9 +286,7 @@ cosa que no es mi prioridad, me será de gran ayuda
 
 <br>
 
-### 🇬🇧
-
-### Intro
+### Intro 🇬🇧
 
 <br>
 
