@@ -7,7 +7,7 @@
 
 <br>
 
-SpriteSheeter is a tool meant to be able to deal in an easier way with an issue related with a project i am 
+SpriteSheeter is a tool meant to make me be able to deal, in an easier way, with an issue related with a project I am 
 occasionally working on.
 I started working in a 2D graphics pixel art game, which it's developed for Android, with a test mode basic user
 interface. Although the project was in a very early stage, I developed a system to get individual objects, sprites, 
