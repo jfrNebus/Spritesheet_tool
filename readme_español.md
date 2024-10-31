@@ -1,6 +1,6 @@
 ### Introducción 🇪🇸
 
-SpriteSheeter es una herramienta pasada para poder gestionar de una forma más sencilla, un aspecto de uno de los proyectos en los que estoy 
+SpriteSheeter es una herramienta pensada para poder gestionar, de una forma más sencilla, un aspecto de uno de los proyectos en los que estoy 
 trabajando.
 
 Empecé un juego 2D de gráficos de tipo pixel art, lo estaba desarrollando para Android con una interfaz de usuario básica a modo de prueba. Aunque 
