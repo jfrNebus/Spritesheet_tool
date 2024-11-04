@@ -1,4 +1,4 @@
-<h3 id="intro">Intro 🇬🇧</h3>
+<h1 id="intro">Intro 🇬🇧</h1>
 
 <br>
 
