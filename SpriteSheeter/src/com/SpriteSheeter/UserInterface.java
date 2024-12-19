@@ -2,8 +2,6 @@ package com.SpriteSheeter;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -20,17 +18,10 @@ class UserInterface implements KeyListener {
 
     //Boolean to be used to toggle on/off the movement of the main map scroller throught directional keys.
     boolean toggleMapMovement = false;
-
-    //ESCRIBE EXPLICACIÓN ESCRIBE EXPLICACIÓN
-
     boolean toggleSpriteMovement = false;
 
-    //ESCRIBE EXPLICACIÓN ESCRIBE EXPLICACIÓN
-
     private boolean fillingBrush = false;
-    //The size of the left side listPane. The one which controls how much space the menu where the sprites
-    //will be shown, will take.
-    int optionsSize;
+
     //The scale ratio for the main map pic. This will modify the size for the main map to be displayed,
     //through multiplying map's values by its value.
     private int mapScale = 1;
@@ -57,8 +48,6 @@ class UserInterface implements KeyListener {
     //The amount of pixels
     private int movementIncrement;
     //Screen size
-    private final int SCREEN_WIDTH = 1920;
-    private final int SCREEN_HEIGHT = 1080;
     private final int MAP_SCALE_RATIO = 1;
     private String actualCanvas = "default_layer";
     private SpriteSheet spriteSheet;
@@ -67,14 +56,11 @@ class UserInterface implements KeyListener {
     private JLabel picLabel;
     private JPanel spritesPanel;
     private JLabel actualLayerLabel;
-    private JScrollPane layerScroller;
     private JPanel layerSelector;
-    private JPanel layerPanel;
     private JScrollPane spriteListScroller;
-    private JPanel panel3;
     private JTextArea ta = new JTextArea();
-    private JViewport mapView = new JViewport();
-    private JViewport spriteView = new JViewport();
+    private final JViewport mapView = new JViewport();
+    private final JViewport spriteView = new JViewport();
     private JButton biggerMap;
     private JButton smallerMap;
     private JButton biggerSprite;
@@ -87,6 +73,8 @@ class UserInterface implements KeyListener {
 
     public void setUpEverything() {
         if (spriteSheet != null) {
+            int SCREEN_HEIGHT = 1080;
+            int SCREEN_WIDTH = 1920;
             //Creo una ventana con todas las configuraciones relativas a la misma
             int FRAME_WIDTH = 1280;
             int FRAME_HEIGHT = 720;
@@ -181,7 +169,7 @@ class UserInterface implements KeyListener {
 
             //Layer Management
             //>>> Inside panel1 > Inside panel2
-            layerPanel = new JPanel();
+            JPanel layerPanel = new JPanel();
             layerPanel.setLayout(new BoxLayout(layerPanel, BoxLayout.Y_AXIS));
             layerPanel.setMaximumSize(new Dimension((int) (panel2.getMaximumSize().getWidth() * 0.25), panel2Height));
             layerPanel.setPreferredSize(layerPanel.getMaximumSize());
@@ -221,7 +209,7 @@ class UserInterface implements KeyListener {
             });
 
             //>>> Inside panel1 > Inside panel2 > Inside layerPanel
-            layerScroller = new JScrollPane();
+            JScrollPane layerScroller = new JScrollPane();
             layerScroller.addKeyListener(this);
             layerScroller.setFocusable(true);
             layerScroller.setWheelScrollingEnabled(true);
@@ -266,7 +254,7 @@ class UserInterface implements KeyListener {
             layerScroller.setViewportView(layerSelector);
 
             //>>> Inside panel1
-            panel3 = new JPanel();
+            JPanel panel3 = new JPanel();
             panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
             panel3.setFocusable(true);
             panel3.addKeyListener(this);
@@ -843,26 +831,26 @@ class UserInterface implements KeyListener {
         ta.setText("");
     }
 
-    private void checkCommand(String command) {
-        System.out.println("Command: " + command);
-        if (command.startsWith("/new ")) {
-            command = command.replace("/new ", "");
-            spriteSheet.addNewCanvas(command);
-            actualCanvas = command;
-//            setLabelSize(picLabel, SPRITE_SHEET, getMapScale());
-            updateMainCanvas(getMapScale());
-            System.out.println("New canvas: -" + actualCanvas + "-");
-        } else if (command.startsWith("/layer ")) {
-            command = command.replace("/layer ", "");
-            actualCanvas = command;
-            System.out.println("Actual canvas: -" + actualCanvas + "-");
-        } else if (command.startsWith("/get")) {
-            for (Map.Entry<Integer, Sprite> entry : spriteSheet.getSPRITES_HASMAP().entrySet()) {
-                System.out.println("entry.getKey() = " + entry.getKey());
-
-            }
-        }
-    }
+//    private void checkCommand(String command) {
+//        System.out.println("Command: " + command);
+//        if (command.startsWith("/new ")) {
+//            command = command.replace("/new ", "");
+//            spriteSheet.addNewCanvas(command);
+//            actualCanvas = command;
+////            setLabelSize(picLabel, SPRITE_SHEET, getMapScale());
+//            updateMainCanvas(getMapScale());
+//            System.out.println("New canvas: -" + actualCanvas + "-");
+//        } else if (command.startsWith("/layer ")) {
+//            command = command.replace("/layer ", "");
+//            actualCanvas = command;
+//            System.out.println("Actual canvas: -" + actualCanvas + "-");
+//        } else if (command.startsWith("/get")) {
+//            for (Map.Entry<Integer, Sprite> entry : spriteSheet.getSPRITES_HASMAP().entrySet()) {
+//                System.out.println("entry.getKey() = " + entry.getKey());
+//
+//            }
+//        }
+//    }
 
     private void pointerMovement(String direction) {
         int spriteSide = spriteSheet.getSPRITE_SIDE();
@@ -971,17 +959,9 @@ class UserInterface implements KeyListener {
         int width = spriteSheet.getPOINTER_LAYER().getWidth() - spriteSheet.getSPRITE_SIDE();
         System.out.println("Key = " + key);
         if (ta.hasFocus()) {
-            if (key == KeyEvent.VK_ENTER) {
-                String text = ta.getText();
-                if (text.startsWith("/")) {
-                    checkCommand(text);
-                }
-                ta.setText("");
-            } else if (key == 27) {
+            if (key == 27) {
                 //Key 27 = Esc
-                if (ta.hasFocus()) {
-                    frame.requestFocus();
-                }
+                frame.requestFocus();
             }
         } else {
             if (key == 17) {
@@ -1394,7 +1374,7 @@ class UserInterface implements KeyListener {
         subFrame.add(Box.createRigidArea(new Dimension(0, 10)));
 
 
-//        firstTF.setText("G:\\Mi unidad\\Z Variado\\Java\\SpriteSheeter\\SpriteSheeter\\Resources\\sewer_1.png");
+        firstTF.setText("G:\\Mi unidad\\Z_Variado\\Java\\SpriteSheeter\\SpriteSheeter\\Resources\\tiles.png");
         secondTF.setText("16");
         thirdTF.setText("80");
         //Export menu
