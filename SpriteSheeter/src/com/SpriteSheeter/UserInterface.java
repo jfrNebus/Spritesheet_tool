@@ -44,11 +44,11 @@ class UserInterface implements KeyListener {
     private int x = 0;
     private int y = 0;
     private int id = 0;
-    int maxActualCanvasLength = 17;
+    int maxActualCanvasLength = 1;
     //The amount of pixels
     private int movementIncrement;
     //Screen size
-    private final int MAP_SCALE_RATIO = 1;
+    private final int MAP_SCALE_RATIO = 17;
     private String actualCanvas = "default_layer";
     private SpriteSheet spriteSheet;
     private JFrame frame;
@@ -280,6 +280,7 @@ class UserInterface implements KeyListener {
             panel6.setLayout(new BoxLayout(panel6, BoxLayout.X_AXIS));
             panel6.setFocusable(true);
             panel6.addKeyListener(this);
+
             panel6.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
 
             //>>> Inside panel1 > Inside panel3 > Inside panel5
