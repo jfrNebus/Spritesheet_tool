@@ -44,11 +44,11 @@ class UserInterface implements KeyListener {
     private int x = 0;
     private int y = 0;
     private int id = 0;
-    int maxActualCanvasLength = 1;
+    int maxActualCanvasLength = 17;
     //The amount of pixels
     private int movementIncrement;
     //Screen size
-    private final int MAP_SCALE_RATIO = 17;
+    private final int MAP_SCALE_RATIO = 1;
     private String actualCanvas = "default_layer";
     private SpriteSheet spriteSheet;
     private JFrame frame;

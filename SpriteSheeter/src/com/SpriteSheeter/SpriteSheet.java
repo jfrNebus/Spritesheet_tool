@@ -22,6 +22,7 @@ public class SpriteSheet {
     private final int SPRITE_SIDE;
     private int tilesInColumn;
     private int tilesInRow;
+    int arraySize;
     private String picturePath;
 
     public SpriteSheet(String picturePath, int spriteSide, int newCanvasSize) {
@@ -31,6 +32,7 @@ public class SpriteSheet {
         this.picturePath = picturePath;
         SPRITE_SIDE = spriteSide <= 0 ? defaultSpriteSide : spriteSide;
         INITIAL_CANVAS_SIZE = newCanvasSize <= 0 ? defaultNewCanvasSize : newCanvasSize;
+        arraySize = INITIAL_CANVAS_SIZE / SPRITE_SIDE;
 
         int frameThickness = 2;
         int pointerSize = INITIAL_CANVAS_SIZE + frameThickness;
@@ -82,6 +84,10 @@ public class SpriteSheet {
         return tilesInRow;
     }
 
+    /**
+     * Builds a new BufferedImage out of the unhidden layers.
+     * @return
+     */
     public BufferedImage getCanvas() {
         //Mixing of all bufferedImages in layers in one single image.
         BufferedImage b = new BufferedImage(INITIAL_CANVAS_SIZE, INITIAL_CANVAS_SIZE, BufferedImage.TYPE_INT_ARGB);
@@ -95,19 +101,28 @@ public class SpriteSheet {
         return b;
     }
 
+    /**
+     * Returns getCanvas without frame and pointer layer.
+     * @param scaleRatio
+     * @return
+     */
     public BufferedImage getFramelessScaledCanvas(int scaleRatio) {
-        int targetSide = (INITIAL_CANVAS_SIZE * scaleRatio) + 2;
+        int targetSide = (INITIAL_CANVAS_SIZE * scaleRatio) + 2; //<<<<<<<<<<<< Check this +2
         BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
         b.createGraphics().drawImage(getCanvas(), 0, 0, targetSide, targetSide, null);
         return b;
     }
 
+    /**
+     * Returns getCanvas with frame and pointer layer.
+     * @return
+     */
     public BufferedImage getFullCanvas() {
         /*
-         * En b es + 2 porque se establece el ancho y el alto del canvas. Es decir, tiene que tener x initial pixels
+         * En b es + 2 porque se establece el ancho y el alto del canvas. Es decir, debe tener x initial pixels
          * más 2 porque en cada lado del canvas tiene que haber un pixel extra para el marco.
-         * Lado izquierdo = 1 + canvas = 80 + lado derecho = 1 > todo suma 82
-         * Parte superior = 1 + canvas = 80 + parte inferior = 1 > todo suma 82
+         * (Lado izquierdo = 1) + canvas = 80 + (lado derecho = 1) > todo suma 82
+         * (Parte superior) = 1 + canvas = 80 + (parte inferior = 1) > todo suma 82
          * */
 
         BufferedImage b = new BufferedImage(INITIAL_CANVAS_SIZE + 2, INITIAL_CANVAS_SIZE + 2, BufferedImage.TYPE_INT_ARGB);
@@ -122,8 +137,13 @@ public class SpriteSheet {
         return b;
     }
 
+    /**
+     * Returns a string with all the data related to the current canvas. This data includes:
+     * the amount of sprites on each side in the canvas, the path where the sprite sheet is
+     * stored, the name of each layer in the canvas and the array of IDs for each layer.
+     * @return
+     */
     public String getIdArrayPrinted() {
-        int arraySize = INITIAL_CANVAS_SIZE / SPRITE_SIDE;
         int x = 0;
         int y = 0;
         StringBuilder variables = new StringBuilder();
@@ -161,10 +181,20 @@ public class SpriteSheet {
         return variables.toString();
     }
 
+    /**
+     * Returns the requested layer.
+     * @param layerName
+     * @return
+     */
     public BufferedImage getLayer(String layerName) {
         return LAYERS.get(layerName);
     }
 
+    /**
+     * Scales the full canvas, all the layers and the frame layer, using the specified ration.
+     * @param scaleRatio
+     * @return
+     */
     public BufferedImage getScaledCanvas(int scaleRatio) {
         int targetSide = (INITIAL_CANVAS_SIZE * scaleRatio) + 2;
         BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
@@ -172,50 +202,90 @@ public class SpriteSheet {
         return b;
     }
 
+    /**
+     * Sets the specified string as the path to the sprite sheet.
+     * @param picturePath
+     */
     public void setPicturePath(String picturePath) {
         this.picturePath = picturePath;
     }
 
+
+    /**
+     * Adds a new entry to ID_ARRAY_MAP. This new entry is a new canvas layer.
+     * @param layerName
+     * @param idArrayLayer
+     */
     public void addIdArrayLayer(String layerName, int[][] idArrayLayer) {
         ID_ARRAY_MAP.put(layerName, idArrayLayer);
     }
 
-
+    /**
+     * Adds a new BufferedImage to the map LAYERS, and a new ID array to the MAP ID_ARRAY_MAP,
+     * under the specified String.
+     * @param layerName
+     */
     public void addNewCanvas(String layerName) {
         BufferedImage canvas = new BufferedImage(INITIAL_CANVAS_SIZE, INITIAL_CANVAS_SIZE, BufferedImage.TYPE_INT_ARGB);
         LAYERS.put(layerName, canvas);
-        int tilesInRow = INITIAL_CANVAS_SIZE / SPRITE_SIDE;
-        addIdArrayLayer(layerName, new int[tilesInRow][tilesInRow]);
+        addIdArrayLayer(layerName, new int[arraySize][arraySize]);
     }
 
+    /**
+     * Clear the bufferedImage of each layer.
+     */
     public void clearAllLayers() {
         for (Map.Entry<String, BufferedImage> entry : LAYERS.entrySet()) {
             clearLayer(entry.getKey());
         }
     }
 
+    /**
+     * Clear the bufferedImage of the specified layer.
+     * @param layerToClear
+     */
     public void clearLayer(String layerToClear) {
         LAYERS.put(layerToClear, new BufferedImage(INITIAL_CANVAS_SIZE, INITIAL_CANVAS_SIZE,
                 BufferedImage.TYPE_INT_ARGB));
     }
 
+    /**
+     * Removes all of the mappings from LAYERS.
+     */
     public void deleteAllLayers() {
         LAYERS.clear();
     }
 
+    /**
+     * Removes the mapping for a key from LAYERS.
+     * @param layerToDelete
+     */
     public void deleteLayer(String layerToDelete) {
         LAYERS.remove(layerToDelete);
     }
 
+    /**
+     * Adds the specified layer to HIDDEN_LAYERS.
+     * @param layerName
+     */
     public void hideLayer(String layerName) {
         HIDDEN_LAYERS.add(layerName);
     }
 
+    /**
+     * Removes the specified layer from HIDDEN_LAYERS.
+     * @param layerName
+     */
     public void showLayer(String layerName) {
         HIDDEN_LAYERS.remove(layerName);
     }
 
+    /**
+     *
+     * @param newlayerSelector
+     */
     public void loadImportedData(Map<String, int[]> newlayerSelector) {
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC);
         for (Map.Entry<String, int[]> newLayers : newlayerSelector.entrySet()) {
             int sideSprites = (int) Math.sqrt(newLayers.getValue().length);
             int[] currentLayerIds = newLayers.getValue();
@@ -223,20 +293,19 @@ public class SpriteSheet {
             int xSprite = 0;
             int ySprite = 0;
             int[][] loadedIdArray = new int[sideSprites][sideSprites];
+            Graphics2D pictureGraphics = LAYERS.get(newLayers.getKey()).createGraphics();
+            pictureGraphics.setComposite(ac);
             for (int y = 0; y < sideSprites; y++) {
                 for (int x = 0; x < sideSprites; x++) {
-                    Graphics2D pictureGraphics = getLayer(newLayers.getKey()).createGraphics();
-                    AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC);
-                    pictureGraphics.setComposite(ac);
                     pictureGraphics.drawImage(SPRITES_HASMAP.get(currentLayerIds[idCount]).getSprite(), xSprite, ySprite, null);
-                    pictureGraphics.dispose();
                     loadedIdArray[y][x] = currentLayerIds[idCount];
                     idCount++;
-                    xSprite += 16;
+                    xSprite += SPRITE_SIDE;
                 }
                 xSprite = 0;
-                ySprite += 16;
+                ySprite += SPRITE_SIDE;
             }
+            pictureGraphics.dispose();
             addIdArrayLayer(newLayers.getKey(), loadedIdArray);
         }
     }
