@@ -157,8 +157,8 @@ modificar el tamaño del canvas si se presiona la tecla Ctrl y las teclas + y -.
 pasando de color rojo a color verde. Esto indica, que se imprimirá, automáticamente, el último sprite que se haya seleccionado
 con el ratón en la lista de sprites, en cualquier ubicación a la que se mueva el cursor, hasta que el cursor vuelva a ser de color rojo.
 
-En la parte superior izquierda se encuentra un menú desplegable que permitirá realizar diversas acciones. Se podrán 
-gestionar las capas, pudiendo borrar o eliminar la capa actual, o todas las capas a la vez; importar o exportar un 
+En la parte superior izquierda se encuentra un menú desplegable que permitirá realizar diversas acciones. Se podrá cargar un nuevo 
+sprite sheet; gestionar las capas, pudiendo borrar o eliminar la capa actual, o todas las capas a la vez; importar o exportar un 
 archivo de texto _.txt_ para poder guardar o cargar el trabajo realizado; exportar en formato .png el canvas actual, 
 siendo que las capas ocultas no se imprimirán; o leer una pequeña leyenda donde se informa de los atajos de teclado.
 
