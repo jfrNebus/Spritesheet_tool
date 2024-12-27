@@ -46,9 +46,10 @@ public class SpriteSheet {
         pictureGraphics.drawRect(1, 1, 15, 15);
         pictureGraphics.dispose();
 
+        addNewCanvas("default_layer");
+        
         if (!picturePath.isEmpty()) {
             loadSpriteSheet();
-            addNewCanvas("default_layer");
         }
     }
 
@@ -95,9 +96,21 @@ public class SpriteSheet {
         int i = 0;
         for (Map.Entry<String, BufferedImage> entry : LAYERS.entrySet()) {
             if (!HIDDEN_LAYERS.contains(entry.getKey())) {
-                graphics2D.drawImage(getLayer(entry.getKey()), null, 0, 0);
+                graphics2D.drawImage(LAYERS.get(entry.getKey()), null, 0, 0);
             }
         }
+        return b;
+    }
+
+    /**
+     * Scales the full canvas, all the layers and the frame layer, using the specified ration.
+     * @param scaleRatio
+     * @return
+     */
+    public BufferedImage getScaledCanvas(int scaleRatio) {
+        int targetSide = (INITIAL_CANVAS_SIZE * scaleRatio) + 2;
+        BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
+        b.createGraphics().drawImage(getFramedCanvas(), 0, 0, targetSide, targetSide, null);
         return b;
     }
 
@@ -117,7 +130,7 @@ public class SpriteSheet {
      * Returns getCanvas with frame and pointer layer.
      * @return
      */
-    public BufferedImage getFullCanvas() {
+    public BufferedImage getFramedCanvas() {
         /*
          * En b es + 2 porque se establece el ancho y el alto del canvas. Es decir, debe tener x initial pixels
          * más 2 porque en cada lado del canvas tiene que haber un pixel extra para el marco.
@@ -143,7 +156,7 @@ public class SpriteSheet {
      * stored, the name of each layer in the canvas and the array of IDs for each layer.
      * @return
      */
-    public String getIdArrayPrinted() {
+    public String getIdArrayString() {
         int x = 0;
         int y = 0;
         StringBuilder variables = new StringBuilder();
@@ -191,33 +204,11 @@ public class SpriteSheet {
     }
 
     /**
-     * Scales the full canvas, all the layers and the frame layer, using the specified ration.
-     * @param scaleRatio
-     * @return
-     */
-    public BufferedImage getScaledCanvas(int scaleRatio) {
-        int targetSide = (INITIAL_CANVAS_SIZE * scaleRatio) + 2;
-        BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
-        b.createGraphics().drawImage(getFullCanvas(), 0, 0, targetSide, targetSide, null);
-        return b;
-    }
-
-    /**
      * Sets the specified string as the path to the sprite sheet.
      * @param picturePath
      */
     public void setPicturePath(String picturePath) {
         this.picturePath = picturePath;
-    }
-
-
-    /**
-     * Adds a new entry to ID_ARRAY_MAP. This new entry is a new canvas layer.
-     * @param layerName
-     * @param idArrayLayer
-     */
-    public void addIdArrayLayer(String layerName, int[][] idArrayLayer) {
-        ID_ARRAY_MAP.put(layerName, idArrayLayer);
     }
 
     /**
@@ -228,16 +219,7 @@ public class SpriteSheet {
     public void addNewCanvas(String layerName) {
         BufferedImage canvas = new BufferedImage(INITIAL_CANVAS_SIZE, INITIAL_CANVAS_SIZE, BufferedImage.TYPE_INT_ARGB);
         LAYERS.put(layerName, canvas);
-        addIdArrayLayer(layerName, new int[arraySize][arraySize]);
-    }
-
-    /**
-     * Clear the bufferedImage of each layer.
-     */
-    public void clearAllLayers() {
-        for (Map.Entry<String, BufferedImage> entry : LAYERS.entrySet()) {
-            clearLayer(entry.getKey());
-        }
+        ID_ARRAY_MAP.put(layerName, new int[arraySize][arraySize]);
     }
 
     /**
@@ -250,10 +232,12 @@ public class SpriteSheet {
     }
 
     /**
-     * Removes all of the mappings from LAYERS.
+     * Clear the bufferedImage of each layer.
      */
-    public void deleteAllLayers() {
-        LAYERS.clear();
+    public void clearAllLayers() {
+        for (Map.Entry<String, BufferedImage> entry : LAYERS.entrySet()) {
+            clearLayer(entry.getKey());
+        }
     }
 
     /**
@@ -262,6 +246,13 @@ public class SpriteSheet {
      */
     public void deleteLayer(String layerToDelete) {
         LAYERS.remove(layerToDelete);
+    }
+
+    /**
+     * Removes all the mappings from LAYERS.
+     */
+    public void deleteAllLayers() {
+        LAYERS.clear();
     }
 
     /**
@@ -281,12 +272,12 @@ public class SpriteSheet {
     }
 
     /**
-     *
-     * @param newlayerSelector
+     * Builds layers out of imported ID arrays.
+     * @param IDArray
      */
-    public void loadImportedData(Map<String, int[]> newlayerSelector) {
+    public void buildLayers(Map<String, int[]> IDArray) {
         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC);
-        for (Map.Entry<String, int[]> newLayers : newlayerSelector.entrySet()) {
+        for (Map.Entry<String, int[]> newLayers : IDArray.entrySet()) {
             int sideSprites = (int) Math.sqrt(newLayers.getValue().length);
             int[] currentLayerIds = newLayers.getValue();
             int idCount = 0;
@@ -306,14 +297,18 @@ public class SpriteSheet {
                 ySprite += SPRITE_SIDE;
             }
             pictureGraphics.dispose();
-            addIdArrayLayer(newLayers.getKey(), loadedIdArray);
+            ID_ARRAY_MAP.put(newLayers.getKey(), loadedIdArray);
         }
     }
 
+    /**
+     * Builds the array of sprite buttons to be placed in the "Sprite list:" area,
+     * out of the picture in the picturePath.
+     */
     public void loadSpriteSheet() {
         try {
-            //We use LinkedHashMap for the layers because we need to keep the order of the layers
-            //as they were introduced in the map.
+            //We use LinkedHashMap because we need to keep the order of the layers as they were
+            // introduced in the map.
             BufferedImage picture = ImageIO.read(new File(picturePath));
 
             tilesInRow = picture.getWidth() / SPRITE_SIDE;

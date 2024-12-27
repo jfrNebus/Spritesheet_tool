@@ -124,7 +124,7 @@ class UserInterface implements KeyListener {
 //            pictureGraphics.drawRect(x + 1, y + 1, 15, 15);
 //            pictureGraphics.dispose();
 
-            picLabel = new JLabel(new ImageIcon(spriteSheet.getFullCanvas()));
+            picLabel = new JLabel(new ImageIcon(spriteSheet.getFramedCanvas()));
             picLabel.addKeyListener(this);
             picLabel.setFocusable(true);
 
@@ -483,10 +483,25 @@ class UserInterface implements KeyListener {
     private JMenuBar getjMenuBar() {
         JMenuBar jMenuBar = new JMenuBar();
         JMenu options = new JMenu("Options");
-        JMenu subOptions = new JMenu("Import / export code");
+
+        //JMenuItem  generateCode
+        JMenuItem loadSpriteSheet = new JMenuItem("Load sprite sheet");
+        loadSpriteSheet.addActionListener(e -> {
+            final JFileChooser fc = new JFileChooser();
+            int returnVal = fc.showOpenDialog(loadSpriteSheet);
+            if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
+                spritesPanel.removeAll();
+                spriteSheet.setPicturePath(fc.getSelectedFile().getAbsolutePath());
+                spriteSheet.loadSpriteSheet();
+                buildJLabelList(spritesPanel, spriteSheet, spriteListScale);
+                spritesPanel.updateUI();
+            }
+        });
+
+        JMenu layerMenu = new JMenu("Layer management           ");
         JMenu clearLayerMenu = new JMenu("Clear layer           ");
         JMenu deleteLayerMenu = new JMenu("Delete layer           ");
-        JMenu layerMenu = new JMenu("Layer management           ");
+        JMenu importExport = new JMenu("Import / export code");
 
 
         //JMenuItem clearlayer
@@ -540,10 +555,11 @@ class UserInterface implements KeyListener {
                     if (loadedData != null) {
                         resetLayerSelector(loadedData);
                         spritesPanel.removeAll();
+                        System.out.println("getLoadedPath(sb.toString() = " + getLoadedPath(sb.toString()));
                         spriteSheet.setPicturePath(getLoadedPath(sb.toString()));
                         spriteSheet.loadSpriteSheet();
                         buildJLabelList(spritesPanel, spriteSheet, spriteListScale);
-                        spriteSheet.loadImportedData(loadedData);
+                        spriteSheet.buildLayers(loadedData);
                         updateMainCanvas(getMapScale());
                     } else {
                         runInfoWindo("invalidFile");
@@ -559,7 +575,7 @@ class UserInterface implements KeyListener {
         JMenuItem exportCode = new JMenuItem("Export");
         exportCode.addActionListener(e -> {
             final JFileChooser fc = new JFileChooser();
-            String arrayPrinted = spriteSheet.getIdArrayPrinted();
+            String arrayPrinted = spriteSheet.getIdArrayString();
             fc.setApproveButtonText("OK");
             try {
                 int returnVal = fc.showOpenDialog(exportCode);
@@ -592,11 +608,11 @@ class UserInterface implements KeyListener {
         });
 
 
-        clearLayer.setVisible(true);
-        importCode.setVisible(true);
-        exportCode.setVisible(true);
-        exportCanvas.setVisible(true);
-        help.setVisible(true);
+//        clearLayer.setVisible(true);
+//        importCode.setVisible(true);
+//        exportCode.setVisible(true);
+//        exportCanvas.setVisible(true);
+//        help.setVisible(true);
 
         clearLayerMenu.add(clearLayer);
         clearLayerMenu.add(clearAllLayer);
@@ -607,11 +623,12 @@ class UserInterface implements KeyListener {
         layerMenu.add(clearLayerMenu);
         layerMenu.add(deleteLayerMenu);
 
-        subOptions.add(importCode);
-        subOptions.add(exportCode);
+        importExport.add(importCode);
+        importExport.add(exportCode);
 
+        options.add(loadSpriteSheet);
         options.add(layerMenu);
-        options.add(subOptions);
+        options.add(importExport);
         options.add(exportCanvas);
         options.add(help);
 
@@ -759,6 +776,7 @@ class UserInterface implements KeyListener {
                     //Used to set the kind of Composite to be used in the BufferedImage in use. Check the above
                     //link.
                     if (!actualCanvas.equals("noLayer")) {
+                        System.out.println("actualCanvas = " + actualCanvas);
                         Graphics2D pictureGraphics = spriteSheet.getLayer(actualCanvas).createGraphics();
                         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC);
                         pictureGraphics.setComposite(ac);
@@ -783,8 +801,6 @@ class UserInterface implements KeyListener {
     }
 
     private void addNewLayerButtons(String layerName) {
-//        layerName = layerName.replaceAll("\\s+", "_").toLowerCase();
-
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
