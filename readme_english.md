@@ -165,10 +165,10 @@ by using the key Ctrl together with the keys + and -. The Intro key will change 
 behaviour, which will print in the canvas, the last mouse clicked sprite in the _Sprites List, each time the cursor is moved
 to a new location. This behaviour will remain till the intro key is pressed again, setting the cursor state back to red mode.
 
-In the top left corner of the window there's a dropdown menu. This menu offers the option to clear or delete the current layer,
-or all the layers at onces; the option to import or export a _.txt_ file in order to save or load the work done; it allows to
-export the current canvas as a _.png_ file, keeping in mind that any hidden layer won't be printed; or the option to read a
-brief list of keyboard shortcuts.
+In the top left corner of the window there's a dropdown menu. This menu offers the option load a new sprite sheet; to clear or
+delete the current layer, or all the layers at onces; the option to import or export a _.txt_ file in order to save or load 
+the work done; it allows to export the current canvas as a _.png_ file, keeping in mind that any hidden layer won't be printed; 
+or the option to read a brief list of keyboard shortcuts.
 
 Finally, in the bottom left part of the window there are buttons to control the zoom level applied to the sprite sheet and
 to the canvas; a text field where the name of new layers will be written, or where the text generated when the option to export
