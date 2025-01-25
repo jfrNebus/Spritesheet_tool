@@ -1,4 +1,4 @@
-# Sprite sheet tool, by jfrNebus
+# Spritesheet tool, by jfrNebus
 
 ## HI! :wave:
 
