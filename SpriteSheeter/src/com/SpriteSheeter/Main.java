@@ -25,13 +25,21 @@ DONE agrega al archivo guardado la ruta al spritesheet
 
 todo Maneja la excepción cuando el archivo txt no tiene ruta
 
+todo revisa aquellas variables de tipo string que sirvan para indicar el estado, por ejemplo una variable cuyos valores
+ sean "empty" y "full" para indicar el estado de algo, y sustituyelos por valores int del tipo i = 1 para full, i = 0
+ para empty.
+
+todo revisa el por qué de la línea "File notePad = new File(fc.getSelectedFile() + ".txt");" en el JMenuItem exportCode
+
+
+
  */
 
 
 public class Main {
     public static void main(String[] args) {
         UserInterface userInterface = new UserInterface();
-        userInterface.getStartValues();
+//        userInterface.getStartValues();
         userInterface.setUpEverything();
     }
 }
