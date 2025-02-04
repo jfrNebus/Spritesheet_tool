@@ -40,7 +40,6 @@ todo revisa el por qué de la línea "File notePad = new File(fc.getSelectedFile
 public class Main {
     public static void main(String[] args) {
         UserInterface userInterface = new UserInterface();
-//        userInterface.getStartValues();
         userInterface.setUpEverything();
     }
 }

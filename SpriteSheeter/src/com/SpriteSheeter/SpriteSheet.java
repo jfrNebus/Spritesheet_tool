@@ -44,6 +44,8 @@ public class SpriteSheet {
         this.picturePath = picturePath;
     }
 
+    /**
+     * */
     public void setSpriteSide(int spriteSide) {
         this.spriteSide = spriteSide;
     }
