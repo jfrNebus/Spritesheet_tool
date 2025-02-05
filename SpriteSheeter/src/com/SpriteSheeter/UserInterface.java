@@ -613,7 +613,7 @@ class UserInterface implements KeyListener {
         exportCode.addActionListener(e -> {
             if (exportCode.isEnabled()) {
                 final JFileChooser fc = new JFileChooser();
-                String arrayPrinted = CANVAS.getDataToExportString(spriteSheet.getPicturePath());
+                String arrayPrinted = CANVAS.getDataString(spriteSheet.getPicturePath());
                 fc.setApproveButtonText("OK");
                 try {
                     int returnVal = fc.showOpenDialog(exportCode);

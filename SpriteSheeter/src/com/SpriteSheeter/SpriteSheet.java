@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * This class allows to handle each sprite in a spritesheet as individual {@code Sprite} objects.*/
+ * This class is used to handle each sprite in a spritesheet, as individual {@code Sprite} objects.
+ */
 public class SpriteSheet {
 
     private final HashMap<Integer, Sprite> SPRITES_HASMAP = new HashMap<>();
@@ -16,43 +17,72 @@ public class SpriteSheet {
     private int tilesInRow;
     private String picturePath;
 
+    /**
+     * Returns a string of the absolute path to the spritesheet picture.
+     *
+     * @return {@code picturePath}
+     */
     public String getPicturePath() {
         return picturePath;
     }
 
+    /**
+     * Returns the HashMap associated to the Spritesheet object.
+     *
+     * @return {@code SPRITES_HASMAP}
+     */
     public HashMap<Integer, Sprite> getSPRITES_HASMAP() {
         return SPRITES_HASMAP;
     }
 
+    /**
+     * Returns an int value showing the current sprite side size.
+     *
+     * @return {@code spriteSide}
+     */
     public int getSpriteSide() {
         return spriteSide;
     }
 
+    /**
+     * Returns an int value showing the current amount of tiles in each column.
+     *
+     * @return {@code tilesInColumn}
+     */
     public int getTilesInColumn() {
         return tilesInColumn;
     }
 
+    /**
+     * Returns an int value showing the current amount of tiles in each row.
+     *
+     * @return {@code tilesInRow}
+     */
     public int getTilesInRow() {
         return tilesInRow;
     }
 
     /**
-     * Sets the specified string as the path to the sprite sheet.
-     * @param picturePath
+     * Sets the specified string as the path to the spritesheet picture.
+     *
+     * @param picturePath The absolute path to the new spritesheet picture.
      */
     public void setPicturePath(String picturePath) {
         this.picturePath = picturePath;
     }
 
     /**
-     * */
+     * Sets the sprite side size with the specified value.
+     *
+     * @param spriteSide The desired new sprite side size.
+     */
     public void setSpriteSide(int spriteSide) {
         this.spriteSide = spriteSide;
     }
 
     /**
-     * Builds the array of sprite buttons to be placed in the "Sprite list:" area,
-     * out of the picture in the picturePath.
+     * Splits the spriteSheet BufferedImage casted from the {@code picturePath}, in objects {@code Sprite}. The sprites will
+     * be stored in {@code SPRITES_HASMAP}.
      */
     public void loadSpriteSheet() {
         try {
