@@ -239,7 +239,7 @@ class UserInterface implements KeyListener {
                     !CANVAS.hasLayer(newLayerName)) {
                 newLayerName = newLayerName.replaceAll("\\s+", "_").toLowerCase();
                 addNewLayerButtons(newLayerName);
-                if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getInitialCanvasSize() == 0)
+                if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getCanvasSize() == 0)
                         && (spriteSheet.getSpriteSide() == 0)) {
                     runSubMenu("requestNewCanvasValues");
                 }
@@ -299,7 +299,7 @@ class UserInterface implements KeyListener {
         biggerSprite.addMouseListener(mouseListener);
         biggerSprite.addActionListener(e -> {
             setSpriteListScale(++spriteListScale);
-            int size = CANVAS.getInitialCanvasSize() * spriteListScale;
+            int size = CANVAS.getCanvasSize() * spriteListScale;
             spritesPanel.setSize(new Dimension(size, size));
             spritesPanel.removeAll();
             buildJLabelList(spritesPanel, spriteListScale);
@@ -317,7 +317,7 @@ class UserInterface implements KeyListener {
             if (spriteListScale > 1) {
                 setSpriteListScale(--spriteListScale);
             }
-            int size = CANVAS.getInitialCanvasSize() * spriteListScale;
+            int size = CANVAS.getCanvasSize() * spriteListScale;
             spritesPanel.setSize(new Dimension(size, size));
             spritesPanel.removeAll();
             buildJLabelList(spritesPanel, spriteListScale);
@@ -716,7 +716,7 @@ class UserInterface implements KeyListener {
         }
         matcher.reset();
 
-        if ((CANVAS.getInitialCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
+        if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
                 (spriteSheet.getSpriteSide() == 0)) {
             int side = 0;
             String firstRegex = "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)";
@@ -1303,7 +1303,7 @@ class UserInterface implements KeyListener {
                 firstLabelS = "Path:  ";
                 firstToolTip = "Paste your path here.";
                 secondLabelS = "Scale:";
-                secondToolTip = "Eenter a valid scale factor. Type an integer greater than 0.\n" + "The actual canvas size will be multiplied by the scale.\nActual canvas size: " + CANVAS.getInitialCanvasSize() + ".";
+                secondToolTip = "Eenter a valid scale factor. Type an integer greater than 0.\n" + "The actual canvas size will be multiplied by the scale.\nActual canvas size: " + CANVAS.getCanvasSize() + ".";
 //                frameHeight = 170;
                 break;
             case "requestNewCanvasValues":
