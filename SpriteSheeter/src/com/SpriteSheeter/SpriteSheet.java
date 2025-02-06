@@ -81,7 +81,7 @@ public class SpriteSheet {
     }
 
     /**
-     * Splits the spriteSheet BufferedImage casted from the {@code picturePath}, in objects {@code Sprite}. The sprites will
+     * Splits the spriteSheet BufferedImage in objects {@code Sprite}. The sprites will
      * be stored in {@code SPRITES_HASMAP}.
      */
     public void loadSpriteSheet() {

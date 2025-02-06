@@ -613,7 +613,7 @@ class UserInterface implements KeyListener {
         exportCode.addActionListener(e -> {
             if (exportCode.isEnabled()) {
                 final JFileChooser fc = new JFileChooser();
-                String arrayPrinted = CANVAS.getDataString(spriteSheet.getPicturePath());
+                String arrayPrinted = CANVAS.getExportString(spriteSheet.getPicturePath());
                 fc.setApproveButtonText("OK");
                 try {
                     int returnVal = fc.showOpenDialog(exportCode);
@@ -803,7 +803,7 @@ class UserInterface implements KeyListener {
     }
 
     private void updateMainCanvas(int scale) {
-        picLabel.setIcon(new ImageIcon(CANVAS.getScaledCanvas(scale)));
+        picLabel.setIcon(new ImageIcon(CANVAS.getScaledFramedCanvas(scale)));
     }
 
     private void buildJLabelList(JPanel spritesPanel, int spriteListScaleRatio) {

@@ -24,7 +24,6 @@ public class Canvas {
         //Mixing of all bufferedImages in layers in one single image.
         BufferedImage b = new BufferedImage(canvasSize, canvasSize, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics2D = b.createGraphics();
-        int i = 0;
         for (Map.Entry<String, BufferedImage> entry : LAYERS.entrySet()) {
             if (!HIDDEN_LAYERS.contains(entry.getKey())) {
                 graphics2D.drawImage(LAYERS.get(entry.getKey()), null, 0, 0);
@@ -43,44 +42,44 @@ public class Canvas {
      *
      * @return {@code String}
      */
-    public String getDataString(String picturePath) {
+    public String getExportString(String picturePath) {
         int x = 0;
         int y = 0;
-        StringBuilder variables = new StringBuilder();
+        StringBuilder data = new StringBuilder();
         StringBuilder arrayNumbers = new StringBuilder();
-        variables.append("//Sprites in side = ").append(arraySize).append("\n");
-        variables.append("\n//Sprite side = ").append(spriteSide).append("\n");
-        variables.append("\n//Canvas side size = ").append(canvasSize).append("\n");
-        variables.append("\n##").append(picturePath).append("##\n\n");
+        data.append("//Sprites in side = ").append(arraySize).append("\n");
+        data.append("\n//Sprite side = ").append(spriteSide).append("\n");
+        data.append("\n//Canvas side size = ").append(canvasSize).append("\n");
+        data.append("\n##").append(picturePath).append("##\n\n");
         for (Map.Entry<String, int[][]> array : ID_ARRAY_MAP.entrySet()) {
-            variables.append("-\n//Layer: ").append(array.getKey()).append("\nint[][] ")
+            data.append("-\n//Layer: ").append(array.getKey()).append("\nint[][] ")
                     .append(array.getKey()).append(" = {\n{");
             int[][] layerArray = array.getValue();
             for (int i = 0; i < arraySize; i++) {
                 for (int j = 0; j < arraySize; j++) {
                     arrayNumbers.append(layerArray[y][x]).append(" ");
-                    variables.append(layerArray[y][x]);
+                    data.append(layerArray[y][x]);
                     x++;
                     if (x < arraySize) {
-                        variables.append(",");
+                        data.append(",");
                     } else {
-                        variables.append("}");
+                        data.append("}");
                     }
                 }
                 x = 0;
                 y++;
                 if (y < arraySize) {
-                    variables.append(",\n{");
+                    data.append(",\n{");
                 } else {
-                    variables.append("\n};\n");
+                    data.append("\n};\n");
                 }
             }
             y = 0;
-            variables.append("//").append(array.getKey()).append(":").append(arrayNumbers).append("\n-\n");
+            data.append("//").append(array.getKey()).append(":").append(arrayNumbers).append("\n-\n");
             arrayNumbers = new StringBuilder();
         }
-        variables.append("-");
-        return variables.toString();
+        data.append("-");
+        return data.toString();
     }
 
     /**
@@ -157,7 +156,7 @@ public class Canvas {
     }
 
     /**
-     * Returns the map Layers.
+     * Returns the map {@code LAYERS}.
      *
      * @return {@code LAYERS}
      * */
@@ -165,24 +164,56 @@ public class Canvas {
         return LAYERS;
     }
 
+    /**
+     * Returns the layer which displays the square pointer and the frame.
+     *
+     * @return {@code POINTER_LAYER}
+     * */
     public BufferedImage getPOINTER_LAYER() {
         return POINTER_LAYER;
     }
 
     /**
-     * Scales the full canvas, all the layers and the frame layer, using the specified ration.
+     * Scales the full canvas, all the layers and the frame layer, using the specified scaling ratio.
      *
      * @param scaleRatio
-     * @return
+     * @return {@code BufferedImage}
      */
-    public BufferedImage getScaledCanvas(int scaleRatio) {
+    public BufferedImage getScaledFramedCanvas(int scaleRatio) {
         int targetSide = (canvasSize * scaleRatio) + 2;
         BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
         b.createGraphics().drawImage(getFramedCanvas(), 0, 0, targetSide, targetSide, null);
         return b;
     }
 
+
+
+    Revisa si puedes eliminar métodos de escalado de scalado y framed
+
+    getCanvas getFramedCanvas getFramelessScaledCancas getScaledCanvas
+
+
+
+    /**
+     * Returns an int value showing the current sprite side size.
+     *
+     * @return {@code spriteSide}
+     */
     public int getSpriteSide() {
+        /*Necesario para los sistemas de chequeo de datos antes de empezar. Es decir, cuando inicias la aplicación y
+        te pide que crees el canvas, se asegura de que Canvas y SpriteSheet tengan sus valores bien configurados.
+
+        Si pasa esto
+
+        if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
+                (spriteSheet.getSpriteSide() == 0)) {
+
+        entonces carga el bloque interior a la hora de importar datos, o lanza el popup solicitando datos si se
+        intenta realizar una acción que no sea la de crear un nuevo canvas.
+
+        getSpriteSide son necesarios tanto en Canvas como en SpriteSheet porque se debe evaluar que cada uno tiene
+        este método de consulta.
+         */
         return spriteSide;
     }
 
@@ -190,7 +221,7 @@ public class Canvas {
      * Adds a new BufferedImage to the map LAYERS, and a new ID array to the MAP ID_ARRAY_MAP,
      * under the specified String.
      *
-     * @param layerName
+     * @param layerName The name key for the new layer.
      */
     public void addNewCanvas(String layerName) {
         BufferedImage canvas = new BufferedImage(canvasSize, canvasSize, BufferedImage.TYPE_INT_ARGB);
@@ -230,9 +261,9 @@ public class Canvas {
     }
 
     /**
-     * Clear the bufferedImage of the specified layer.
+     * Clears the bufferedImage of the specified layer.
      *
-     * @param layerToClear
+     * @param layerToClear Name of the layer to clear
      */
     public void clearLayer(String layerToClear) {
         LAYERS.put(layerToClear, new BufferedImage(canvasSize, canvasSize,
@@ -240,7 +271,7 @@ public class Canvas {
     }
 
     /**
-     * Clear the bufferedImage of each layer.
+     * Clears the bufferedImage of each layer.
      */
     public void clearAllLayers() {
         for (Map.Entry<String, BufferedImage> entry : LAYERS.entrySet()) {
@@ -249,9 +280,9 @@ public class Canvas {
     }
 
     /**
-     * Removes the mapping for a key from LAYERS.
+     * Removes the mapping for a key from {@code LAYERS}.
      *
-     * @param layerToDelete
+     * @param layerToDelete Name of the layer to be deleted.
      */
     public void deleteLayer(String layerToDelete) {
         LAYERS.remove(layerToDelete);
@@ -267,16 +298,30 @@ public class Canvas {
     /**
      * Adds the specified layer to HIDDEN_LAYERS.
      *
-     * @param layerName
+     * @param layerName Name of the layer to be hidden.
      */
     public void hideLayer(String layerName) {
         HIDDEN_LAYERS.add(layerName);
     }
 
+    /**
+     * Checks if the {@code LAYERS} contains any value mapped for the specified key.
+     *
+     * @param layerName Name of the layer.
+     *
+     * @return True if there is any mapping in {@code LAYERS} for the specified key, or null if there is not.
+     * */
     public boolean hasLayer(String layerName) {
         return LAYERS.containsKey(layerName);
     }
 
+    /**
+     * Initializes the values {@code spriteSide} and {@code canvasSize}, with the specified parameters. It
+     * also creates the {@code POINTER_LAYER} layer.
+     *
+     * @param side The sprite side size.
+     * @param newCanvasSize The canvas side size.
+     * */
     public void initializeCanvas(int side, int newCanvasSize) {
         spriteSide = side;
         canvasSize = newCanvasSize;
@@ -296,9 +341,9 @@ public class Canvas {
     }
 
     /**
-     * Removes the specified layer from HIDDEN_LAYERS.
+     * Removes the specified layer from {@code HIDDEN_LAYERS}.
      *
-     * @param layerName
+     * @param layerName The name of the layer to be removed.
      */
     public void showLayer(String layerName) {
         HIDDEN_LAYERS.remove(layerName);
