@@ -609,7 +609,7 @@ class UserInterface implements KeyListener {
             }
         });
 
-        exportCode = new JMenuItem("Export");
+        exportCode = new JMenuItem("ExportCode");
         exportCode.addActionListener(e -> {
             if (exportCode.isEnabled()) {
                 final JFileChooser fc = new JFileChooser();
@@ -641,7 +641,7 @@ class UserInterface implements KeyListener {
         exportCanvas = new JMenuItem("Export canvas           ");
         exportCanvas.addActionListener(e -> {
             if (exportCanvas.isEnabled()) {
-                runSubMenu("export");
+                runSubMenu("exportCode");
             } else {
                 System.out.println("Not enabled");
             }
@@ -803,7 +803,7 @@ class UserInterface implements KeyListener {
     }
 
     private void updateMainCanvas(int scale) {
-        picLabel.setIcon(new ImageIcon(CANVAS.getScaledFramedCanvas(scale)));
+        picLabel.setIcon(new ImageIcon(CANVAS.getScaledCanvas(CANVAS.getFramedCanvas(), scale)));
     }
 
     private void buildJLabelList(JPanel spritesPanel, int spriteListScaleRatio) {
@@ -1298,7 +1298,7 @@ class UserInterface implements KeyListener {
 //        JTextField thirdTF = new JTextField();
 
         switch (menuName) {
-            case "export":
+            case "exportCode":
                 frameName = "Export canvas";
                 firstLabelS = "Path:  ";
                 firstToolTip = "Paste your path here.";
@@ -1365,7 +1365,7 @@ class UserInterface implements KeyListener {
         firstTF.setToolTipText(firstToolTip);
         firstTF.setMaximumSize(new Dimension(textPWidth, itemHeight));
         firstTF.setMinimumSize(firstTF.getMaximumSize());
-        if (menuName.equals("export")) {
+        if (menuName.equals("exportCode")) {
             firstTF.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -1418,12 +1418,12 @@ class UserInterface implements KeyListener {
             String firstTFS = firstTF.getText().isEmpty() ? "" : firstTF.getText();
             String secondTFS = secondTF.getText();
 //            String thirdTFS = thirdTF.getText();
-            if (menuName.equals("export")) {
+            if (menuName.equals("exportCode")) {
                 if (!firstTFS.isEmpty() && !secondTFS.isEmpty()) {
                     boolean secondNumber = secondTFS.matches("\\d+");
                     if (secondNumber) {
                         try {
-                            ImageIO.write(CANVAS.getFramelessScaledCanvas(Integer.parseInt(secondTFS)), "png", new File(firstTFS + ".png"));
+                            ImageIO.write(CANVAS.getScaledCanvas(CANVAS.getFramedCanvas(), Integer.parseInt(secondTFS)), "png", new File(firstTFS + ".png"));
                             subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
                         } catch (IOException ex) {
                             runInfoWindo("invalidPath");

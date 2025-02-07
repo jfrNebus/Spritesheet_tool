@@ -108,19 +108,19 @@ public class Canvas {
         return b;
     }
 
-    /**
-     * Returns the BufferedImage returned by {@link #getCanvas()}, after applying the specified scale ratio.
-     *
-     * @param scaleRatio The {@code initialCanvasSize} variable will be multiplied by scaleRatio.
-     *
-     * @return {@code BufferedImage}
-     */
-    public BufferedImage getFramelessScaledCanvas(int scaleRatio) {
-        int targetSide = (canvasSize * scaleRatio) + 2; //<<<<<<<<<<<< Check this +2
-        BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
-        b.createGraphics().drawImage(getCanvas(), 0, 0, targetSide, targetSide, null);
-        return b;
-    }
+//    /**
+//     * Returns the BufferedImage returned by {@link #getCanvas()}, after applying the specified scale ratio.
+//     *
+//     * @param scaleRatio The {@code initialCanvasSize} variable will be multiplied by scaleRatio.
+//     *
+//     * @return {@code BufferedImage}
+//     */
+//    public BufferedImage getFramelessScaledCanvas(int scaleRatio) {
+//        int targetSide = (canvasSize * scaleRatio) + 2; //<<<<<<<<<<<< Check this +2
+//        BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
+//        b.createGraphics().drawImage(getCanvas(), 0, 0, targetSide, targetSide, null);
+//        return b;
+//    }
 
     /**
      * Returns the value to which the specified key is mapped in {@code ID_ARRAY_MAP}, or null if
@@ -173,25 +173,27 @@ public class Canvas {
         return POINTER_LAYER;
     }
 
-    /**
-     * Scales the full canvas, all the layers and the frame layer, using the specified scaling ratio.
-     *
-     * @param scaleRatio
-     * @return {@code BufferedImage}
-     */
-    public BufferedImage getScaledFramedCanvas(int scaleRatio) {
+//    /**
+//     * Scales the full canvas, all the layers and the frame layer, using the specified scaling ratio.
+//     *
+//     * @param scaleRatio
+//     * @return {@code BufferedImage}
+//     */
+//    public BufferedImage getScaledFramedCanvas(int scaleRatio) {
+//        int targetSide = (canvasSize * scaleRatio) + 2;
+//        BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
+//        b.createGraphics().drawImage(getFramedCanvas(), 0, 0, targetSide, targetSide, null);
+//        return b;
+//    }
+
+    public BufferedImage getScaledCanvas(BufferedImage canvasToScale, int scaleRatio) {
         int targetSide = (canvasSize * scaleRatio) + 2;
         BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
-        b.createGraphics().drawImage(getFramedCanvas(), 0, 0, targetSide, targetSide, null);
+        b.createGraphics().drawImage(canvasToScale, 0, 0, targetSide, targetSide, null);
         return b;
     }
 
-
-
-    Revisa si puedes eliminar métodos de escalado de scalado y framed
-
-    getCanvas getFramedCanvas getFramelessScaledCancas getScaledCanvas
-
+    Sigue revisando los métodos de escalado y retira de UserInterface los que sobren
 
 
     /**
