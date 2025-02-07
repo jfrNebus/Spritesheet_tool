@@ -108,27 +108,13 @@ public class Canvas {
         return b;
     }
 
-//    /**
-//     * Returns the BufferedImage returned by {@link #getCanvas()}, after applying the specified scale ratio.
-//     *
-//     * @param scaleRatio The {@code initialCanvasSize} variable will be multiplied by scaleRatio.
-//     *
-//     * @return {@code BufferedImage}
-//     */
-//    public BufferedImage getFramelessScaledCanvas(int scaleRatio) {
-//        int targetSide = (canvasSize * scaleRatio) + 2; //<<<<<<<<<<<< Check this +2
-//        BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
-//        b.createGraphics().drawImage(getCanvas(), 0, 0, targetSide, targetSide, null);
-//        return b;
-//    }
-
     /**
      * Returns the value to which the specified key is mapped in {@code ID_ARRAY_MAP}, or null if
      * this map contains no mapping for the key,
      *
      * @param idArrayName The key for the desired mapped value.
      *
-     * @return {@code ID_ARRAY_MAP.get(idArrayName);}
+     * @return A {@code int[][]} as result of {@code ID_ARRAY_MAP.get(idArrayName);}
      * */
     public int[][] getID_ARRAY_MAP(String idArrayName) {
         return ID_ARRAY_MAP.get(idArrayName);
@@ -149,7 +135,7 @@ public class Canvas {
      *
      * @param layerName The key for the desired mapped value.
      *
-     * @return {@code LAYERS.get(layerName);}
+     * @return A {@code BufferedImage} as result of {@code LAYERS.get(layerName);}
      */
     public BufferedImage getLayer(String layerName) {
         return LAYERS.get(layerName);
@@ -158,7 +144,7 @@ public class Canvas {
     /**
      * Returns the map {@code LAYERS}.
      *
-     * @return {@code LAYERS}
+     * @return {@code Map<String, BufferedImage>}
      * */
     public Map<String, BufferedImage> getLAYERS() {
         return LAYERS;
@@ -167,25 +153,20 @@ public class Canvas {
     /**
      * Returns the layer which displays the square pointer and the frame.
      *
-     * @return {@code POINTER_LAYER}
+     * @return {@code BufferedImage}
      * */
     public BufferedImage getPOINTER_LAYER() {
         return POINTER_LAYER;
     }
 
-//    /**
-//     * Scales the full canvas, all the layers and the frame layer, using the specified scaling ratio.
-//     *
-//     * @param scaleRatio
-//     * @return {@code BufferedImage}
-//     */
-//    public BufferedImage getScaledFramedCanvas(int scaleRatio) {
-//        int targetSide = (canvasSize * scaleRatio) + 2;
-//        BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
-//        b.createGraphics().drawImage(getFramedCanvas(), 0, 0, targetSide, targetSide, null);
-//        return b;
-//    }
-
+    /**
+     * Returns a scaled copy of the provided BufferedImage, using the specified sacale ratio.
+     *
+     * @param canvasToScale The BufferedImage to scale.
+     * @param scaleRatio The ratio to be used to scale {@code canvasToScale}.
+     *
+     * @return A scaled {@code BufferedImage} version of the provided BufferedImage.
+     * */
     public BufferedImage getScaledCanvas(BufferedImage canvasToScale, int scaleRatio) {
         int targetSide = (canvasSize * scaleRatio) + 2;
         BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
@@ -193,13 +174,10 @@ public class Canvas {
         return b;
     }
 
-    Sigue revisando los métodos de escalado y retira de UserInterface los que sobren
-
-
     /**
      * Returns an int value showing the current sprite side size.
      *
-     * @return {@code spriteSide}
+     * @return {@code int}
      */
     public int getSpriteSide() {
         /*Necesario para los sistemas de chequeo de datos antes de empezar. Es decir, cuando inicias la aplicación y
@@ -298,7 +276,7 @@ public class Canvas {
     }
 
     /**
-     * Adds the specified layer to HIDDEN_LAYERS.
+     * Adds the specified layer to the List<String> HIDDEN_LAYERS.
      *
      * @param layerName Name of the layer to be hidden.
      */
@@ -343,7 +321,7 @@ public class Canvas {
     }
 
     /**
-     * Removes the specified layer from {@code HIDDEN_LAYERS}.
+     * Removes the specified layer from List<String> {@code HIDDEN_LAYERS}.
      *
      * @param layerName The name of the layer to be removed.
      */

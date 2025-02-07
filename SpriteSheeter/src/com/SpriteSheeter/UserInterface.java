@@ -609,7 +609,7 @@ class UserInterface implements KeyListener {
             }
         });
 
-        exportCode = new JMenuItem("ExportCode");
+        exportCode = new JMenuItem("Export");
         exportCode.addActionListener(e -> {
             if (exportCode.isEnabled()) {
                 final JFileChooser fc = new JFileChooser();
@@ -641,7 +641,7 @@ class UserInterface implements KeyListener {
         exportCanvas = new JMenuItem("Export canvas           ");
         exportCanvas.addActionListener(e -> {
             if (exportCanvas.isEnabled()) {
-                runSubMenu("exportCode");
+                runSubMenu("exportCanvas");
             } else {
                 System.out.println("Not enabled");
             }
@@ -1289,22 +1289,17 @@ class UserInterface implements KeyListener {
         String firstToolTip = "";
         String secondLabelS = "";
         String secondToolTip = "";
-//        String thirdLabelS = "";
-//        String thirdToolTip = "";
         int frameHeight = 170;
         int amountOfLabels = 2;
-//        boolean multiFieldMenu = true;
         JTextField secondTF = new JTextField();
-//        JTextField thirdTF = new JTextField();
 
         switch (menuName) {
-            case "exportCode":
+            case "exportCanvas":
                 frameName = "Export canvas";
                 firstLabelS = "Path:  ";
                 firstToolTip = "Paste your path here.";
                 secondLabelS = "Scale:";
                 secondToolTip = "Eenter a valid scale factor. Type an integer greater than 0.\n" + "The actual canvas size will be multiplied by the scale.\nActual canvas size: " + CANVAS.getCanvasSize() + ".";
-//                frameHeight = 170;
                 break;
             case "requestNewCanvasValues":
                 frameName = "Canvas data";
@@ -1312,8 +1307,6 @@ class UserInterface implements KeyListener {
                 firstToolTip = "The side size of each individual sprite in pixels.";
                 secondLabelS = "New canvas side:";
                 secondToolTip = "The new canvas' side size in pixels. .";
-//                thirdLabelS = "Sheet size:";
-//                thirdToolTip = "The side size of the new canvas.";
                 break;
         }
 
@@ -1365,7 +1358,7 @@ class UserInterface implements KeyListener {
         firstTF.setToolTipText(firstToolTip);
         firstTF.setMaximumSize(new Dimension(textPWidth, itemHeight));
         firstTF.setMinimumSize(firstTF.getMaximumSize());
-        if (menuName.equals("exportCode")) {
+        if (menuName.equals("exportCanvas")) {
             firstTF.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -1418,12 +1411,13 @@ class UserInterface implements KeyListener {
             String firstTFS = firstTF.getText().isEmpty() ? "" : firstTF.getText();
             String secondTFS = secondTF.getText();
 //            String thirdTFS = thirdTF.getText();
-            if (menuName.equals("exportCode")) {
+            if (menuName.equals("exportCanvas")) {
                 if (!firstTFS.isEmpty() && !secondTFS.isEmpty()) {
                     boolean secondNumber = secondTFS.matches("\\d+");
                     if (secondNumber) {
                         try {
-                            ImageIO.write(CANVAS.getScaledCanvas(CANVAS.getFramedCanvas(), Integer.parseInt(secondTFS)), "png", new File(firstTFS + ".png"));
+                            ImageIO.write(CANVAS.getScaledCanvas(CANVAS.getCanvas(), Integer.parseInt(secondTFS)),
+                                    "png", new File(firstTFS + ".png"));
                             subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
                         } catch (IOException ex) {
                             runInfoWindo("invalidPath");
@@ -1435,7 +1429,7 @@ class UserInterface implements KeyListener {
                     runInfoWindo("empty");
                 }
             } else if (menuName.equals("requestNewCanvasValues")) {
-                boolean notEmpty = (!firstTFS.isEmpty()) || (!secondTFS.isEmpty()) /*|| (!thirdTFS.isEmpty())*/;
+                boolean notEmpty = (!firstTFS.isEmpty()) || (!secondTFS.isEmpty());
                 boolean condition = true;
                 int side = 0;
                 int newCanvasSize = 0;
@@ -1463,17 +1457,6 @@ class UserInterface implements KeyListener {
                     spriteSheet.setSpriteSide(side);
                     movementIncrement = side;
                     initializePicLabel();
-//                    try {
-//                        spriteSheet = new SpriteSheet(firstTFS, side);
-//                        canvas = new Canvas(side, newCanvasSize);
-//                        side = spriteSheet.getSPRITE_SIDE();
-//                        movementIncrement = side;
-//                        previousSprite = new BufferedImage(side, side, BufferedImage.TYPE_INT_ARGB);
-//                        subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
-//                    } catch (RuntimeException ex) {
-//                        //Comprueba si puedes especificar más la excepción en el catch y que sea IOException
-//                        runInfoWindo("invalidPath");
-//                    }
                 }
             }
         });
@@ -1522,8 +1505,7 @@ class UserInterface implements KeyListener {
         secondTF.setText("80");
 
         //Export menu
-//        if (multiFieldMenu) {
-        //Second panels
+        //Second panel
         JPanel secondP = new JPanel();
         secondP.setLayout(new BoxLayout(secondP, BoxLayout.X_AXIS));
         secondP.setMaximumSize(new Dimension(labelPWidth, itemHeight));
@@ -1547,33 +1529,6 @@ class UserInterface implements KeyListener {
         secondLabel.setVisible(true);
         secondTF.setVisible(true);
 
-//            if (menuName.equals("generateNewCanvas")) {
-//                //Third panels
-//                JPanel thirdP = new JPanel();
-//                thirdP.setLayout(new BoxLayout(thirdP, BoxLayout.X_AXIS));
-//                thirdP.setMaximumSize(new Dimension(labelPWidth, itemHeight));
-//                thirdP.setMinimumSize(thirdP.getMaximumSize());
-//                JLabel thirdLabel = new JLabel(thirdLabelS);
-//                thirdLabel.setFont(font);
-//
-//                thirdP.add(thirdLabel);
-//                thirdP.add(Box.createHorizontalGlue());
-//
-//                thirdTF.setToolTipText(thirdToolTip);
-//                thirdTF.setMaximumSize(new Dimension(textPWidth, itemHeight));
-//                thirdTF.setMinimumSize(thirdTF.getMaximumSize());
-//
-//                labelsP.add(thirdP);
-//                labelsP.add(Box.createRigidArea(new Dimension(0, 5)));
-//
-//                textP.add(thirdTF);
-//                textP.add(Box.createRigidArea(new Dimension(0, 5)));
-//
-//                thirdP.setVisible(true);
-//                thirdLabel.setVisible(true);
-//                thirdTF.setVisible(true);
-//            }
-//        }
         //Export menu
 
         //Component visibility
