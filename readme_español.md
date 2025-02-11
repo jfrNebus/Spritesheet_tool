@@ -1,4 +1,4 @@
-# Introducción 🇪🇸
+# Introducción
 
 SpriteSheeter es una herramienta pensada para poder gestionar, de una forma más sencilla, un aspecto de uno de los proyectos en los que estoy 
 trabajando.
