@@ -9,8 +9,8 @@ The following labels allow you to review all explanations, descriptions, and mat
 <br>
 
 <p align="center">
-    <a href="readme_español.md"><img src="https://img.shields.io/badge/readme-espa%C3%B1ol%20%F0%9F%87%AA%F0%9F%87%B8-f9f2bc"/></a>
-    <a href="readme_english.md"><img src="https://img.shields.io/badge/readme-english%F0%9F%87%AC%F0%9F%87%A7-bcd8f9"/></a>
+    <a href="readme_español.md"><img src="https://img.shields.io/badge/Readme%20espa%C3%B1ol-cb1111?style=plastic"/></a>
+    <a href="readme_english.md"><img src="https://img.shields.io/badge/Readme%20english-2e77ff?style=plastic"/></a>
 </p>
 
 <br>
