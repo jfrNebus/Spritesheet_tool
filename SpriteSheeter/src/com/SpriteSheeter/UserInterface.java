@@ -78,15 +78,13 @@ class UserInterface implements KeyListener {
      * Builds up the whole user interface.
      * */
     public void setUpEverything() {
-//        int SCREEN_HEIGHT = 1080;
-//        int SCREEN_WIDTH = 1920;
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         final int SCREEN_HEIGHT = (int)screenSize.getHeight();
         final int SCREEN_WIDTH = (int)screenSize.getWidth();
 
-        int FRAME_WIDTH = 1280;
-        int FRAME_HEIGHT = 720;
+        int FRAME_WIDTH = (int)(SCREEN_WIDTH* 0.6);
+        int FRAME_HEIGHT = (int)(SCREEN_HEIGHT * 0.6);
 
         frame = new JFrame("Spriter");
         frame.setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
