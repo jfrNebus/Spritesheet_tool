@@ -17,10 +17,9 @@ import java.util.regex.Pattern;
 
 class UserInterface implements KeyListener {
 
-    //Boolean to be used to  toggle on/off the movement of the main map scroller throught directional keys.
+    //Boolean to be used to  toggle on/off the movement of the main map scroller by using directional keys.
     boolean toggleMapMovement = false;
     boolean toggleSpriteMovement = false;
-
     private boolean fillingBrush = false;
 
     //The scale ratio for the main map pic. This will modify the size for the main map to be displayed,
@@ -51,8 +50,7 @@ class UserInterface implements KeyListener {
     //Screen size
     private final int MAP_SCALE_RATIO = 1;
     private String actualCanvas = "noLayer";
-    private final SpriteSheet spriteSheet = new SpriteSheet();
-    ;
+    private final SpriteSheet SPRITESHEET = new SpriteSheet();
     private final Canvas CANVAS = new Canvas();
     private JFrame frame;
     private JScrollPane picScroller;
@@ -61,9 +59,9 @@ class UserInterface implements KeyListener {
     private JLabel actualLayerLabel;
     private JPanel layerSelector;
     private JScrollPane spriteListScroller;
-    private final JTextArea ta = new JTextArea();
-    private final JViewport mapView = new JViewport();
-    private final JViewport spriteView = new JViewport();
+    private final JTextArea TA = new JTextArea();
+    private final JViewport MAP_VIEW = new JViewport();
+    private final JViewport SPRITE_VIEW = new JViewport();
     private JButton newLayerB;
     private JButton biggerMap;
     private JButton smallerMap;
@@ -75,19 +73,22 @@ class UserInterface implements KeyListener {
     private JMenuItem exportCanvas;
     private BufferedImage previousSprite;
 
-//    public void getStartValues() {
-//        runSubMenu("generateNewCanvas");
-//    }
 
+    /**
+     * Builds up the whole user interface.
+     * */
     public void setUpEverything() {
-        int SCREEN_HEIGHT = 1080;
-        int SCREEN_WIDTH = 1920;
-        //Creo una ventana con todas las configuraciones relativas a la misma
+//        int SCREEN_HEIGHT = 1080;
+//        int SCREEN_WIDTH = 1920;
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        final int SCREEN_HEIGHT = (int)screenSize.getHeight();
+        final int SCREEN_WIDTH = (int)screenSize.getWidth();
+
         int FRAME_WIDTH = 1280;
         int FRAME_HEIGHT = 720;
 
         frame = new JFrame("Spriter");
-//        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        To explain layout for frame > https://stackoverflow.com/questions/24840860/boxlayout-for-a-jframe
@@ -125,12 +126,6 @@ class UserInterface implements KeyListener {
         picScroller.setFocusable(true);
         picScroller.setWheelScrollingEnabled(true);
 
-//            picLabel = new JLabel();
-//            picLabel.addKeyListener(this);
-//            picLabel.setFocusable(true);
-
-//            mapView.setView(picLabel);
-
         //>>> Inside panel1
         int panel2Width = (int) (SCREEN_WIDTH * 0.40);
         int panel2Height = (int) (SCREEN_HEIGHT * 0.90);
@@ -164,8 +159,7 @@ class UserInterface implements KeyListener {
         spritesPanel.setLayout(new BoxLayout(spritesPanel, BoxLayout.PAGE_AXIS));
         spritesPanel.addKeyListener(this);
 
-        spriteView.setView(spritesPanel);
-
+        SPRITE_VIEW.setView(spritesPanel);
 
         //Layer Management
         //>>> Inside panel1 > Inside panel2
@@ -219,7 +213,6 @@ class UserInterface implements KeyListener {
         layerSelector.setFocusable(false);
 
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller > layerSelector
-
         JPanel newLayerBPanel = new JPanel();
         newLayerBPanel.setLayout(new BoxLayout(newLayerBPanel, BoxLayout.X_AXIS));
         newLayerBPanel.setMaximumSize(new Dimension(layerPanel.getMaximumSize().width, (int) (layerPanel.getMaximumSize().getHeight() * 0.03)));
@@ -233,14 +226,14 @@ class UserInterface implements KeyListener {
         newLayerB.setEnabled(false);
         newLayerB.addMouseListener(mouseListener);
         newLayerB.addActionListener(e -> {
-            String newLayerName = ta.getText().trim();
+            String newLayerName = TA.getText().trim();
             if (!newLayerName.isEmpty() &&
                     newLayerName.matches("(\\w+(\\s+\\w+)*)") &&
                     !CANVAS.hasLayer(newLayerName)) {
                 newLayerName = newLayerName.replaceAll("\\s+", "_").toLowerCase();
                 addNewLayerButtons(newLayerName);
                 if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getCanvasSize() == 0)
-                        && (spriteSheet.getSpriteSide() == 0)) {
+                        && (SPRITESHEET.getSpriteSide() == 0)) {
                     runSubMenu("requestNewCanvasValues");
                 }
                 CANVAS.addNewCanvas(newLayerName);
@@ -279,16 +272,17 @@ class UserInterface implements KeyListener {
         panel5.setFocusable(true);
         panel5.addKeyListener(this);
         panel5.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
+//        panel5.setMaximumSize(new Dimension(panel4.getSize().width, panel4.getSize().height / 2));
 
         JPanel panel6 = new JPanel();
         panel6.setLayout(new BoxLayout(panel6, BoxLayout.X_AXIS));
         panel6.setFocusable(true);
         panel6.addKeyListener(this);
-
         panel6.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
+//        panel6.setMaximumSize(new Dimension(panel4.getSize().width, panel4.getSize().height / 2));
 
         //>>> Inside panel1 > Inside panel3 > Inside panel5
-        Dimension buttonsDimension = new Dimension(panel4.getMaximumSize().width / 2, panel4.getMaximumSize().width / 2);
+        Dimension buttonsDimension = new Dimension(panel4.getMaximumSize().width / 2, panel4.getMaximumSize().height / 2);
 
         biggerSprite = new JButton("Sprite zoom +");
         biggerSprite.setMaximumSize(buttonsDimension);
@@ -325,7 +319,11 @@ class UserInterface implements KeyListener {
         });
 
         //>>> Inside panel1 > Inside panel3 > Inside panel5 > Inside panel6
-        biggerMap = new JButton("Map zoom +");
+        //The string used for the name of map buttons must include extra empty spaces in order
+        //to match the length of the strings used for the sprite buttons. both groups of strings
+        //must be equally long in order to be resized in the same way when the screen resolution
+        //changes.
+        biggerMap = new JButton(" Map zoom +  ");
         biggerMap.setMaximumSize(buttonsDimension);
         biggerMap.addKeyListener(this);
         biggerMap.setFocusable(true);
@@ -337,7 +335,7 @@ class UserInterface implements KeyListener {
             updateMainCanvas(getMapScale());
         });
 
-        smallerMap = new JButton("Map zoom -");
+        smallerMap = new JButton(" Map zoom -  ");
         smallerMap.setMaximumSize(buttonsDimension);
         smallerMap.addKeyListener(this);
         smallerMap.setFocusable(true);
@@ -368,14 +366,14 @@ class UserInterface implements KeyListener {
         taScroller.setWheelScrollingEnabled(true);
 
         //>>> Inside panel1 > Inside panel3 > panel7 > Inside taScroller
-        ta.addKeyListener(this);
-        ta.addMouseListener(mouseListener);
-        ta.setEditable(false);
-        ta.setFont(new Font("", Font.BOLD, 15));
-        ta.setLineWrap(true);
-        ta.setWrapStyleWord(true);
-        ta.setCaretColor(Color.WHITE);
-        taScroller.setViewportView(ta);
+        TA.addKeyListener(this);
+        TA.addMouseListener(mouseListener);
+        TA.setEditable(false);
+        TA.setFont(new Font("", Font.BOLD, 15));
+        TA.setLineWrap(true);
+        TA.setWrapStyleWord(true);
+        TA.setCaretColor(Color.WHITE);
+        taScroller.setViewportView(TA);
 
         //Layout adding.
         frame.add(Box.createRigidArea(new Dimension(5, 0)));
@@ -406,7 +404,7 @@ class UserInterface implements KeyListener {
         //>>> Inside panel1 > Inside panel2 > Inside spritesFather
         spritesFather.add(Box.createRigidArea(new Dimension(0, 5)));
         spritesFather.add(spriteListScroller);
-        spriteListScroller.setViewportView(spriteView);
+        spriteListScroller.setViewportView(SPRITE_VIEW);
         spritesFather.add(Box.createRigidArea(new Dimension(0, 5)));
 
         //>>> Inside panel1 > Inside panel2
@@ -468,7 +466,6 @@ class UserInterface implements KeyListener {
         //>>>frane > picScrollerHolder
         picScrollerHolder.add(Box.createRigidArea(new Dimension(0, 5)));
         picScrollerHolder.add(picScroller);
-//            picScroller.setViewportView(mapView);
         picScrollerHolder.add(Box.createRigidArea(new Dimension(0, 5)));
 
 
@@ -487,10 +484,9 @@ class UserInterface implements KeyListener {
         newLayerB.setVisible(true);
         picScrollerHolder.setVisible(true);
         picScroller.setVisible(true);
-//            picLabel.setVisible(true);
         biggerSprite.setVisible(true);
         smallerSprite.setVisible(true);
-        ta.setVisible(true);
+        TA.setVisible(true);
         biggerMap.setVisible(true);
         smallerMap.setVisible(true);
     }
@@ -517,8 +513,8 @@ class UserInterface implements KeyListener {
                         if (spritesPanel.getComponentCount() > 0) {
                             spritesPanel.removeAll();
                         }
-                        spriteSheet.setPicturePath(newPicturePath);
-                        spriteSheet.loadSpriteSheet();
+                        SPRITESHEET.setPicturePath(newPicturePath);
+                        SPRITESHEET.loadSpriteSheet();
                         buildJLabelList(spritesPanel, spriteListScale);
                         spritesPanel.updateUI();
                     } else if (!pictureFile) {
@@ -566,13 +562,13 @@ class UserInterface implements KeyListener {
             updateMainCanvas(getMapScale());
         });
 
-        //        JMenuItem clearlayer
+        //JMenuItem clearlayer
         JMenuItem deleteAllLayerMenu = new JMenuItem("Delete all layers           ");
         deleteAllLayerMenu.addActionListener(e -> {
             deleteAllLayer();
         });
 
-        //JMenuItem  generateCode
+        //JMenuItem generateCode
         JMenuItem importCode = new JMenuItem("Import");
         importCode.addActionListener(e -> {
             final JFileChooser fc = new JFileChooser();
@@ -593,10 +589,10 @@ class UserInterface implements KeyListener {
                         deleteAllLayer();
                         resetLayerSelector(loadedMap);
                         spritesPanel.removeAll();
-                        spriteSheet.setPicturePath(getLoadedPath(sb.toString()));
-                        spriteSheet.loadSpriteSheet();
+                        SPRITESHEET.setPicturePath(getLoadedPath(sb.toString()));
+                        SPRITESHEET.loadSpriteSheet();
                         buildJLabelList(spritesPanel, spriteListScale);
-                        CANVAS.buildLayers(loadedMap, spriteSheet.getSPRITES_HASMAP());
+                        CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASMAP());
                         updateMainCanvas(getMapScale());
                     } else {
                         runInfoWindo("invalidFile");
@@ -613,7 +609,7 @@ class UserInterface implements KeyListener {
         exportCode.addActionListener(e -> {
             if (exportCode.isEnabled()) {
                 final JFileChooser fc = new JFileChooser();
-                String arrayPrinted = CANVAS.getExportString(spriteSheet.getPicturePath());
+                String arrayPrinted = CANVAS.getExportString(SPRITESHEET.getPicturePath());
                 fc.setApproveButtonText("OK");
                 try {
                     int returnVal = fc.showOpenDialog(exportCode);
@@ -717,7 +713,7 @@ class UserInterface implements KeyListener {
         matcher.reset();
 
         if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
-                (spriteSheet.getSpriteSide() == 0)) {
+                (SPRITESHEET.getSpriteSide() == 0)) {
             int side = 0;
             String firstRegex = "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)";
             matcher.usePattern(Pattern.compile(firstRegex, Pattern.MULTILINE));
@@ -736,7 +732,7 @@ class UserInterface implements KeyListener {
             matcher.reset();
 
             CANVAS.initializeCanvas(side, newCanvasSize);
-            spriteSheet.setSpriteSide(side);
+            SPRITESHEET.setSpriteSide(side);
             movementIncrement = side;
         }
 
@@ -769,7 +765,6 @@ class UserInterface implements KeyListener {
                 break;
             }
         }
-
         return layers;
     }
 
@@ -807,17 +802,17 @@ class UserInterface implements KeyListener {
     }
 
     private void buildJLabelList(JPanel spritesPanel, int spriteListScaleRatio) {
-        int targetSide = spriteSheet.getSpriteSide() * spriteListScaleRatio;
+        int targetSide = SPRITESHEET.getSpriteSide() * spriteListScaleRatio;
         int j = 0;
         BufferedImage newImage;
-        for (int i = 0; i < spriteSheet.getTilesInColumn(); i++) {
+        for (int i = 0; i < SPRITESHEET.getTilesInColumn(); i++) {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.X_AXIS));
             spritesPanel.add(jPanel);
             j++;
-            for (; j < (spriteSheet.getTilesInColumn() * spriteSheet.getTilesInRow()) + 1; j++) {
+            for (; j < (SPRITESHEET.getTilesInColumn() * SPRITESHEET.getTilesInRow()) + 1; j++) {
                 newImage = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
-                BufferedImage b = spriteSheet.getSPRITES_HASMAP().get(j - 1).getSprite();
+                BufferedImage b = SPRITESHEET.getSPRITES_HASMAP().get(j - 1).getSprite();
                 newImage.createGraphics().drawImage(b, 0, 0, targetSide, targetSide, null);
                 JButton button = new JButton();
                 button.setIcon(new ImageIcon(newImage));
@@ -840,7 +835,7 @@ class UserInterface implements KeyListener {
                 button.addActionListener(e -> {
 //                        https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
 
-                    System.out.println("Pressed sprite idd: " + spriteSheet.getSPRITES_HASMAP().get(innerId - 1).getId());
+                    System.out.println("Pressed sprite idd: " + SPRITESHEET.getSPRITES_HASMAP().get(innerId - 1).getId());
                     //Used to set the kind of Composite to be used in the BufferedImage in use. Check the above
                     //link.
                     if (!actualCanvas.equals("noLayer")) {
@@ -855,15 +850,15 @@ class UserInterface implements KeyListener {
                         int arrayIndexY = y / 16;
                         int arrayIndexX = x / 16;
                         int[][] returnedArray = CANVAS.getID_ARRAY_MAP(actualCanvas);
-                        returnedArray[arrayIndexY][arrayIndexX] = spriteSheet.getSPRITES_HASMAP().get(innerId - 1).getId();
+                        returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASMAP().get(innerId - 1).getId();
                         id = innerId;
                         updateMainCanvas(getMapScale());
                     } else {
-                        ta.setText("No layer selected.");
+                        TA.setText("No layer selected.");
                     }
                 });
                 jPanel.add(button);
-                if (j % spriteSheet.getTilesInRow() == 0) {
+                if (j % SPRITESHEET.getTilesInRow() == 0) {
                     break;
                 }
             }
@@ -915,11 +910,11 @@ class UserInterface implements KeyListener {
         layerSelector.add(panel);
         layerSelector.updateUI();
 
-        ta.setText("");
+        TA.setText("");
     }
 
     private void pointerMovement(String direction) {
-        int spriteSide = spriteSheet.getSpriteSide();
+        int spriteSide = SPRITESHEET.getSpriteSide();
         Color pointer = Color.RED;
         Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
         pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
@@ -950,7 +945,7 @@ class UserInterface implements KeyListener {
             int arrayIndexY = y / 16;
             int arrayIndexX = x / 16;
             int[][] returnedArray = CANVAS.getID_ARRAY_MAP(actualCanvas);
-            returnedArray[arrayIndexY][arrayIndexX] = spriteSheet.getSPRITES_HASMAP().get(id - 1).getId();
+            returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASMAP().get(id - 1).getId();
             System.out.println("returnedArray[arrayIndexY][arrayIndexX] = " + returnedArray[arrayIndexY][arrayIndexX]);
         }
 
@@ -962,8 +957,8 @@ class UserInterface implements KeyListener {
     }
 
     private void moveMapViewPort(String direction) {
-        Point newPicViewPosition = mapView.getViewPosition();
-        int viewMovement = spriteSheet.getSpriteSide() * getMapScale();
+        Point newPicViewPosition = MAP_VIEW.getViewPosition();
+        int viewMovement = SPRITESHEET.getSpriteSide() * getMapScale();
         switch (direction) {
             case "left":
                 if ((newPicViewPosition.x - viewMovement) >= -viewMovement) {
@@ -982,13 +977,13 @@ class UserInterface implements KeyListener {
                 newPicViewPosition.y += viewMovement;
                 break;
         }
-        mapView.setViewPosition(newPicViewPosition);
-        picScroller.setViewport(mapView);
+        MAP_VIEW.setViewPosition(newPicViewPosition);
+        picScroller.setViewport(MAP_VIEW);
     }
 
     private void moveSpriteViewPort(String direction) {
-        Point newPicViewPosition = spriteView.getViewPosition();
-        int viewMovement = spriteSheet.getSpriteSide() * getSpriteListScale();
+        Point newPicViewPosition = SPRITE_VIEW.getViewPosition();
+        int viewMovement = SPRITESHEET.getSpriteSide() * getSpriteListScale();
         switch (direction) {
             case "left":
                 if ((newPicViewPosition.x - viewMovement) >= -viewMovement) {
@@ -1007,15 +1002,15 @@ class UserInterface implements KeyListener {
                 newPicViewPosition.y += viewMovement;
                 break;
         }
-        spriteView.setViewPosition(newPicViewPosition);
-        spriteListScroller.setViewport(spriteView);
+        SPRITE_VIEW.setViewPosition(newPicViewPosition);
+        spriteListScroller.setViewport(SPRITE_VIEW);
     }
 
     MouseListener mouseListener = new MouseListener() {
         @Override
         public void mouseClicked(MouseEvent e) {
 //            runInfoWindo("newCanvasNeeded");
-            ta.setText("You have to create a new canvas. Create a new" +
+            TA.setText("You have to create a new canvas. Create a new" +
                     " canvas throught the \"Options\" menu.");
         }
 
@@ -1047,14 +1042,14 @@ class UserInterface implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (ta.isEditable()) {
+        if (TA.isEditable()) {
             int key = e.getKeyCode();
             //Next line is set in orderd to not allow X or Y to reach the end of the pointer BufferedImage.
             //If any coordinate reaches the end of the axis, it would generate the square to be drawn outside
             //of the buffered, since it is the top left coordinate the one which is taken in consideration.
-            int width = CANVAS.getPOINTER_LAYER().getWidth() - spriteSheet.getSpriteSide();
+            int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
             System.out.println("Key = " + key);
-            if (ta.hasFocus()) {
+            if (TA.hasFocus()) {
                 if (key == 27) {
                     //Key 27 = Esc
                     frame.requestFocus();
@@ -1164,8 +1159,8 @@ class UserInterface implements KeyListener {
         picLabel.addKeyListener(this);
         picLabel.setFocusable(true);
         picLabel.setVisible(true);
-        mapView.setView(picLabel);
-        picScroller.setViewportView(mapView);
+        MAP_VIEW.setView(picLabel);
+        picScroller.setViewportView(MAP_VIEW);
     }
 
     void enableUI() {
@@ -1178,7 +1173,7 @@ class UserInterface implements KeyListener {
         smallerSprite.setEnabled(true);
         smallerMap.setEnabled(true);
         newLayerB.setEnabled(true);
-        ta.setEditable(true);
+        TA.setEditable(true);
         loadSpriteSheet.removeMouseListener(mouseListener);
         layerMenu.removeMouseListener(mouseListener);
         exportCode.removeMouseListener(mouseListener);
@@ -1188,9 +1183,9 @@ class UserInterface implements KeyListener {
         smallerSprite.removeMouseListener(mouseListener);
         smallerMap.removeMouseListener(mouseListener);
         newLayerB.removeMouseListener(mouseListener);
-        ta.removeMouseListener(mouseListener);
-        ta.setCaretColor(Color.BLACK);
-        ta.setText("");
+        TA.removeMouseListener(mouseListener);
+        TA.setCaretColor(Color.BLACK);
+        TA.setText("");
         picScroller.requestFocus();
     }
 
@@ -1454,7 +1449,7 @@ class UserInterface implements KeyListener {
                 if (condition) {
                     subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
                     CANVAS.initializeCanvas(side, newCanvasSize);
-                    spriteSheet.setSpriteSide(side);
+                    SPRITESHEET.setSpriteSide(side);
                     movementIncrement = side;
                     initializePicLabel();
                 }

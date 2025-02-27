@@ -36,7 +36,7 @@ public class SpriteSheet {
     }
 
     /**
-     * Returns an int value showing the current sprite side size.
+     * Returns an int value showing the size of the current sprite side.
      *
      * @return {@code spriteSide}
      */

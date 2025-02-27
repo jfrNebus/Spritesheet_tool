@@ -36,6 +36,7 @@ public class Canvas {
      * Returns a string with all the data related to the current canvas. This data includes:
      * <ul>
      *    <li>The amount of sprites on each side of the canvas.</li>
+     *    <li>The size of canvas side and the side of sprite side.</li>
      *    <li>The absolute path where the spritesheet is located.</li>
      *    <li>The name of each layer in the canvas and the array of IDs for each layer.</li>
      * </ul>
@@ -83,8 +84,8 @@ public class Canvas {
     }
 
     /**
-     * Returns the BufferedImage resulted by mixing the value returned by {@link #getCanvas()}, with the
-     * frame and pointer layers.
+     * Returns the BufferedImage resulted by mixing the value returned by {@link #getCanvas()} with
+     * {@code POINTER_LAYER}.
      *
      * @return {@code BufferedImage}
      */
@@ -121,7 +122,7 @@ public class Canvas {
     }
 
     /**
-     * Returns the canvas side size.
+     * Returns the size of canvas side.
      *
      * @return {@code canvasSize}
      * */
@@ -241,7 +242,7 @@ public class Canvas {
     }
 
     /**
-     * Clears the bufferedImage of the specified layer.
+     * Clears the bufferedImage for the specified layer.
      *
      * @param layerToClear Name of the layer to clear
      */
@@ -251,7 +252,7 @@ public class Canvas {
     }
 
     /**
-     * Clears the bufferedImage of each layer.
+     * Clears the bufferedImage for each layer.
      */
     public void clearAllLayers() {
         for (Map.Entry<String, BufferedImage> entry : LAYERS.entrySet()) {
@@ -285,7 +286,7 @@ public class Canvas {
     }
 
     /**
-     * Checks if the {@code LAYERS} contains any value mapped for the specified key.
+     * Checks if {@code LAYERS} contains any value mapped for the specified key.
      *
      * @param layerName Name of the layer.
      *
