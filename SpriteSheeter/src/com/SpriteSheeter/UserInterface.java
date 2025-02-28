@@ -15,6 +15,14 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+
+
+//        To explain layout for frame > https://stackoverflow.com/questions/24840860/boxlayout-for-a-jframe
+
+
+
+
 class UserInterface implements KeyListener {
 
     //Boolean to be used to  toggle on/off the movement of the main map scroller by using directional keys.
@@ -86,19 +94,17 @@ class UserInterface implements KeyListener {
         int FRAME_WIDTH = (int)(SCREEN_WIDTH* 0.6);
         int FRAME_HEIGHT = (int)(SCREEN_HEIGHT * 0.6);
 
+        JMenuBar jMenuBar = getjMenuBar();
+
         frame = new JFrame("Spriter");
         frame.setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        To explain layout for frame > https://stackoverflow.com/questions/24840860/boxlayout-for-a-jframe
         frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
         frame.addKeyListener(this);
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
         frame.setLocationRelativeTo(null);
         frame.setIconImage(null);
-
-        JMenuBar jMenuBar = getjMenuBar();
-
         frame.setJMenuBar(jMenuBar);
 
         //>>>Inside frame
@@ -113,9 +119,9 @@ class UserInterface implements KeyListener {
 
         //Map Management
         JPanel picScrollerHolder = new JPanel();
+        picScrollerHolder.setLayout(new BoxLayout(picScrollerHolder, BoxLayout.Y_AXIS));
         picScrollerHolder.addKeyListener(this);
         picScrollerHolder.setFocusable(true);
-        picScrollerHolder.setLayout(new BoxLayout(picScrollerHolder, BoxLayout.Y_AXIS));
         picScrollerHolder.setMaximumSize(new Dimension(SCREEN_WIDTH - panel1Width, SCREEN_HEIGHT));
         picScrollerHolder.setPreferredSize(picScrollerHolder.getMaximumSize());
 
@@ -129,8 +135,8 @@ class UserInterface implements KeyListener {
         int panel2Height = (int) (SCREEN_HEIGHT * 0.90);
         JPanel panel2 = new JPanel();
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
-        panel2.setFocusable(true);
         panel2.addKeyListener(this);
+        panel2.setFocusable(true);
         panel2.setMaximumSize(new Dimension(panel2Width, panel2Height));
         panel2.setPreferredSize(panel2.getMaximumSize());
 
@@ -194,16 +200,17 @@ class UserInterface implements KeyListener {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                actualLayerLabel.setText("Actual layer: " +
+                String layerLabel = "Actual layer: " +
                         (actualCanvas.length() > maxActualCanvasLength ? actualCanvas.substring(0, 5) + "..." +
-                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas);
+                actualLayerLabel.setText(layerLabel);
             }
         });
 
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel
         JScrollPane layerScroller = new JScrollPane();
-        layerScroller.addKeyListener(this);
         layerScroller.setFocusable(true);
+        layerScroller.addKeyListener(this);
         layerScroller.setWheelScrollingEnabled(true);
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller
         layerSelector = new JPanel();
@@ -217,11 +224,9 @@ class UserInterface implements KeyListener {
         newLayerBPanel.setPreferredSize(newLayerBPanel.getMaximumSize());
 
         newLayerB = new JButton("New layer");
-        newLayerB.addKeyListener(this);
         newLayerB.setFocusable(true);
-        newLayerB.setMaximumSize(new Dimension(newLayerBPanel.getMaximumSize().width, (int) (newLayerBPanel.getMaximumSize().height)));
-        newLayerB.setPreferredSize(newLayerB.getMaximumSize());
         newLayerB.setEnabled(false);
+        newLayerB.addKeyListener(this);
         newLayerB.addMouseListener(mouseListener);
         newLayerB.addActionListener(e -> {
             String newLayerName = TA.getText().trim();
@@ -243,7 +248,8 @@ class UserInterface implements KeyListener {
                 runInfoWindo("invalidLayerHelp");
             }
         });
-
+        newLayerB.setMaximumSize(new Dimension(newLayerBPanel.getMaximumSize().width, (int) (newLayerBPanel.getMaximumSize().height)));
+        newLayerB.setPreferredSize(newLayerB.getMaximumSize());
 
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller
         layerScroller.setViewportView(layerSelector);
@@ -251,8 +257,8 @@ class UserInterface implements KeyListener {
         //>>> Inside panel1
         JPanel panel3 = new JPanel();
         panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
-        panel3.setFocusable(true);
         panel3.addKeyListener(this);
+        panel3.setFocusable(true);
         panel3.setMaximumSize(new Dimension(panel1Width, SCREEN_HEIGHT - panel2Height));
         panel3.setPreferredSize(panel3.getMaximumSize());
 
@@ -260,34 +266,31 @@ class UserInterface implements KeyListener {
         //>>> Inside panel1 > Inside panel3
         JPanel panel4 = new JPanel();
         panel4.setLayout(new BoxLayout(panel4, BoxLayout.Y_AXIS));
-        panel4.setFocusable(true);
         panel4.addKeyListener(this);
+        panel4.setFocusable(true);
         panel4.setMaximumSize(new Dimension((int) (SCREEN_WIDTH * 0.15), panel3.getMaximumSize().height));
 
         //>>> Inside panel1 > Inside panel3 > Inside panel4
         JPanel panel5 = new JPanel();
         panel5.setLayout(new BoxLayout(panel5, BoxLayout.X_AXIS));
-        panel5.setFocusable(true);
         panel5.addKeyListener(this);
+        panel5.setFocusable(true);
         panel5.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
-//        panel5.setMaximumSize(new Dimension(panel4.getSize().width, panel4.getSize().height / 2));
 
         JPanel panel6 = new JPanel();
         panel6.setLayout(new BoxLayout(panel6, BoxLayout.X_AXIS));
-        panel6.setFocusable(true);
         panel6.addKeyListener(this);
+        panel6.setFocusable(true);
         panel6.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
-//        panel6.setMaximumSize(new Dimension(panel4.getSize().width, panel4.getSize().height / 2));
 
         //>>> Inside panel1 > Inside panel3 > Inside panel5
         Dimension buttonsDimension = new Dimension(panel4.getMaximumSize().width / 2, panel4.getMaximumSize().height / 2);
 
         biggerSprite = new JButton("Sprite zoom +");
-        biggerSprite.setMaximumSize(buttonsDimension);
-        biggerSprite.setActionCommand("+");
-        biggerSprite.addKeyListener(this);
         biggerSprite.setFocusable(true);
         biggerSprite.setEnabled(false);
+        biggerSprite.setActionCommand("+");
+        biggerSprite.addKeyListener(this);
         biggerSprite.addMouseListener(mouseListener);
         biggerSprite.addActionListener(e -> {
             setSpriteListScale(++spriteListScale);
@@ -297,13 +300,13 @@ class UserInterface implements KeyListener {
             buildJLabelList(spritesPanel, spriteListScale);
             spritesPanel.updateUI();
         });
+        biggerSprite.setMaximumSize(buttonsDimension);
 
         smallerSprite = new JButton("Sprite zoom -");
-        smallerSprite.setMaximumSize(buttonsDimension);
-        smallerSprite.setActionCommand("-");
-        smallerSprite.addKeyListener(this);
         smallerSprite.setFocusable(true);
         smallerSprite.setEnabled(false);
+        smallerSprite.setActionCommand("-");
+        smallerSprite.addKeyListener(this);
         smallerSprite.addMouseListener(mouseListener);
         smallerSprite.addActionListener(e -> {
             if (spriteListScale > 1) {
@@ -315,6 +318,7 @@ class UserInterface implements KeyListener {
             buildJLabelList(spritesPanel, spriteListScale);
             spritesPanel.updateUI();
         });
+        smallerSprite.setMaximumSize(buttonsDimension);
 
         //>>> Inside panel1 > Inside panel3 > Inside panel5 > Inside panel6
         //The string used for the name of map buttons must include extra empty spaces in order
@@ -322,22 +326,20 @@ class UserInterface implements KeyListener {
         //must be equally long in order to be resized in the same way when the screen resolution
         //changes.
         biggerMap = new JButton(" Map zoom +  ");
-        biggerMap.setMaximumSize(buttonsDimension);
-        biggerMap.addKeyListener(this);
         biggerMap.setFocusable(true);
         biggerMap.setEnabled(false);
+        biggerMap.addKeyListener(this);
         biggerMap.addMouseListener(mouseListener);
         biggerMap.addActionListener(e -> {
             setMapScale(MAP_SCALE_RATIO);
-//                setLabelSize(picLabel, SPRITE_SHEET, getMapScale());
             updateMainCanvas(getMapScale());
         });
+        biggerMap.setMaximumSize(buttonsDimension);
 
         smallerMap = new JButton(" Map zoom -  ");
-        smallerMap.setMaximumSize(buttonsDimension);
-        smallerMap.addKeyListener(this);
         smallerMap.setFocusable(true);
         smallerMap.setEnabled(false);
+        smallerMap.addKeyListener(this);
         smallerMap.addMouseListener(mouseListener);
         smallerMap.addActionListener(e -> {
             if ((mapScale - MAP_SCALE_RATIO) > 0) {
@@ -346,15 +348,15 @@ class UserInterface implements KeyListener {
                 updateMainCanvas(getMapScale());
             }
         });
+        smallerMap.setMaximumSize(buttonsDimension);
 
         //>>> Inside panel1 > Inside panel3
         int panel7Width = panel3.getMaximumSize().width - panel4.getMaximumSize().width;
         int panel7Height = panel3.getMaximumSize().height;
         JPanel panel7 = new JPanel();
         panel7.setLayout(new BoxLayout(panel7, BoxLayout.Y_AXIS));
-        panel7.setFocusable(true);
-
         panel7.addKeyListener(this);
+        panel7.setFocusable(true);
         panel7.setMaximumSize(new Dimension(panel7Width, panel7Height));
 
         //>>> Inside panel1 > Inside panel3 > panel7
@@ -374,98 +376,105 @@ class UserInterface implements KeyListener {
         taScroller.setViewportView(TA);
 
         //Layout adding.
+
+        //>>> Inside frame
         frame.add(Box.createRigidArea(new Dimension(5, 0)));
         frame.add(panel1);
-        frame.add(Box.createRigidArea(new Dimension(5, 0)));
-        frame.add(picScrollerHolder);
-        frame.add(Box.createRigidArea(new Dimension(5, 0)));
 
-
-        //>>> Inside panel1
+        //>>> Inside frame > Inside panel1
         panel1.add(Box.createRigidArea(new Dimension(5, 0)));
         panel1.add(panel2);
-        panel1.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel1.add(panel3);
-        panel1.add(Box.createRigidArea(new Dimension(5, 0)));
 
-
-        //>>> Inside panel1 > Inside panel2
+        //>>> Inside frame > Inside panel1 > Inside panel2
         panel2.add(Box.createRigidArea(new Dimension(5, 0)));
         panel2.add(spritesFather);
-
-        //>>> Inside panel1 > Inside panel2 > Inside spritesFather
+        //>>> Inside frame > Inside panel1 > Inside panel2 > Inside spritesFather
         spritesFather.add(Box.createRigidArea(new Dimension(0, 5)));
         spritesFather.add(spriteLabelPanel);
-        //>>> Inside panel1 > Inside panel2 > Inside spritesFather > Inside spriteLabelPanel
+        //>>> Inside frame > Inside panel1 > Inside panel2 > Inside spritesFather > Inside spriteLabelPanel
         spriteLabelPanel.add(spriteLabel);
         spriteLabelPanel.add(Box.createHorizontalGlue());
-        //>>> Inside panel1 > Inside panel2 > Inside spritesFather
+        //>>> Inside frame > Inside panel1 > Inside panel2 > Inside spritesFather
         spritesFather.add(Box.createRigidArea(new Dimension(0, 5)));
         spritesFather.add(spriteListScroller);
         spriteListScroller.setViewportView(SPRITE_VIEW);
         spritesFather.add(Box.createRigidArea(new Dimension(0, 5)));
 
-        //>>> Inside panel1 > Inside panel2
+        //>>> Inside frame > Inside panel1 > Inside panel2
         panel2.add(Box.createRigidArea(new Dimension(5, 0)));
         panel2.add(layerPanel);
-        //>>> Inside panel1 > Inside panel2
+        //>>> Inside frame > Inside panel1 > Inside panel2
 
-        //>>> Inside panel1 > Inside panel2 > Inside layerPanel
+        //>>> Inside frame > Inside panel1 > Inside panel2 > Inside layerPanel
         layerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         layerPanel.add(layerLabelPanel);
-        //>>> Inside panel1 > Inside panel2 > layerPanel > layerLabelPanel
+        //>>> Inside frame > Inside panel1 > Inside panel2 > layerPanel > layerLabelPanel
         layerLabelPanel.add(actualLayerLabel);
         layerLabelPanel.add(Box.createHorizontalGlue());
-        //>>> Inside panel1 > Inside panel2 > layerPanel
+        //>>> Inside frame > Inside panel1 > Inside panel2 > layerPanel
         layerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         layerPanel.add(layerScroller);
         layerScroller.setViewportView(layerSelector);
         layerPanel.add(Box.createRigidArea(new Dimension(0, 3)));
         layerPanel.add(newLayerBPanel);
-        //>>> Inside panel1 > Inside panel2 > layerPanel > Inside newLayerBPanel
+        //>>> Inside frame > Inside panel1 > Inside panel2 > layerPanel > Inside newLayerBPanel
         newLayerBPanel.add(newLayerB);
-        //>>> Inside panel1 > Inside panel2 > layerPanel
+        //>>> Inside frame > Inside panel1 > Inside panel2 > layerPanel
         layerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
-        //>>> Inside panel1 > Inside panel2
+        //>>> Inside frame > Inside panel1 > Inside panel2
         panel2.add(Box.createRigidArea(new Dimension(5, 0)));
 
+        //>>> Inside frame > Inside panel1
+        panel1.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel1.add(panel3);
+        panel1.add(Box.createRigidArea(new Dimension(5, 0)));
 
-        //>>> Inside panel1 > Inside panel3
+        //>>> Inside frame > Inside panel1 > Inside panel3
         panel3.add(Box.createRigidArea(new Dimension(5, 0)));
         panel3.add(panel4);
         panel3.add(Box.createRigidArea(new Dimension(5, 0)));
         panel3.add(panel7);
         panel3.add(Box.createRigidArea(new Dimension(5, 0)));
 
-        //>>> Inside panel1 > Inside panel3 > Inside panel4
+        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4
         panel4.add(Box.createRigidArea(new Dimension(0, 5)));
         panel4.add(panel5);
-        panel4.add(Box.createRigidArea(new Dimension(0, 5)));
-        panel4.add(panel6);
-        panel4.add(Box.createRigidArea(new Dimension(0, 5)));
 
-        //>>> Inside panel1 > Inside panel3 > Inside panel4 > Inside panel5
+        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4 > Inside panel5
         panel5.add(biggerSprite);
         panel5.add(Box.createRigidArea(new Dimension(5, 0)));
         panel5.add(smallerSprite);
 
-        //>>> Inside panel1 > Inside panel3 > Inside panel4 > Inside panel5
+        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4
+        panel4.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel4.add(panel6);
+
+        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4 > Inside panel6
         panel6.add(biggerMap);
         panel6.add(Box.createRigidArea(new Dimension(5, 0)));
         panel6.add(smallerMap);
 
-        //>>> Inside panel1 > Inside panel3 > Inside panel7
+        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4
+        panel4.add(Box.createRigidArea(new Dimension(0, 5)));
+
+
+        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel7
         panel7.add(Box.createRigidArea(new Dimension(0, 5)));
         panel7.add(taScroller);
         panel7.add(Box.createRigidArea(new Dimension(0, 5)));
 
+        //>>> Inside frame
+        frame.add(Box.createRigidArea(new Dimension(5, 0)));
+        frame.add(picScrollerHolder);
 
-        //>>>frane > picScrollerHolder
+        //>>> Inside frame > picScrollerHolder
         picScrollerHolder.add(Box.createRigidArea(new Dimension(0, 5)));
         picScrollerHolder.add(picScroller);
         picScrollerHolder.add(Box.createRigidArea(new Dimension(0, 5)));
 
+        //>>> Inside frame
+        frame.add(Box.createRigidArea(new Dimension(5, 0)));
 
         //Setting everything visible
         frame.setVisible(true);
