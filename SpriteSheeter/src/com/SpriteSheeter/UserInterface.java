@@ -71,7 +71,7 @@ class UserInterface implements KeyListener {
     private JButton smallerMap;
     private JButton biggerSprite;
     private JButton smallerSprite;
-    private JMenu layerMenu;
+    private JMenu layerManagement;
     private JMenuItem loadSpriteSheet;
     private JMenuItem exportCode;
     private JMenuItem exportCanvas;
@@ -495,10 +495,19 @@ class UserInterface implements KeyListener {
     }
 
     private JMenuBar getjMenuBar() {
+
+        Vuelve a repasarlo todo.
+
         JMenuBar jMenuBar = new JMenuBar();
         JMenu options = new JMenu("Options");
 
-        //JMenuItem  generateCode
+        //----------
+        JMenuItem newCanvas = new JMenuItem("Create a new canvas           ");
+        newCanvas.addActionListener(e -> {
+            runSubMenu("requestNewCanvasValues");
+            enableUI();
+        });
+        //----------
         loadSpriteSheet = new JMenuItem("Load spritesheet");
         loadSpriteSheet.addActionListener(e -> {
             final JFileChooser fc = new JFileChooser();
@@ -527,27 +536,27 @@ class UserInterface implements KeyListener {
         });
         loadSpriteSheet.setEnabled(false);
         loadSpriteSheet.addMouseListener(mouseListener);
-
-        layerMenu = new JMenu("Layer management           ");
-        layerMenu.setEnabled(false);
-        layerMenu.addMouseListener(mouseListener);
-
+        //----------
+        layerManagement = new JMenu("Layer management           ");
+        layerManagement.setEnabled(false);
+        layerManagement.addMouseListener(mouseListener);
+        //------
         JMenu clearLayerMenu = new JMenu("Clear layer           ");
-        //JMenuItem clearlayer
+        //--
         JMenuItem clearLayer = new JMenuItem("Clear actual layer           ");
         clearLayer.addActionListener(e -> {
             CANVAS.clearLayer(actualCanvas);
             updateMainCanvas(getMapScale());
         });
-        //JMenuItem clearAlllayer
+        //--
         JMenuItem clearAllLayer = new JMenuItem("Clear all layers           ");
         clearAllLayer.addActionListener(e -> {
             CANVAS.clearAllLayers();
             updateMainCanvas(getMapScale());
         });
-
+        //------
         JMenu deleteLayerMenu = new JMenu("Delete layer           ");
-        //JMenuItem clearlayer
+        //--
         JMenuItem deleteLayer = new JMenuItem("Delete actual layer           ");
         deleteLayer.addActionListener(e -> {
             CANVAS.deleteLayer(actualCanvas);
@@ -557,14 +566,14 @@ class UserInterface implements KeyListener {
             }
             updateMainCanvas(getMapScale());
         });
-        //JMenuItem clearlayer
+        //--
         JMenuItem deleteAllLayerMenu = new JMenuItem("Delete all layers           ");
         deleteAllLayerMenu.addActionListener(e -> {
             deleteAllLayer();
         });
-
+        //----------
         JMenu importExport = new JMenu("Import / export code");
-        //JMenuItem generateCode
+        //------
         JMenuItem importCode = new JMenuItem("Import");
         importCode.addActionListener(e -> {
             final JFileChooser fc = new JFileChooser();
@@ -602,88 +611,62 @@ class UserInterface implements KeyListener {
                 }
             }
         });
-
-        Sigue comprobando por aquí
-
+        //------
         exportCode = new JMenuItem("Export");
         exportCode.addActionListener(e -> {
-            if (exportCode.isEnabled()) {
-                final JFileChooser fc = new JFileChooser();
-                String arrayPrinted = CANVAS.getExportString(SPRITESHEET.getPicturePath());
-                fc.setApproveButtonText("OK");
-                try {
-                    int returnVal = fc.showOpenDialog(exportCode);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        File notePad = new File(fc.getSelectedFile() + ".txt");
-                        FileWriter writer = new FileWriter(fc.getSelectedFile() + ".txt");
-                        writer.write(arrayPrinted);
-                        writer.close();
-                        System.out.println("Successfully wrote to the file.");
-                        System.out.println(fc.getSelectedFile().getAbsolutePath());
-                    } else {
-                        System.out.println("Open command cancelled by user.");
-                    }
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+            final JFileChooser fc = new JFileChooser();
+            fc.setApproveButtonText("OK");
+            try {
+                int returnVal = fc.showOpenDialog(exportCode);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File notePad = new File(fc.getSelectedFile() + ".txt");
+                    FileWriter writer = new FileWriter(notePad);
+                    String arrayPrinted = CANVAS.getExportString(SPRITESHEET.getPicturePath());
+                    writer.write(arrayPrinted);
+                    writer.close();
+                    System.out.println("Successfully wrote to the file.");
+                    System.out.println(fc.getSelectedFile().getAbsolutePath());
+                } else {
+                    System.out.println("Open command cancelled by user.");
                 }
-            } else {
-                System.out.println("Not enabled");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
         });
         exportCode.setEnabled(false);
         exportCode.addMouseListener(mouseListener);
-
-        //JMenuItem  exportCanvas
+        //----------
         exportCanvas = new JMenuItem("Export canvas           ");
         exportCanvas.addActionListener(e -> {
-            if (exportCanvas.isEnabled()) {
-                runSubMenu("exportCanvas");
-            } else {
-                System.out.println("Not enabled");
-            }
+            runSubMenu("exportCanvas");
         });
         exportCanvas.setEnabled(false);
         exportCanvas.addMouseListener(mouseListener);
-
-        //JMenuItem newCanvas
-        JMenuItem newCanvas = new JMenuItem("Create a new canvas           ");
-        newCanvas.addActionListener(e -> {
-            runSubMenu("requestNewCanvasValues");
-            enableUI();
-        });
-
-        //JMenuItem help
+        //----------
         JMenuItem help = new JMenuItem("Help           ");
         help.addActionListener(e -> {
             runInfoWindo("help");
         });
 
-
-        clearLayerMenu.add(clearLayer);
-        clearLayerMenu.add(clearAllLayer);
-
-        deleteLayerMenu.add(deleteLayer);
-        deleteLayerMenu.add(deleteAllLayerMenu);
-
-        layerMenu.add(clearLayerMenu);
-        layerMenu.add(deleteLayerMenu);
-
-        importExport.add(importCode);
-        importExport.add(exportCode);
-
+        jMenuBar.add(options);
         options.add(newCanvas);
         options.add(loadSpriteSheet);
-        options.add(layerMenu);
+        options.add(layerManagement);
+        layerManagement.add(clearLayerMenu);
+        clearLayerMenu.add(clearLayer);
+        clearLayerMenu.add(clearAllLayer);
+        layerManagement.add(deleteLayerMenu);
+        deleteLayerMenu.add(deleteLayer);
+        deleteLayerMenu.add(deleteAllLayerMenu);
         options.add(importExport);
+        importExport.add(importCode);
+        importExport.add(exportCode);
         options.add(exportCanvas);
         options.add(help);
 
-
+        jMenuBar.setVisible(true);
         options.setVisible(true);
 
-        jMenuBar.setVisible(true);
-
-        jMenuBar.add(options);
         return jMenuBar;
     }
 
@@ -1165,7 +1148,7 @@ class UserInterface implements KeyListener {
 
     void enableUI() {
         loadSpriteSheet.setEnabled(true);
-        layerMenu.setEnabled(true);
+        layerManagement.setEnabled(true);
         exportCode.setEnabled(true);
         exportCanvas.setEnabled(true);
         biggerSprite.setEnabled(true);
@@ -1175,7 +1158,7 @@ class UserInterface implements KeyListener {
         newLayerB.setEnabled(true);
         TA.setEditable(true);
         loadSpriteSheet.removeMouseListener(mouseListener);
-        layerMenu.removeMouseListener(mouseListener);
+        layerManagement.removeMouseListener(mouseListener);
         exportCode.removeMouseListener(mouseListener);
         exportCanvas.removeMouseListener(mouseListener);
         biggerSprite.removeMouseListener(mouseListener);
