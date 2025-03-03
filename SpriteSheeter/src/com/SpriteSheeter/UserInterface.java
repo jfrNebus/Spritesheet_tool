@@ -16,11 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
-
 //        To explain layout for frame > https://stackoverflow.com/questions/24840860/boxlayout-for-a-jframe
-
-
 
 
 class UserInterface implements KeyListener {
@@ -84,15 +80,15 @@ class UserInterface implements KeyListener {
 
     /**
      * Builds up the whole user interface.
-     * */
+     */
     public void setUpEverything() {
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        final int SCREEN_HEIGHT = (int)screenSize.getHeight();
-        final int SCREEN_WIDTH = (int)screenSize.getWidth();
+        final int SCREEN_HEIGHT = (int) screenSize.getHeight();
+        final int SCREEN_WIDTH = (int) screenSize.getWidth();
 
-        int FRAME_WIDTH = (int)(SCREEN_WIDTH* 0.6);
-        int FRAME_HEIGHT = (int)(SCREEN_HEIGHT * 0.6);
+        int FRAME_WIDTH = (int) (SCREEN_WIDTH * 0.6);
+        int FRAME_HEIGHT = (int) (SCREEN_HEIGHT * 0.6);
 
         JMenuBar jMenuBar = getjMenuBar();
 
@@ -479,8 +475,9 @@ class UserInterface implements KeyListener {
         //Setting everything visible
         frame.setVisible(true);
         panel1.setVisible(true);
-        panel1.setVisible(true);
-        panel3.setVisible(true);
+        picScrollerHolder.setVisible(true);
+        picScroller.setVisible(true);
+        panel2.setVisible(true);
         spritesFather.setVisible(true);
         spriteLabel.setVisible(true);
         spriteListScroller.setVisible(true);
@@ -489,13 +486,12 @@ class UserInterface implements KeyListener {
         layerScroller.setVisible(true);
         layerSelector.setVisible(true);
         newLayerB.setVisible(true);
-        picScrollerHolder.setVisible(true);
-        picScroller.setVisible(true);
+        panel3.setVisible(true);
         biggerSprite.setVisible(true);
         smallerSprite.setVisible(true);
-        TA.setVisible(true);
         biggerMap.setVisible(true);
         smallerMap.setVisible(true);
+        TA.setVisible(true);
     }
 
     private JMenuBar getjMenuBar() {
@@ -505,32 +501,28 @@ class UserInterface implements KeyListener {
         //JMenuItem  generateCode
         loadSpriteSheet = new JMenuItem("Load spritesheet");
         loadSpriteSheet.addActionListener(e -> {
-            if (loadSpriteSheet.isEnabled()) {
-                final JFileChooser fc = new JFileChooser();
-                int returnVal = fc.showOpenDialog(loadSpriteSheet);
-                if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
-                    String newPicturePath = fc.getSelectedFile().getAbsolutePath();
-                    boolean pictureFile;
-                    try {
-                        pictureFile = Files.probeContentType(new File(newPicturePath).toPath()).startsWith("image");
-                    } catch (IOException ex) {
-                        pictureFile = false;
-                    }
-                    if (pictureFile) {
-                        if (spritesPanel.getComponentCount() > 0) {
-                            spritesPanel.removeAll();
-                        }
-                        SPRITESHEET.setPicturePath(newPicturePath);
-                        SPRITESHEET.loadSpriteSheet();
-                        buildJLabelList(spritesPanel, spriteListScale);
-                        spritesPanel.updateUI();
-                    } else if (!pictureFile) {
-                        runInfoWindo("invalidPath");
-                        loadSpriteSheet.doClick();
-                    }
+            final JFileChooser fc = new JFileChooser();
+            int returnVal = fc.showOpenDialog(loadSpriteSheet);
+            if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
+                String newPicturePath = fc.getSelectedFile().getAbsolutePath();
+                boolean pictureFile;
+                try {
+                    pictureFile = Files.probeContentType(new File(newPicturePath).toPath()).startsWith("image");
+                } catch (IOException ex) {
+                    pictureFile = false;
                 }
-            } else {
-                System.out.println("Not enabled");
+                if (!pictureFile) {
+                    runInfoWindo("invalidPath");
+                    loadSpriteSheet.doClick();
+                } else {
+                    if (spritesPanel.getComponentCount() > 0) {
+                        spritesPanel.removeAll();
+                    }
+                    SPRITESHEET.setPicturePath(newPicturePath);
+                    SPRITESHEET.loadSpriteSheet();
+                    buildJLabelList(spritesPanel, spriteListScale);
+                    spritesPanel.updateUI();
+                }
             }
         });
         loadSpriteSheet.setEnabled(false);
@@ -539,18 +531,14 @@ class UserInterface implements KeyListener {
         layerMenu = new JMenu("Layer management           ");
         layerMenu.setEnabled(false);
         layerMenu.addMouseListener(mouseListener);
+
         JMenu clearLayerMenu = new JMenu("Clear layer           ");
-        JMenu deleteLayerMenu = new JMenu("Delete layer           ");
-        JMenu importExport = new JMenu("Import / export code");
-
-
         //JMenuItem clearlayer
         JMenuItem clearLayer = new JMenuItem("Clear actual layer           ");
         clearLayer.addActionListener(e -> {
             CANVAS.clearLayer(actualCanvas);
             updateMainCanvas(getMapScale());
         });
-
         //JMenuItem clearAlllayer
         JMenuItem clearAllLayer = new JMenuItem("Clear all layers           ");
         clearAllLayer.addActionListener(e -> {
@@ -558,6 +546,7 @@ class UserInterface implements KeyListener {
             updateMainCanvas(getMapScale());
         });
 
+        JMenu deleteLayerMenu = new JMenu("Delete layer           ");
         //JMenuItem clearlayer
         JMenuItem deleteLayer = new JMenuItem("Delete actual layer           ");
         deleteLayer.addActionListener(e -> {
@@ -568,13 +557,13 @@ class UserInterface implements KeyListener {
             }
             updateMainCanvas(getMapScale());
         });
-
         //JMenuItem clearlayer
         JMenuItem deleteAllLayerMenu = new JMenuItem("Delete all layers           ");
         deleteAllLayerMenu.addActionListener(e -> {
             deleteAllLayer();
         });
 
+        JMenu importExport = new JMenu("Import / export code");
         //JMenuItem generateCode
         JMenuItem importCode = new JMenuItem("Import");
         importCode.addActionListener(e -> {
@@ -590,9 +579,10 @@ class UserInterface implements KeyListener {
                         sb.append("\n");
                     }
                     Map<String, int[]> loadedMap = getImportedData(sb.toString());
+                    System.out.println("loadedMap.toString() = " + loadedMap.toString());
                     enableUI();
                     initializePicLabel();
-                    if (loadedMap != null) {
+                    if (!loadedMap.isEmpty()) {
                         deleteAllLayer();
                         resetLayerSelector(loadedMap);
                         spritesPanel.removeAll();
@@ -608,9 +598,12 @@ class UserInterface implements KeyListener {
                 } catch (IOException ex) {
                     runInfoWindo("invalidPath");
                     returnVal = fc.showOpenDialog(importCode);
+                    System.out.println("returnVal = " + returnVal);
                 }
             }
         });
+
+        Sigue comprobando por aquí
 
         exportCode = new JMenuItem("Export");
         exportCode.addActionListener(e -> {
