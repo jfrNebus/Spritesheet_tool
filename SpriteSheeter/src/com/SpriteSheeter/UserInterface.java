@@ -605,7 +605,8 @@ class UserInterface implements KeyListener {
                     }
                 } catch (IOException | NullPointerException ex) {
 
-                    Maquínatelo para generar diferentes infos en función del error que de
+
+//                    Maquínatelo para generar diferentes infos en función del error que de
 
                     System.out.println("ex = " + ex);
                     subWindow.runInfoWindo("invalidPath");

@@ -21,7 +21,7 @@ public class SubWindow {
                 break;
             case "invalidLayerHelp":
                 messageS = "The layer name must be an ASCII string, or a" +
-                        "\ncombination of several ASCII strings separated\nby a whitespace character.\n" +
+                        " combination of several ASCII strings separated by a whitespace character. " +
                         "Layer names cannot be duplicated.";
                 break;
             case "invalidPath":
@@ -64,6 +64,8 @@ public class SubWindow {
             message.setEditable(false);
             message.setBorder(null);
             message.setCaretColor(translucentColor);
+            message.setLineWrap(true);
+            message.setWrapStyleWord(true);
             messageObject = message;
         } else {
             JTextField message = new JTextField();
