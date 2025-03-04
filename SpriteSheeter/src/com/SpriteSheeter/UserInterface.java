@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
 class UserInterface implements KeyListener {
 
     //Boolean to be used to  toggle on/off the movement of the main map scroller by using directional keys.
-    boolean toggleMapMovement = false;
-    boolean toggleSpriteMovement = false;
+    private boolean toggleMapMovement = false;
+    private boolean toggleSpriteMovement = false;
     private boolean fillingBrush = false;
 
     //The scale ratio for the main map pic. This will modify the size for the main map to be displayed,
@@ -48,9 +48,9 @@ class UserInterface implements KeyListener {
     private int x = 0;
     private int y = 0;
     private int id = 0;
-    int maxActualCanvasLength = 17;
     //The amount of pixels
     private int movementIncrement;
+    private final int maxActualCanvasLength = 17;
     //Screen size
     private final int MAP_SCALE_RATIO = 1;
     private String actualCanvas = "noLayer";
@@ -76,6 +76,7 @@ class UserInterface implements KeyListener {
     private JMenuItem exportCode;
     private JMenuItem exportCanvas;
     private BufferedImage previousSprite;
+    private final SubWindow subWindow = new SubWindow();
 
 
     /**
@@ -241,7 +242,7 @@ class UserInterface implements KeyListener {
                         (actualCanvas.length() > maxActualCanvasLength ? actualCanvas.substring(0, 5) + "..." +
                                 actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
             } else {
-                runInfoWindo("invalidLayerHelp");
+                subWindow.runInfoWindo("invalidLayerHelp");
             }
         });
         newLayerB.setMaximumSize(new Dimension(newLayerBPanel.getMaximumSize().width, (int) (newLayerBPanel.getMaximumSize().height)));
@@ -328,7 +329,7 @@ class UserInterface implements KeyListener {
         biggerMap.addMouseListener(mouseListener);
         biggerMap.addActionListener(e -> {
             setMapScale(MAP_SCALE_RATIO);
-            updateMainCanvas(getMapScale());
+            updateMainCanvas(mapScale);
         });
         biggerMap.setMaximumSize(buttonsDimension);
 
@@ -340,8 +341,7 @@ class UserInterface implements KeyListener {
         smallerMap.addActionListener(e -> {
             if ((mapScale - MAP_SCALE_RATIO) > 0) {
                 setMapScale(-MAP_SCALE_RATIO);
-//                    setLabelSize(picLabel, SPRITE_SHEET, getMapScale());
-                updateMainCanvas(getMapScale());
+                updateMainCanvas(mapScale);
             }
         });
         smallerMap.setMaximumSize(buttonsDimension);
@@ -495,9 +495,6 @@ class UserInterface implements KeyListener {
     }
 
     private JMenuBar getjMenuBar() {
-
-        Vuelve a repasarlo todo.
-
         JMenuBar jMenuBar = new JMenuBar();
         JMenu options = new JMenu("Options");
 
@@ -517,13 +514,12 @@ class UserInterface implements KeyListener {
                 boolean pictureFile;
                 try {
                     pictureFile = Files.probeContentType(new File(newPicturePath).toPath()).startsWith("image");
-                } catch (IOException ex) {
+                } catch (IOException | NullPointerException | SecurityException ex) {
+                    subWindow.runInfoWindo("invalidPath");
+                    loadSpriteSheet.doClick();
                     pictureFile = false;
                 }
-                if (!pictureFile) {
-                    runInfoWindo("invalidPath");
-                    loadSpriteSheet.doClick();
-                } else {
+                if (pictureFile) {
                     if (spritesPanel.getComponentCount() > 0) {
                         spritesPanel.removeAll();
                     }
@@ -546,13 +542,13 @@ class UserInterface implements KeyListener {
         JMenuItem clearLayer = new JMenuItem("Clear actual layer           ");
         clearLayer.addActionListener(e -> {
             CANVAS.clearLayer(actualCanvas);
-            updateMainCanvas(getMapScale());
+            updateMainCanvas(mapScale);
         });
         //--
         JMenuItem clearAllLayer = new JMenuItem("Clear all layers           ");
         clearAllLayer.addActionListener(e -> {
             CANVAS.clearAllLayers();
-            updateMainCanvas(getMapScale());
+            updateMainCanvas(mapScale);
         });
         //------
         JMenu deleteLayerMenu = new JMenu("Delete layer           ");
@@ -564,7 +560,7 @@ class UserInterface implements KeyListener {
             for (Map.Entry<String, BufferedImage> layers : CANVAS.getLAYERS().entrySet()) {
                 addNewLayerButtons(layers.getKey());
             }
-            updateMainCanvas(getMapScale());
+            updateMainCanvas(mapScale);
         });
         //--
         JMenuItem deleteAllLayerMenu = new JMenuItem("Delete all layers           ");
@@ -580,33 +576,40 @@ class UserInterface implements KeyListener {
             int returnVal = fc.showOpenDialog(importCode);
             if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
                 try {
-                    File notePad = new File(fc.getSelectedFile().getAbsolutePath());
-                    Scanner scanner = new Scanner(notePad);
-                    StringBuilder sb = new StringBuilder();
-                    while (scanner.hasNextLine()) {
-                        sb.append(scanner.nextLine());
-                        sb.append("\n");
+                    boolean pictureFile = Files.probeContentType(fc.getSelectedFile().toPath()).startsWith("text");
+                    if (pictureFile) {
+                        File notePad = new File(fc.getSelectedFile().getAbsolutePath());
+                        Scanner scanner = new Scanner(notePad);
+                        StringBuilder sb = new StringBuilder();
+                        while (scanner.hasNextLine()) {
+                            sb.append(scanner.nextLine());
+                            sb.append("\n");
+                        }
+                        Map<String, int[]> loadedMap = getImportedData(sb.toString());
+                        System.out.println("loadedMap.toString() = " + loadedMap.toString());
+                        enableUI();
+                        initializePicLabel();
+                        if (!loadedMap.isEmpty()) {
+                            deleteAllLayer();
+                            resetLayerSelector(loadedMap);
+                            spritesPanel.removeAll();
+                            SPRITESHEET.setPicturePath(getLoadedPath(sb.toString()));
+                            SPRITESHEET.loadSpriteSheet();
+                            buildJLabelList(spritesPanel, spriteListScale);
+                            CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASMAP());
+                            updateMainCanvas(mapScale);
+                        } else {
+                            subWindow.runInfoWindo("invalidFile");
+                            System.out.println("Operation Failed.");
+                        }
                     }
-                    Map<String, int[]> loadedMap = getImportedData(sb.toString());
-                    System.out.println("loadedMap.toString() = " + loadedMap.toString());
-                    enableUI();
-                    initializePicLabel();
-                    if (!loadedMap.isEmpty()) {
-                        deleteAllLayer();
-                        resetLayerSelector(loadedMap);
-                        spritesPanel.removeAll();
-                        SPRITESHEET.setPicturePath(getLoadedPath(sb.toString()));
-                        SPRITESHEET.loadSpriteSheet();
-                        buildJLabelList(spritesPanel, spriteListScale);
-                        CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASMAP());
-                        updateMainCanvas(getMapScale());
-                    } else {
-                        runInfoWindo("invalidFile");
-                        System.out.println("Operation Failed.");
-                    }
-                } catch (IOException ex) {
-                    runInfoWindo("invalidPath");
-                    returnVal = fc.showOpenDialog(importCode);
+                } catch (IOException | NullPointerException ex) {
+
+                    Maquínatelo para generar diferentes infos en función del error que de
+
+                    System.out.println("ex = " + ex);
+                    subWindow.runInfoWindo("invalidPath");
+                    importCode.doClick();
                     System.out.println("returnVal = " + returnVal);
                 }
             }
@@ -645,7 +648,7 @@ class UserInterface implements KeyListener {
         //----------
         JMenuItem help = new JMenuItem("Help           ");
         help.addActionListener(e -> {
-            runInfoWindo("help");
+            subWindow.runInfoWindo("help");
         });
 
         jMenuBar.add(options);
@@ -670,16 +673,8 @@ class UserInterface implements KeyListener {
         return jMenuBar;
     }
 
-    private int getMapScale() {
-        return mapScale;
-    }
-
     private void setMapScale(int movementIncrement) {
         this.mapScale += movementIncrement;
-    }
-
-    private int getSpriteListScale() {
-        return spriteListScale;
     }
 
     private void setSpriteListScale(int spriteListScale) {
@@ -688,6 +683,9 @@ class UserInterface implements KeyListener {
 
     private Map<String, int[]> getImportedData(String loadedData) {
         //There's documentation about  this method already done.
+        boolean keep = true;
+        Map<String, int[]> layers = new LinkedHashMap<>();
+
         Matcher matcher = Pattern.compile("(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)").matcher(loadedData);
         int amountOfSprites = 0;
         while (matcher.find()) {
@@ -695,58 +693,72 @@ class UserInterface implements KeyListener {
         }
         matcher.reset();
 
-        if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
-                (SPRITESHEET.getSpriteSide() == 0)) {
-            int side = 0;
-            String firstRegex = "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)";
-            matcher.usePattern(Pattern.compile(firstRegex, Pattern.MULTILINE));
-            Map<String, int[]> layers = new LinkedHashMap<>();
-            while (matcher.find()) {
-                side = Integer.parseInt(matcher.group());
-            }
-            matcher.reset();
-
-            int newCanvasSize = 0;
-            String secondRegex = "(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)";
-            matcher.usePattern(Pattern.compile(secondRegex, Pattern.MULTILINE));
-            while (matcher.find()) {
-                newCanvasSize = Integer.parseInt(matcher.group());
-            }
-            matcher.reset();
-
-            CANVAS.initializeCanvas(side, newCanvasSize);
-            SPRITESHEET.setSpriteSide(side);
-            movementIncrement = side;
+        if (amountOfSprites == 0) {
+            keep = false;
         }
 
-        String thirdRegex = "(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])";
-        matcher.usePattern(Pattern.compile(thirdRegex, Pattern.MULTILINE));
-        Map<String, int[]> layers = new LinkedHashMap<>();
-        while (matcher.find()) {
-            layers.put(matcher.group(), null);
-        }
-        matcher.reset();
-
-        for (Map.Entry<String, int[]> numbersMap : layers.entrySet()) {
-            String fourthRegex = "(?<=};\\n//" + numbersMap.getKey() + ":)((\\d)+\\s)+(?=\\n)";
-            matcher.usePattern(Pattern.compile(fourthRegex, Pattern.MULTILINE));
-            String numbersResult = "";
-            while (matcher.find()) {
-                numbersResult = matcher.group();
-            }
-            String[] justNumbers = numbersResult.split("\\s");
-            if (amountOfSprites == justNumbers.length) {
-                int[] numbers = new int[justNumbers.length];
-                for (int i = 0; i < justNumbers.length; i++) {
-                    numbers[i] = Integer.parseInt(justNumbers[i]);
+        if (keep) {
+            if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
+                    (SPRITESHEET.getSpriteSide() == 0)) {
+                int side = 0;
+                String firstRegex = "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)";
+                matcher.usePattern(Pattern.compile(firstRegex, Pattern.MULTILINE));
+//                Map<String, int[]> layers = new LinkedHashMap<>();
+                while (matcher.find()) {
+                    side = Integer.parseInt(matcher.group());
                 }
-                numbersMap.setValue(numbers);
                 matcher.reset();
-            } else {
-                System.out.println("Way to break the whole operation");
-                layers = null;
-                break;
+
+                int newCanvasSize = 0;
+                String secondRegex = "(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)";
+                matcher.usePattern(Pattern.compile(secondRegex, Pattern.MULTILINE));
+                while (matcher.find()) {
+                    newCanvasSize = Integer.parseInt(matcher.group());
+                }
+                matcher.reset();
+
+                if (side != 0 && newCanvasSize != 0) {
+                    CANVAS.initializeCanvas(side, newCanvasSize);
+                    SPRITESHEET.setSpriteSide(side);
+                    movementIncrement = side;
+                } else {
+                    keep = false;
+                }
             }
+        } else {
+            return null;
+        }
+
+        if (keep) {
+            String thirdRegex = "(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])";
+            matcher.usePattern(Pattern.compile(thirdRegex, Pattern.MULTILINE));
+            while (matcher.find()) {
+                layers.put(matcher.group(), null);
+            }
+            matcher.reset();
+            for (Map.Entry<String, int[]> numbersMap : layers.entrySet()) {
+                String fourthRegex = "(?<=};\\n//" + numbersMap.getKey() + ":)((\\d)+\\s)+(?=\\n)";
+                matcher.usePattern(Pattern.compile(fourthRegex, Pattern.MULTILINE));
+                String numbersResult = "";
+                while (matcher.find()) {
+                    numbersResult = matcher.group();
+                }
+                String[] justNumbers = numbersResult.split("\\s");
+                if (amountOfSprites == justNumbers.length) {
+                    int[] numbers = new int[justNumbers.length];
+                    for (int i = 0; i < justNumbers.length; i++) {
+                        numbers[i] = Integer.parseInt(justNumbers[i]);
+                    }
+                    numbersMap.setValue(numbers);
+                    matcher.reset();
+                } else {
+                    System.out.println("Way to break the whole operation");
+                    layers = null;
+                    break;
+                }
+            }
+        } else {
+            return null;
         }
         return layers;
     }
@@ -766,7 +778,7 @@ class UserInterface implements KeyListener {
         CANVAS.deleteAllLayers();
         layerSelector.removeAll();
         actualCanvas = "noLayer";
-        updateMainCanvas(getMapScale());
+        updateMainCanvas(mapScale);
     }
 
     private void resetLayerSelector(Map<String, int[]> newlayerSelector) {
@@ -835,7 +847,7 @@ class UserInterface implements KeyListener {
                         int[][] returnedArray = CANVAS.getID_ARRAY_MAP(actualCanvas);
                         returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASMAP().get(innerId - 1).getId();
                         id = innerId;
-                        updateMainCanvas(getMapScale());
+                        updateMainCanvas(mapScale);
                     } else {
                         TA.setText("No layer selected.");
                     }
@@ -856,12 +868,10 @@ class UserInterface implements KeyListener {
         layerButton.addKeyListener(this);
         layerButton.setFocusable(false);
 
-        String finalLayerName = layerName;
-
         layerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                actualCanvas = finalLayerName;
+                actualCanvas = layerName;
                 actualLayerLabel.setText("Actual layer: " +
                         (actualCanvas.length() > maxActualCanvasLength ? actualCanvas.substring(0, 5) + "..." +
                                 actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
@@ -875,11 +885,11 @@ class UserInterface implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (radioButton.isSelected()) {
-                    CANVAS.hideLayer(finalLayerName);
+                    CANVAS.hideLayer(layerName);
                 } else {
-                    CANVAS.showLayer(finalLayerName);
+                    CANVAS.showLayer(layerName);
                 }
-                updateMainCanvas(getMapScale());
+                updateMainCanvas(mapScale);
             }
         });
 
@@ -936,12 +946,12 @@ class UserInterface implements KeyListener {
         pointerGraphics.drawRect(x + 1, y + 1, 15, 15);
         pointerGraphics.dispose();
 
-        updateMainCanvas(getMapScale());
+        updateMainCanvas(mapScale);
     }
 
     private void moveMapViewPort(String direction) {
         Point newPicViewPosition = MAP_VIEW.getViewPosition();
-        int viewMovement = SPRITESHEET.getSpriteSide() * getMapScale();
+        int viewMovement = SPRITESHEET.getSpriteSide() * mapScale;
         switch (direction) {
             case "left":
                 if ((newPicViewPosition.x - viewMovement) >= -viewMovement) {
@@ -966,7 +976,7 @@ class UserInterface implements KeyListener {
 
     private void moveSpriteViewPort(String direction) {
         Point newPicViewPosition = SPRITE_VIEW.getViewPosition();
-        int viewMovement = SPRITESHEET.getSpriteSide() * getSpriteListScale();
+        int viewMovement = SPRITESHEET.getSpriteSide() * spriteListScale;
         switch (direction) {
             case "left":
                 if ((newPicViewPosition.x - viewMovement) >= -viewMovement) {
@@ -989,10 +999,9 @@ class UserInterface implements KeyListener {
         spriteListScroller.setViewport(SPRITE_VIEW);
     }
 
-    MouseListener mouseListener = new MouseListener() {
+    private final MouseListener mouseListener = new MouseListener() {
         @Override
         public void mouseClicked(MouseEvent e) {
-//            runInfoWindo("newCanvasNeeded");
             TA.setText("You have to create a new canvas. Create a new" +
                     " canvas throught the \"Options\" menu.");
         }
@@ -1117,7 +1126,7 @@ class UserInterface implements KeyListener {
                     }
                     pointerGraphics.drawRect(x + 1, y + 1, 15, 15);
                     pointerGraphics.dispose();
-                    updateMainCanvas(getMapScale());
+                    updateMainCanvas(mapScale);
                 }
             }
         }
@@ -1137,7 +1146,7 @@ class UserInterface implements KeyListener {
         }
     }
 
-    void initializePicLabel() {
+    private void initializePicLabel() {
         picLabel = new JLabel(new ImageIcon(CANVAS.getFramedCanvas()));
         picLabel.addKeyListener(this);
         picLabel.setFocusable(true);
@@ -1146,7 +1155,7 @@ class UserInterface implements KeyListener {
         picScroller.setViewportView(MAP_VIEW);
     }
 
-    void enableUI() {
+    private void enableUI() {
         loadSpriteSheet.setEnabled(true);
         layerManagement.setEnabled(true);
         exportCode.setEnabled(true);
@@ -1398,13 +1407,13 @@ class UserInterface implements KeyListener {
                                     "png", new File(firstTFS + ".png"));
                             subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
                         } catch (IOException ex) {
-                            runInfoWindo("invalidPath");
+                            subWindow.runInfoWindo("invalidPath");
                         }
                     } else {
-                        runInfoWindo("invalidscale");
+                        subWindow.runInfoWindo("invalidscale");
                     }
                 } else {
-                    runInfoWindo("empty");
+                    subWindow.runInfoWindo("empty");
                 }
             } else if (menuName.equals("requestNewCanvasValues")) {
                 boolean notEmpty = (!firstTFS.isEmpty()) || (!secondTFS.isEmpty());
@@ -1421,11 +1430,11 @@ class UserInterface implements KeyListener {
                     } else {
                         condition = false;
                         if (!firstNumber & !secondNumber) {
-                            runInfoWindo("sheetAndSprite");
+                            subWindow.runInfoWindo("sheetAndSprite");
                         } else if (!firstNumber) {
-                            runInfoWindo("spriteSideFail");
+                            subWindow.runInfoWindo("spriteSideFail");
                         } else {
-                            runInfoWindo("spriteSheetFail");
+                            subWindow.runInfoWindo("spriteSheetFail");
                         }
                     }
                 }
