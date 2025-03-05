@@ -16,13 +16,22 @@ public class SubWindow {
             case "newCanvasNeeded":
                 messageS = "You need to create a new canvas first.";
                 break;
-            case "invalidFile":
+            case "corruptedFile":
                 messageS = "The file loaded is corrupted.";
                 break;
             case "invalidLayerHelp":
                 messageS = "The layer name must be an ASCII string, or a" +
                         " combination of several ASCII strings separated by a whitespace character. " +
                         "Layer names cannot be duplicated.";
+                break;
+            case "invalidImage":
+                messageS = "The file must be an image file.";
+                break;
+            case "unsupportedImage":
+                messageS = "Unsupported image format.";
+                break;
+            case "invalidText":
+                messageS = "The uploaded file must be a .txt file.";
                 break;
             case "invalidPath":
                 messageS = "The path to the file is invalid.";

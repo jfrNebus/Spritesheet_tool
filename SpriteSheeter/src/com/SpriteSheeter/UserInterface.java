@@ -511,13 +511,13 @@ class UserInterface implements KeyListener {
             int returnVal = fc.showOpenDialog(loadSpriteSheet);
             if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
                 String newPicturePath = fc.getSelectedFile().getAbsolutePath();
-                boolean pictureFile;
+                boolean pictureFile = true;
                 try {
                     pictureFile = Files.probeContentType(new File(newPicturePath).toPath()).startsWith("image");
                 } catch (IOException | NullPointerException | SecurityException ex) {
+                    System.out.println("ex = " + ex);
                     subWindow.runInfoWindo("invalidPath");
                     loadSpriteSheet.doClick();
-                    pictureFile = false;
                 }
                 if (pictureFile) {
                     if (spritesPanel.getComponentCount() > 0) {
@@ -527,6 +527,9 @@ class UserInterface implements KeyListener {
                     SPRITESHEET.loadSpriteSheet();
                     buildJLabelList(spritesPanel, spriteListScale);
                     spritesPanel.updateUI();
+                } else {
+                    subWindow.runInfoWindo("invalidImage");
+                    loadSpriteSheet.doClick();
                 }
             }
         });
@@ -586,10 +589,9 @@ class UserInterface implements KeyListener {
                             sb.append("\n");
                         }
                         Map<String, int[]> loadedMap = getImportedData(sb.toString());
-                        System.out.println("loadedMap.toString() = " + loadedMap.toString());
-                        enableUI();
-                        initializePicLabel();
-                        if (!loadedMap.isEmpty()) {
+                        if (loadedMap != null) {
+                            enableUI();
+                            initializePicLabel();
                             deleteAllLayer();
                             resetLayerSelector(loadedMap);
                             spritesPanel.removeAll();
@@ -599,19 +601,17 @@ class UserInterface implements KeyListener {
                             CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASMAP());
                             updateMainCanvas(mapScale);
                         } else {
-                            subWindow.runInfoWindo("invalidFile");
-                            System.out.println("Operation Failed.");
+                            subWindow.runInfoWindo("corruptedFile");
+                            importCode.doClick();
                         }
+                    } else {
+                        subWindow.runInfoWindo("invalidText");
+                        importCode.doClick();
                     }
-                } catch (IOException | NullPointerException ex) {
-
-
-//                    Maquínatelo para generar diferentes infos en función del error que de
-
-                    System.out.println("ex = " + ex);
+                } catch (IOException | NullPointerException exception) {
+                    System.out.println("exception = " + exception);
                     subWindow.runInfoWindo("invalidPath");
                     importCode.doClick();
-                    System.out.println("returnVal = " + returnVal);
                 }
             }
         });
