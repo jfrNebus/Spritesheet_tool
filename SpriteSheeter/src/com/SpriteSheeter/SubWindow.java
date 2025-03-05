@@ -90,7 +90,20 @@ public class SubWindow {
         infoFrame.add(panel);
         infoFrame.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        infoFrame.setVisible(true);
+//        System.out.println("1");
+//        infoFrame.add(panel, BorderLayout.CENTER);
+//        System.out.println("2");
+////        infoFrame.pack();
+//
+////        messageObject.revalidate();
+////        SwingUtilities.updateComponentTreeUI(infoFrame);
+//        Dimension size = messageObject.getPreferredSize();
+//        System.out.println("Tamaño de JTextArea: " + size.width + "x" + size.height);
+//
+//        int gap = 20;
+//        infoFrame.setSize(size.width + gap, size.height + gap);
+
         messageObject.setVisible(true);
+        infoFrame.setVisible(true);
     }
 }
