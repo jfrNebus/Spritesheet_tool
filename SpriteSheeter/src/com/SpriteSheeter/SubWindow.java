@@ -39,17 +39,14 @@ public class SubWindow {
             case "invalidscale":
                 messageS = "The scale value is not an integer value.";
                 break;
-            case "empty":
-                messageS = "All fields must be filled to perform the action.";
-                break;
             case "spriteSideFail":
-                messageS = "The sprite side value is not an integer value.";
+                messageS = "The sprite side value must be an integer value.";
                 break;
             case "spriteSheetFail":
-                messageS = "The sprite sheet side value is not an integer value.";
+                messageS = "The spritesheet side value must ba an integer value.";
                 break;
             case "sheetAndSprite":
-                messageS = "\nThe sprite side and the sprite sheet side values are\ninvalid. Both values must be integer type.";
+                messageS = "\nThe sprite side and the spritesheet side values are invalid. Both values must be an integer type.";
                 break;
             case "help":
                 frameHeight = 400;
