@@ -84,32 +84,23 @@ public class SpriteSheet {
      * Splits the spriteSheet BufferedImage in objects {@code Sprite}. The sprites will
      * be stored in {@code SPRITES_HASHMAP}.
      */
-    public void loadSpriteSheet() {
-        try {
-            BufferedImage picture = ImageIO.read(new File(picturePath));
-            System.out.println(picture);
-            if(picture != null) {
-                tilesInRow = picture.getWidth() / spriteSide;
-                tilesInColumn = picture.getHeight() / spriteSide;
+    public void loadSpriteSheet(BufferedImage picture) {
+        if(picture != null) {
+            tilesInRow = picture.getWidth() / spriteSide;
+            tilesInColumn = picture.getHeight() / spriteSide;
 
-                int spriteHashMapKey = 0;
-                int cornerX = 0;
-                int cornerY = 0;
-                for (int y = 0; y < tilesInColumn; y++) {
-                    for (int x = 0; x < tilesInRow; x++) {
-                        SPRITES_HASHMAP.put(spriteHashMapKey, new Sprite(picture, cornerX, cornerY, spriteSide, spriteHashMapKey));
-                        spriteHashMapKey++;
-                        cornerX += spriteSide;
-                    }
-                    cornerY += spriteSide;
-                    cornerX = 0;
+            int spriteHashMapKey = 0;
+            int cornerX = 0;
+            int cornerY = 0;
+            for (int y = 0; y < tilesInColumn; y++) {
+                for (int x = 0; x < tilesInRow; x++) {
+                    SPRITES_HASHMAP.put(spriteHashMapKey, new Sprite(picture, cornerX, cornerY, spriteSide, spriteHashMapKey));
+                    spriteHashMapKey++;
+                    cornerX += spriteSide;
                 }
-            } else {
-                SubWindow subWindow = new SubWindow();
-                subWindow.runInfoWindo("unsupportedImage");
+                cornerY += spriteSide;
+                cornerX = 0;
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 }

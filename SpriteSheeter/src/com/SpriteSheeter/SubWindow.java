@@ -13,9 +13,6 @@ public class SubWindow {
         Font font = new Font("", Font.PLAIN, fontSize);
 
         switch (menuName) {
-            case "newCanvasNeeded":
-                messageS = "You need to create a new canvas first.";
-                break;
             case "corruptedFile":
                 messageS = "The file loaded is corrupted.";
                 break;
@@ -52,6 +49,9 @@ public class SubWindow {
                 frameHeight = 400;
                 frameName = "Info";
                 messageS = "Hotkeys:\n\n* Ctrl + directional / awsd keys:\n   Main canvas movement when zoomed." + "\n\n* Shift + directional / awsd keys:\n   Sprite canvas movement when zoomed." + "\n\n* Ctrl + key \"+\" or key \"-\":\n   Main canvas zoom + or zoom -." + "\n\n* Shift + key \"+\" or key \"-\":\n   Srite canvas zoom + or zoom -." + "\n\n* Ctrl + Enter:\n   Toggle continuous painting on / off.";
+                break;
+            default:
+                System.out.println("Default point reached for Subwindow.");
                 break;
         }
 

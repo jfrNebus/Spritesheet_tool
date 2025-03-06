@@ -29,12 +29,17 @@ todo revisa aquellas variables de tipo string que sirvan para indicar el estado,
  sean "empty" y "full" para indicar el estado de algo, y sustituyelos por valores int del tipo i = 1 para full, i = 0
  para empty.
 
-todo revisa el por qué de la línea "File notePad = new File(fc.getSelectedFile() + ".txt");" en el JMenuItem exportCode
+Done revisa el por qué de la línea "File notePad = new File(fc.getSelectedFile() + ".txt");" en el JMenuItem exportCode
+Done es para darle el formato .txt al archivo creado a través de la ruta fc.getSelectedFile().
 
 //Check commit
 
 
  */
+
+Revisa los menús de importación, exportación, load sprite, en todas sus situaciones posibles.
+Si falta el archivo en el campo, si el archivo no es del tipo indicado, que no haya ningún null en ningún momento
+que el archivo de texto presente errores etc.
 
 
 public class Main {

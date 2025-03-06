@@ -511,23 +511,28 @@ class UserInterface implements KeyListener {
             int returnVal = fc.showOpenDialog(loadSpriteSheet);
             if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
                 String newPicturePath = fc.getSelectedFile().getAbsolutePath();
-                boolean pictureFile = true;
+                boolean validPictureFile = false;
+                BufferedImage newPicture = null;
                 try {
-                    pictureFile = Files.probeContentType(new File(newPicturePath).toPath()).startsWith("image");
+                    validPictureFile = Files.probeContentType(new File(newPicturePath).toPath()).startsWith("image");
+                    newPicture = ImageIO.read(new File(newPicturePath));
+                    validPictureFile = newPicture != null;
                 } catch (IOException | NullPointerException | SecurityException ex) {
                     System.out.println("ex = " + ex);
                     subWindow.runInfoWindo("invalidPath");
                     loadSpriteSheet.doClick();
                 }
-                if (pictureFile) {
+                if (validPictureFile) {
+                    System.out.println("validPictureFile = " + validPictureFile);
                     if (spritesPanel.getComponentCount() > 0) {
                         spritesPanel.removeAll();
                     }
                     SPRITESHEET.setPicturePath(newPicturePath);
-                    SPRITESHEET.loadSpriteSheet();
+                    SPRITESHEET.loadSpriteSheet(newPicture);
                     buildJLabelList(spritesPanel, spriteListScale);
                     spritesPanel.updateUI();
                 } else {
+                    System.out.println("Here");
                     subWindow.runInfoWindo("invalidImage");
                     loadSpriteSheet.doClick();
                 }
@@ -578,9 +583,11 @@ class UserInterface implements KeyListener {
             final JFileChooser fc = new JFileChooser();
             int returnVal = fc.showOpenDialog(importCode);
             if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
+                boolean validPictureFile = false;
+                BufferedImage newPicture = null;
                 try {
-                    boolean pictureFile = Files.probeContentType(fc.getSelectedFile().toPath()).startsWith("text");
-                    if (pictureFile) {
+                    validPictureFile = Files.probeContentType(fc.getSelectedFile().toPath()).startsWith("text");
+                    if (validPictureFile) {
                         File notePad = new File(fc.getSelectedFile().getAbsolutePath());
                         Scanner scanner = new Scanner(notePad);
                         StringBuilder sb = new StringBuilder();
@@ -588,15 +595,18 @@ class UserInterface implements KeyListener {
                             sb.append(scanner.nextLine());
                             sb.append("\n");
                         }
+                        String newPicturePath = getLoadedPath(sb.toString());
+                        newPicture = ImageIO.read(new File(newPicturePath));
+                        validPictureFile = newPicture != null;
                         Map<String, int[]> loadedMap = getImportedData(sb.toString());
-                        if (loadedMap != null) {
+                        if (loadedMap != null && validPictureFile) {
                             enableUI();
                             initializePicLabel();
                             deleteAllLayer();
                             resetLayerSelector(loadedMap);
                             spritesPanel.removeAll();
                             SPRITESHEET.setPicturePath(getLoadedPath(sb.toString()));
-                            SPRITESHEET.loadSpriteSheet();
+                            SPRITESHEET.loadSpriteSheet(newPicture);
                             buildJLabelList(spritesPanel, spriteListScale);
                             CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASHMAP());
                             updateMainCanvas(mapScale);
@@ -609,8 +619,11 @@ class UserInterface implements KeyListener {
                         importCode.doClick();
                     }
                 } catch (IOException | NullPointerException exception) {
-                    System.out.println("exception = " + exception);
-                    subWindow.runInfoWindo("invalidPath");
+                    if (exception instanceof IOException) {
+                        subWindow.runInfoWindo("corruptedFile");
+                    } else {
+                        subWindow.runInfoWindo("invalidPath");
+                    }
                     importCode.doClick();
                 }
             }
@@ -766,7 +779,7 @@ class UserInterface implements KeyListener {
 
     private String getLoadedPath(String loadedData) {
         String path = "";
-        Matcher matcher = Pattern.compile("(?<=\\n##)(\\w:(.*))(?=##\\n\\n)").matcher(loadedData);
+        Matcher matcher = Pattern.compile("(?<=\\n##)(\\w:(.*))(?=##)").matcher(loadedData);
         while (matcher.find()) {
             path = matcher.group();
         }
@@ -775,7 +788,7 @@ class UserInterface implements KeyListener {
     }
 
     private void deleteAllLayer() {
-        actualLayerLabel.setText("Actual layer:");
+        actualLayerLabel.setText("Actual layer: ");
         CANVAS.deleteAllLayers();
         layerSelector.removeAll();
         actualCanvas = "noLayer";
@@ -1321,6 +1334,7 @@ class UserInterface implements KeyListener {
                                     "png", new File(firstTFS + ".png"));
                             subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
                         } catch (IOException ex) {
+
                             subWindow.runInfoWindo("invalidPath");
                         }
                     } else {
