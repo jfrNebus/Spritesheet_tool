@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 public class SpriteSheet {
 
-    private final HashMap<Integer, Sprite> SPRITES_HASMAP = new HashMap<>();
+    private final HashMap<Integer, Sprite> SPRITES_HASHMAP = new HashMap<>();
     private int spriteSide;
     private int tilesInColumn;
     private int tilesInRow;
@@ -29,10 +29,10 @@ public class SpriteSheet {
     /**
      * Returns the HashMap associated to the Spritesheet object.
      *
-     * @return {@code SPRITES_HASMAP}
+     * @return {@code SPRITES_HASHMAP}
      */
-    public HashMap<Integer, Sprite> getSPRITES_HASMAP() {
-        return SPRITES_HASMAP;
+    public HashMap<Integer, Sprite> getSPRITES_HASHMAP() {
+        return SPRITES_HASHMAP;
     }
 
     /**
@@ -82,7 +82,7 @@ public class SpriteSheet {
 
     /**
      * Splits the spriteSheet BufferedImage in objects {@code Sprite}. The sprites will
-     * be stored in {@code SPRITES_HASMAP}.
+     * be stored in {@code SPRITES_HASHMAP}.
      */
     public void loadSpriteSheet() {
         try {
@@ -97,7 +97,7 @@ public class SpriteSheet {
                 int cornerY = 0;
                 for (int y = 0; y < tilesInColumn; y++) {
                     for (int x = 0; x < tilesInRow; x++) {
-                        SPRITES_HASMAP.put(spriteHashMapKey, new Sprite(picture, cornerX, cornerY, spriteSide, spriteHashMapKey));
+                        SPRITES_HASHMAP.put(spriteHashMapKey, new Sprite(picture, cornerX, cornerY, spriteSide, spriteHashMapKey));
                         spriteHashMapKey++;
                         cornerX += spriteSide;
                     }
@@ -107,9 +107,6 @@ public class SpriteSheet {
             } else {
                 SubWindow subWindow = new SubWindow();
                 subWindow.runInfoWindo("unsupportedImage");
-
-                Sigue comprobando este apartado. Comprueba también la importación de archivos de guardado txt y de spritessheet
-
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

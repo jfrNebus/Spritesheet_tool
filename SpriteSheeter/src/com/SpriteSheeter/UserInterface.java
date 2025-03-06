@@ -598,7 +598,7 @@ class UserInterface implements KeyListener {
                             SPRITESHEET.setPicturePath(getLoadedPath(sb.toString()));
                             SPRITESHEET.loadSpriteSheet();
                             buildJLabelList(spritesPanel, spriteListScale);
-                            CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASMAP());
+                            CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASHMAP());
                             updateMainCanvas(mapScale);
                         } else {
                             subWindow.runInfoWindo("corruptedFile");
@@ -808,7 +808,7 @@ class UserInterface implements KeyListener {
             j++;
             for (; j < (SPRITESHEET.getTilesInColumn() * SPRITESHEET.getTilesInRow()) + 1; j++) {
                 newImage = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
-                BufferedImage b = SPRITESHEET.getSPRITES_HASMAP().get(j - 1).getSprite();
+                BufferedImage b = SPRITESHEET.getSPRITES_HASHMAP().get(j - 1).getSprite();
                 newImage.createGraphics().drawImage(b, 0, 0, targetSide, targetSide, null);
                 JButton button = new JButton();
                 button.setIcon(new ImageIcon(newImage));
@@ -831,7 +831,7 @@ class UserInterface implements KeyListener {
                 button.addActionListener(e -> {
 //                        https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
 
-                    System.out.println("Pressed sprite idd: " + SPRITESHEET.getSPRITES_HASMAP().get(innerId - 1).getId());
+                    System.out.println("Pressed sprite idd: " + SPRITESHEET.getSPRITES_HASHMAP().get(innerId - 1).getId());
                     //Used to set the kind of Composite to be used in the BufferedImage in use. Check the above
                     //link.
                     if (!actualCanvas.equals("noLayer")) {
@@ -846,7 +846,7 @@ class UserInterface implements KeyListener {
                         int arrayIndexY = y / 16;
                         int arrayIndexX = x / 16;
                         int[][] returnedArray = CANVAS.getID_ARRAY_MAP(actualCanvas);
-                        returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASMAP().get(innerId - 1).getId();
+                        returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASHMAP().get(innerId - 1).getId();
                         id = innerId;
                         updateMainCanvas(mapScale);
                     } else {
@@ -939,7 +939,7 @@ class UserInterface implements KeyListener {
             int arrayIndexY = y / 16;
             int arrayIndexX = x / 16;
             int[][] returnedArray = CANVAS.getID_ARRAY_MAP(actualCanvas);
-            returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASMAP().get(id - 1).getId();
+            returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASHMAP().get(id - 1).getId();
             System.out.println("returnedArray[arrayIndexY][arrayIndexX] = " + returnedArray[arrayIndexY][arrayIndexX]);
         }
 
