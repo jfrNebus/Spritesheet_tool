@@ -514,7 +514,6 @@ class UserInterface implements KeyListener {
                 boolean validPictureFile = false;
                 BufferedImage newPicture = null;
                 try {
-                    validPictureFile = Files.probeContentType(new File(newPicturePath).toPath()).startsWith("image");
                     newPicture = ImageIO.read(new File(newPicturePath));
                     validPictureFile = newPicture != null;
                 } catch (IOException | NullPointerException | SecurityException ex) {
@@ -583,8 +582,8 @@ class UserInterface implements KeyListener {
             final JFileChooser fc = new JFileChooser();
             int returnVal = fc.showOpenDialog(importCode);
             if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
-                boolean validPictureFile = false;
-                BufferedImage newPicture = null;
+                boolean validPictureFile;
+                BufferedImage newPicture;
                 try {
                     validPictureFile = Files.probeContentType(fc.getSelectedFile().toPath()).startsWith("text");
                     if (validPictureFile) {

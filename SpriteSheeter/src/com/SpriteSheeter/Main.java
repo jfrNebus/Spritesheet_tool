@@ -37,9 +37,9 @@ Done es para darle el formato .txt al archivo creado a través de la ruta fc.get
 
  */
 
-Revisa los menús de importación, exportación, load sprite, en todas sus situaciones posibles.
-Si falta el archivo en el campo, si el archivo no es del tipo indicado, que no haya ningún null en ningún momento
-que el archivo de texto presente errores etc.
+//Revisa los menús de importación, exportación, load sprite, en todas sus situaciones posibles.
+//Si falta el archivo en el campo, si el archivo no es del tipo indicado, que no haya ningún null en ningún momento
+//que el archivo de texto presente errores etc.
 
 
 public class Main {
