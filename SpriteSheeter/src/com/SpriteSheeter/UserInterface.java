@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -517,12 +519,10 @@ class UserInterface implements KeyListener {
                     newPicture = ImageIO.read(new File(newPicturePath));
                     validPictureFile = newPicture != null;
                 } catch (IOException | NullPointerException | SecurityException ex) {
-                    System.out.println("ex = " + ex);
                     subWindow.runInfoWindo("invalidPath");
                     loadSpriteSheet.doClick();
                 }
                 if (validPictureFile) {
-                    System.out.println("validPictureFile = " + validPictureFile);
                     if (spritesPanel.getComponentCount() > 0) {
                         spritesPanel.removeAll();
                     }
@@ -531,7 +531,6 @@ class UserInterface implements KeyListener {
                     buildJLabelList(spritesPanel, spriteListScale);
                     spritesPanel.updateUI();
                 } else {
-                    System.out.println("Here");
                     subWindow.runInfoWindo("invalidImage");
                     loadSpriteSheet.doClick();
                 }
@@ -694,17 +693,125 @@ class UserInterface implements KeyListener {
         this.spriteListScale = spriteListScale;
     }
 
+//    private Map<String, int[]> getImportedData(String loadedData) {
+//        //Update the existing documentation
+//        boolean keep = true;
+//        Map<String, int[]> layers = new LinkedHashMap<>();
+//
+//        Matcher matcher = Pattern.compile("(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)").matcher(loadedData);
+//        int amountOfSprites = 0;
+//        while (matcher.find()) {
+//            amountOfSprites = (int) Math.pow(Integer.parseInt(matcher.group()), 2);
+//        }
+//        matcher.reset();
+//
+//        if (amountOfSprites == 0) {
+//            keep = false;
+//        }
+//
+//        if (keep) {
+//            if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
+//                    (SPRITESHEET.getSpriteSide() == 0)) {
+//                int side = 0;
+//                String firstRegex = "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)";
+//                matcher.usePattern(Pattern.compile(firstRegex, Pattern.MULTILINE));
+//                while (matcher.find()) {
+//                    side = Integer.parseInt(matcher.group());
+//                }
+//                matcher.reset();
+//
+//                int newCanvasSize = 0;
+//                String secondRegex = "(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)";
+//                matcher.usePattern(Pattern.compile(secondRegex, Pattern.MULTILINE));
+//                while (matcher.find()) {
+//                    newCanvasSize = Integer.parseInt(matcher.group());
+//                }
+//                matcher.reset();
+//
+//                if (side != 0 && newCanvasSize != 0) {
+//                    CANVAS.initializeCanvas(side, newCanvasSize);
+//                    SPRITESHEET.setSpriteSide(side);
+//                    movementIncrement = side;
+//                } else {
+//                    keep = false;
+//                }
+//            }
+//        } else {
+//            return null;
+//        }
+//
+//        if (keep) {
+//            String thirdRegex = "(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])";
+//            matcher.usePattern(Pattern.compile(thirdRegex, Pattern.MULTILINE));
+//            while (matcher.find()) {
+//                layers.put(matcher.group(), null);
+//            }
+//            matcher.reset();
+//            for (Map.Entry<String, int[]> numbersMap : layers.entrySet()) {
+//                String fourthRegex = "(?<=};\\n//" + numbersMap.getKey() + ":)((\\d)+\\s)+(?=\\n)";
+//                matcher.usePattern(Pattern.compile(fourthRegex, Pattern.MULTILINE));
+//                String numbersResult = "";
+//                while (matcher.find()) {
+//                    numbersResult = matcher.group();
+//                }
+//                String[] justNumbers = numbersResult.split("\\s");
+//                if (amountOfSprites == justNumbers.length) {
+//                    int[] numbers = new int[justNumbers.length];
+//                    for (int i = 0; i < justNumbers.length; i++) {
+//                        numbers[i] = Integer.parseInt(justNumbers[i]);
+//                    }
+//                    numbersMap.setValue(numbers);
+//                    matcher.reset();
+//                } else {
+//                    System.out.println("Way to break the whole operation");
+//                    layers = null;
+//                    break;
+//                }
+//            }
+//        } else {
+//            return null;
+//        }
+//        return layers;
+//    }
+
     private Map<String, int[]> getImportedData(String loadedData) {
-        //There's documentation about  this method already done.
+        //Update the existing documentation
         boolean keep = true;
         Map<String, int[]> layers = new LinkedHashMap<>();
 
-        Matcher matcher = Pattern.compile("(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)").matcher(loadedData);
+        int regexIndex = 0;
+        String[] regex = {"(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)",
+                "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)",
+                "(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)",
+                "(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])"
+        };
+
+        continua desarrollando
+
+        Supplier<String> matcherFunction = () -> {
+            String output = "";
+            Matcher matcher = Pattern.compile(regex[regexIndex]).matcher(loadedData);
+            ;
+            while (matcher.find()) {
+                output = matcher.group();
+            }
+            return output;
+        };
+
+//        Matcher matcher = Pattern.compile("(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)").matcher(loadedData);
         int amountOfSprites = 0;
-        while (matcher.find()) {
-            amountOfSprites = (int) Math.pow(Integer.parseInt(matcher.group()), 2);
-        }
-        matcher.reset();
+        amountOfSprites = (int) Math.pow(Integer.parseInt(matcherFunction.get()), 2);
+        regexIndex++;
+
+
+        Function<String, String> matcherFunction = string -> {
+            Matcher matcher = Pattern.compile(regex[regexIndex]).matcher(loadedData);
+            ;
+            while (matcher.find()) {
+                string = matcher.group();
+            }
+            return string;
+        };
 
         if (amountOfSprites == 0) {
             keep = false;
@@ -716,7 +823,6 @@ class UserInterface implements KeyListener {
                 int side = 0;
                 String firstRegex = "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)";
                 matcher.usePattern(Pattern.compile(firstRegex, Pattern.MULTILINE));
-//                Map<String, int[]> layers = new LinkedHashMap<>();
                 while (matcher.find()) {
                     side = Integer.parseInt(matcher.group());
                 }
