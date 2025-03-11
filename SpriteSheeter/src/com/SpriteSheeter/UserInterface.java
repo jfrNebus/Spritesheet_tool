@@ -783,35 +783,21 @@ class UserInterface implements KeyListener {
         String[] regex = {"(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)",
                 "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)",
                 "(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)",
-                "(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])"
         };
 
-        continua desarrollando
-
-        Supplier<String> matcherFunction = () -> {
+        Function<String, String> matcherFunction = string -> {
             String output = "";
-            Matcher matcher = Pattern.compile(regex[regexIndex]).matcher(loadedData);
-            ;
+            Matcher matcher = Pattern.compile(string).matcher(loadedData);
             while (matcher.find()) {
                 output = matcher.group();
             }
             return output;
         };
 
-//        Matcher matcher = Pattern.compile("(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)").matcher(loadedData);
-        int amountOfSprites = 0;
-        amountOfSprites = (int) Math.pow(Integer.parseInt(matcherFunction.get()), 2);
+        String matched = matcherFunction.apply(regex[regexIndex]);
+        int amountOfSprites = matched.matches("\\d+") ? (int) Math.pow(Integer.parseInt(matched), 2) :  0;
+
         regexIndex++;
-
-
-        Function<String, String> matcherFunction = string -> {
-            Matcher matcher = Pattern.compile(regex[regexIndex]).matcher(loadedData);
-            ;
-            while (matcher.find()) {
-                string = matcher.group();
-            }
-            return string;
-        };
 
         if (amountOfSprites == 0) {
             keep = false;
@@ -820,21 +806,12 @@ class UserInterface implements KeyListener {
         if (keep) {
             if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
                     (SPRITESHEET.getSpriteSide() == 0)) {
-                int side = 0;
-                String firstRegex = "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)";
-                matcher.usePattern(Pattern.compile(firstRegex, Pattern.MULTILINE));
-                while (matcher.find()) {
-                    side = Integer.parseInt(matcher.group());
-                }
-                matcher.reset();
+                matched = matcherFunction.apply(regex[regexIndex]);
+                int side = matched.matches("\\d+") ? Integer.parseInt(matched) :  0;
+                regexIndex++;
 
-                int newCanvasSize = 0;
-                String secondRegex = "(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)";
-                matcher.usePattern(Pattern.compile(secondRegex, Pattern.MULTILINE));
-                while (matcher.find()) {
-                    newCanvasSize = Integer.parseInt(matcher.group());
-                }
-                matcher.reset();
+                matched = matcherFunction.apply(regex[regexIndex]);
+                int newCanvasSize = matched.matches("\\d+") ? Integer.parseInt(matched) :  0;
 
                 if (side != 0 && newCanvasSize != 0) {
                     CANVAS.initializeCanvas(side, newCanvasSize);
@@ -848,28 +825,23 @@ class UserInterface implements KeyListener {
             return null;
         }
 
+        Comprobados los tres file loaded corrupted cuando falta el número o la línea completa en los matcher anteriores
+
         if (keep) {
-            String thirdRegex = "(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])";
-            matcher.usePattern(Pattern.compile(thirdRegex, Pattern.MULTILINE));
+            String layerRegex = "(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])";
+            Matcher matcher = Pattern.compile(layerRegex).matcher(loadedData);
             while (matcher.find()) {
                 layers.put(matcher.group(), null);
             }
-            matcher.reset();
             for (Map.Entry<String, int[]> numbersMap : layers.entrySet()) {
-                String fourthRegex = "(?<=};\\n//" + numbersMap.getKey() + ":)((\\d)+\\s)+(?=\\n)";
-                matcher.usePattern(Pattern.compile(fourthRegex, Pattern.MULTILINE));
-                String numbersResult = "";
-                while (matcher.find()) {
-                    numbersResult = matcher.group();
-                }
-                String[] justNumbers = numbersResult.split("\\s");
+                String numbersRegex = "(?<=};\\n//" + numbersMap.getKey() + ":)((\\d)+\\s)+(?=\\n)";
+                String[] justNumbers = matcherFunction.apply(numbersRegex).split("\\s");
                 if (amountOfSprites == justNumbers.length) {
                     int[] numbers = new int[justNumbers.length];
                     for (int i = 0; i < justNumbers.length; i++) {
                         numbers[i] = Integer.parseInt(justNumbers[i]);
                     }
                     numbersMap.setValue(numbers);
-                    matcher.reset();
                 } else {
                     System.out.println("Way to break the whole operation");
                     layers = null;
