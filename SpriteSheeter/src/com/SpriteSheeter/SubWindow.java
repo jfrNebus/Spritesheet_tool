@@ -12,6 +12,8 @@ public class SubWindow {
         String frameName = "Alert";
         Font font = new Font("", Font.PLAIN, fontSize);
 
+        //REPASA EL INGLÉS
+
         switch (menuName) {
             case "corruptedFile":
                 messageS = "The file loaded is corrupted.";
@@ -32,6 +34,9 @@ public class SubWindow {
                 break;
             case "invalidPath":
                 messageS = "The path to the file is invalid.";
+                break;
+            case "invalidImagePath":
+                messageS = "The image path in the text file is invalid.";
                 break;
             case "invalidscale":
                 messageS = "The scale value is not an integer value.";

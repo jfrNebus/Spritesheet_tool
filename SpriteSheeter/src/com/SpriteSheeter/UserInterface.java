@@ -609,7 +609,11 @@ class UserInterface implements KeyListener {
                             CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASHMAP());
                             updateMainCanvas(mapScale);
                         } else {
-                            subWindow.runInfoWindo("corruptedFile");
+                            if(!validPictureFile){
+                                subWindow.runInfoWindo("invalidImagePath");
+                            } else {
+                                subWindow.runInfoWindo("corruptedFile");
+                            }
                             importCode.doClick();
                         }
                     } else {
@@ -779,12 +783,6 @@ class UserInterface implements KeyListener {
         boolean keep = true;
         Map<String, int[]> layers = new LinkedHashMap<>();
 
-        int regexIndex = 0;
-        String[] regex = {"(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)",
-                "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)",
-                "(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)",
-        };
-
         Function<String, String> matcherFunc = string -> {
             String output = "";
             Matcher matcher = Pattern.compile(string).matcher(loadedData);
@@ -794,10 +792,8 @@ class UserInterface implements KeyListener {
             return output;
         };
 
-        String matched = matcherFunc.apply(regex[regexIndex]);
-        int amountOfSprites = matched.matches("\\d+") ? (int) Math.pow(Integer.parseInt(matched), 2) :  0;
-
-        regexIndex++;
+        String matchedString = matcherFunc.apply("(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)");
+        int amountOfSprites = matchedString.matches("\\d+") ? (int) Math.pow(Integer.parseInt(matchedString), 2) :  0;
 
         if (amountOfSprites == 0) {
             keep = false;
@@ -806,12 +802,11 @@ class UserInterface implements KeyListener {
         if (keep) {
             if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
                     (SPRITESHEET.getSpriteSide() == 0)) {
-                matched = matcherFunc.apply(regex[regexIndex]);
-                int side = matched.matches("\\d+") ? Integer.parseInt(matched) :  0;
-                regexIndex++;
+                matchedString = matcherFunc.apply("(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)");
+                int side = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) :  0;
 
-                matched = matcherFunc.apply(regex[regexIndex]);
-                int newCanvasSize = matched.matches("\\d+") ? Integer.parseInt(matched) :  0;
+                matchedString = matcherFunc.apply("(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)");
+                int newCanvasSize = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) :  0;
 
                 if (side != 0 && newCanvasSize != 0) {
                     CANVAS.initializeCanvas(side, newCanvasSize);
@@ -826,8 +821,8 @@ class UserInterface implements KeyListener {
         }
 
         if (keep) {
-            String layerRegex = "(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])";
-            Matcher matcher = Pattern.compile(layerRegex).matcher(loadedData);
+            Matcher matcher = Pattern.compile("(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])")
+                    .matcher(loadedData);
             while (matcher.find()) {
                 layers.put(matcher.group(), null);
             }
