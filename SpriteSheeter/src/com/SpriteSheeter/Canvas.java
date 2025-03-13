@@ -317,7 +317,7 @@ public class Canvas {
         pictureGraphics.setPaint(Color.BLACK);
         pictureGraphics.drawRect(0, 0, canvasSize + 1, canvasSize + 1);
         pictureGraphics.setColor(Color.RED);
-        pictureGraphics.drawRect(1, 1, 15, 15);
+        pictureGraphics.drawRect(1, 1, spriteSide-1, spriteSide-1);
         pictureGraphics.dispose();
     }
 

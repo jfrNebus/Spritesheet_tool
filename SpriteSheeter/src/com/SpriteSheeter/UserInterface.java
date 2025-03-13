@@ -697,87 +697,6 @@ class UserInterface implements KeyListener {
         this.spriteListScale = spriteListScale;
     }
 
-//    private Map<String, int[]> getImportedData(String loadedData) {
-//        //Update the existing documentation
-//        boolean keep = true;
-//        Map<String, int[]> layers = new LinkedHashMap<>();
-//
-//        Matcher matcher = Pattern.compile("(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)").matcher(loadedData);
-//        int amountOfSprites = 0;
-//        while (matcher.find()) {
-//            amountOfSprites = (int) Math.pow(Integer.parseInt(matcher.group()), 2);
-//        }
-//        matcher.reset();
-//
-//        if (amountOfSprites == 0) {
-//            keep = false;
-//        }
-//
-//        if (keep) {
-//            if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
-//                    (SPRITESHEET.getSpriteSide() == 0)) {
-//                int side = 0;
-//                String firstRegex = "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)";
-//                matcher.usePattern(Pattern.compile(firstRegex, Pattern.MULTILINE));
-//                while (matcher.find()) {
-//                    side = Integer.parseInt(matcher.group());
-//                }
-//                matcher.reset();
-//
-//                int newCanvasSize = 0;
-//                String secondRegex = "(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)";
-//                matcher.usePattern(Pattern.compile(secondRegex, Pattern.MULTILINE));
-//                while (matcher.find()) {
-//                    newCanvasSize = Integer.parseInt(matcher.group());
-//                }
-//                matcher.reset();
-//
-//                if (side != 0 && newCanvasSize != 0) {
-//                    CANVAS.initializeCanvas(side, newCanvasSize);
-//                    SPRITESHEET.setSpriteSide(side);
-//                    movementIncrement = side;
-//                } else {
-//                    keep = false;
-//                }
-//            }
-//        } else {
-//            return null;
-//        }
-//
-//        if (keep) {
-//            String thirdRegex = "(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])";
-//            matcher.usePattern(Pattern.compile(thirdRegex, Pattern.MULTILINE));
-//            while (matcher.find()) {
-//                layers.put(matcher.group(), null);
-//            }
-//            matcher.reset();
-//            for (Map.Entry<String, int[]> numbersMap : layers.entrySet()) {
-//                String fourthRegex = "(?<=};\\n//" + numbersMap.getKey() + ":)((\\d)+\\s)+(?=\\n)";
-//                matcher.usePattern(Pattern.compile(fourthRegex, Pattern.MULTILINE));
-//                String numbersResult = "";
-//                while (matcher.find()) {
-//                    numbersResult = matcher.group();
-//                }
-//                String[] justNumbers = numbersResult.split("\\s");
-//                if (amountOfSprites == justNumbers.length) {
-//                    int[] numbers = new int[justNumbers.length];
-//                    for (int i = 0; i < justNumbers.length; i++) {
-//                        numbers[i] = Integer.parseInt(justNumbers[i]);
-//                    }
-//                    numbersMap.setValue(numbers);
-//                    matcher.reset();
-//                } else {
-//                    System.out.println("Way to break the whole operation");
-//                    layers = null;
-//                    break;
-//                }
-//            }
-//        } else {
-//            return null;
-//        }
-//        return layers;
-//    }
-
     private Map<String, int[]> getImportedData(String loadedData) {
         //Update the existing documentation
         boolean keep = true;
@@ -866,13 +785,17 @@ class UserInterface implements KeyListener {
     }
 
     private void resetLayerSelector(Map<String, int[]> newlayerSelector) {
+        boolean firstLayerName = true;
         for (Map.Entry<String, int[]> newLayers : newlayerSelector.entrySet()) {
             addNewLayerButtons(newLayers.getKey());
             CANVAS.addNewCanvas(newLayers.getKey());
-            actualCanvas = newLayers.getKey();
-            actualLayerLabel.setText("Actual layer:\n" +
-                    (actualCanvas.length() > maxActualCanvasLength ? actualCanvas.substring(0, 5) + "..." +
-                            actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+            if(firstLayerName) {
+                actualCanvas = newLayers.getKey();
+                actualLayerLabel.setText("Actual layer:\n" +
+                        (actualCanvas.length() > maxActualCanvasLength ? actualCanvas.substring(0, 5) + "..." +
+                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+                firstLayerName = false;
+            }
         }
     }
 
@@ -901,14 +824,14 @@ class UserInterface implements KeyListener {
                 button.setFocusable(false);
                 //Se tiene que crear una variable local id, aunque ya exista una global, porque para poder
                 //usar el valor de j dentro de la declaración del actionListener del botón, dicha variable debe
-                //ser final o effectively final. Y no podemos hacer id = j; y asignarle id al método get
+                //ser final o effectively final. No podemos hacer id = j; y asignarle id al método get
                 //spriteSheet.getSPRITES_HASMAP().get(id - 1).getId()); porque para cuando se pulse el botón, y
                 //se llame a la acción del botón, el valor de id será el último valor que se le asignase, es
                 //decir, el valor del último botón que se crease, la última iteración de este bucle for, donde
-                //se estableción id = j; Si el último botón que se creo fue el 540, el valor de id será id = 540
-                //y será siempre así. No obstante, id se ha de actualizar al valor de innerId dentro de la acción
+                //se estableción id = j. Si el último botón que se creó fue el 540, el valor de id será id = 540
+                //y será siempre así. No obstante, id ha de  ser actualizada al valor de innerId dentro de la acción
                 //del botón para que cuando se active la función de dibujar de forma constante, el programa sepa
-                //cual es la id que ha de utilizar a la hora de pintar. La función de pintar usa la última id
+                //cuál es la id que ha de utilizar a la hora de pintar. La función de pintar usa la última id
                 //conocida, y esa id se actualiza cada vez que se presiona un botón.
                 int innerId = j;
                 button.addActionListener(e -> {
@@ -926,8 +849,8 @@ class UserInterface implements KeyListener {
                         pictureGraphics.dispose();
                         previousSprite = b;
 
-                        int arrayIndexY = y / 16;
-                        int arrayIndexX = x / 16;
+                        int arrayIndexY = y / SPRITESHEET.getSpriteSide();
+                        int arrayIndexX = x / SPRITESHEET.getSpriteSide();
                         int[][] returnedArray = CANVAS.getID_ARRAY_MAP(actualCanvas);
                         returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASHMAP().get(innerId - 1).getId();
                         id = innerId;
@@ -996,7 +919,7 @@ class UserInterface implements KeyListener {
         Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
         pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
         pointerGraphics.drawImage(new BufferedImage(spriteSide, spriteSide, BufferedImage.TYPE_INT_ARGB),
-                x + 1, y + 1, 16, 16, null);
+                x + 1, y + 1, SPRITESHEET.getSpriteSide(), SPRITESHEET.getSpriteSide(), null);
 
         switch (direction) {
             case "up":
@@ -1019,15 +942,16 @@ class UserInterface implements KeyListener {
             pictureGraphics.drawImage(previousSprite, x, y, null);
             pictureGraphics.dispose();
             pointer = Color.GREEN;
-            int arrayIndexY = y / 16;
-            int arrayIndexX = x / 16;
+            int arrayIndexY = y / SPRITESHEET.getSpriteSide();
+            int arrayIndexX = x / SPRITESHEET.getSpriteSide();
             int[][] returnedArray = CANVAS.getID_ARRAY_MAP(actualCanvas);
             returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASHMAP().get(id - 1).getId();
             System.out.println("returnedArray[arrayIndexY][arrayIndexX] = " + returnedArray[arrayIndexY][arrayIndexX]);
         }
 
         pointerGraphics.setColor(pointer);
-        pointerGraphics.drawRect(x + 1, y + 1, 15, 15);
+        pointerGraphics.drawRect(x + 1, y + 1, SPRITESHEET.getSpriteSide()-1,
+                SPRITESHEET.getSpriteSide()-1);
         pointerGraphics.dispose();
 
         updateMainCanvas(mapScale);
