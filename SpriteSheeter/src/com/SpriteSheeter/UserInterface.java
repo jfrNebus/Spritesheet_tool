@@ -919,7 +919,7 @@ class UserInterface implements KeyListener {
         Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
         pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
         pointerGraphics.drawImage(new BufferedImage(spriteSide, spriteSide, BufferedImage.TYPE_INT_ARGB),
-                x + 1, y + 1, SPRITESHEET.getSpriteSide(), SPRITESHEET.getSpriteSide(), null);
+                x + 1, y + 1, spriteSide, spriteSide, null);
 
         switch (direction) {
             case "up":
@@ -942,16 +942,16 @@ class UserInterface implements KeyListener {
             pictureGraphics.drawImage(previousSprite, x, y, null);
             pictureGraphics.dispose();
             pointer = Color.GREEN;
-            int arrayIndexY = y / SPRITESHEET.getSpriteSide();
-            int arrayIndexX = x / SPRITESHEET.getSpriteSide();
+            int arrayIndexY = y / spriteSide;
+            int arrayIndexX = x / spriteSide;
             int[][] returnedArray = CANVAS.getID_ARRAY_MAP(actualCanvas);
             returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASHMAP().get(id - 1).getId();
             System.out.println("returnedArray[arrayIndexY][arrayIndexX] = " + returnedArray[arrayIndexY][arrayIndexX]);
         }
 
         pointerGraphics.setColor(pointer);
-        pointerGraphics.drawRect(x + 1, y + 1, SPRITESHEET.getSpriteSide()-1,
-                SPRITESHEET.getSpriteSide()-1);
+        pointerGraphics.drawRect(x + 1, y + 1, spriteSide-1,
+                spriteSide-1);
         pointerGraphics.dispose();
 
         updateMainCanvas(mapScale);
