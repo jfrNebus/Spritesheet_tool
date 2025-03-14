@@ -814,8 +814,8 @@ class UserInterface implements KeyListener {
             j++;
             for (; j < (SPRITESHEET.getTilesInColumn() * SPRITESHEET.getTilesInRow()) + 1; j++) {
                 newImage = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
-                BufferedImage b = SPRITESHEET.getSPRITES_HASHMAP().get(j - 1).getSprite();
-                newImage.createGraphics().drawImage(b, 0, 0, targetSide, targetSide, null);
+                BufferedImage spriteToPrint = SPRITESHEET.getSPRITES_HASHMAP().get(j - 1).getSprite();
+                newImage.createGraphics().drawImage(spriteToPrint, 0, 0, targetSide, targetSide, null);
                 JButton button = new JButton();
                 button.setIcon(new ImageIcon(newImage));
                 button.setPreferredSize(new Dimension(targetSide, targetSide));
@@ -841,13 +841,12 @@ class UserInterface implements KeyListener {
                     //Used to set the kind of Composite to be used in the BufferedImage in use. Check the above
                     //link.
                     if (!actualCanvas.equals("noLayer")) {
-                        System.out.println("actualCanvas = " + actualCanvas);
                         Graphics2D pictureGraphics = CANVAS.getLayer(actualCanvas).createGraphics();
                         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC);
                         pictureGraphics.setComposite(ac);
-                        pictureGraphics.drawImage(b, x, y, null);
+                        pictureGraphics.drawImage(spriteToPrint, x, y, null);
                         pictureGraphics.dispose();
-                        previousSprite = b;
+                        previousSprite = spriteToPrint;
 
                         int arrayIndexY = y / SPRITESHEET.getSpriteSide();
                         int arrayIndexX = x / SPRITESHEET.getSpriteSide();
@@ -874,7 +873,6 @@ class UserInterface implements KeyListener {
         JButton layerButton = new JButton(layerName);
         layerButton.addKeyListener(this);
         layerButton.setFocusable(false);
-
         layerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
