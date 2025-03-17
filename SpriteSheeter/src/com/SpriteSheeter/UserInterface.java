@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -128,6 +129,7 @@ class UserInterface implements KeyListener {
         picScroller.addKeyListener(this);
         picScroller.setFocusable(true);
         picScroller.setWheelScrollingEnabled(true);
+        picScroller.setEnabled(false); //Enabled false allows the JScrollPane movement throught arrow keys.
 
         //>>> Inside panel1
         int panel2Width = (int) (SCREEN_WIDTH * 0.40);
@@ -837,7 +839,7 @@ class UserInterface implements KeyListener {
                 button.addActionListener(e -> {
 //                        https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
 
-                    System.out.println("Pressed sprite idd: " + SPRITESHEET.getSPRITES_HASHMAP().get(innerId - 1).getId());
+                    System.out.println("Pressed sprite id: " + SPRITESHEET.getSPRITES_HASHMAP().get(innerId - 1).getId());
                     //Used to set the kind of Composite to be used in the BufferedImage in use. Check the above
                     //link.
                     if (!actualCanvas.equals("noLayer")) {
@@ -943,10 +945,9 @@ class UserInterface implements KeyListener {
             int arrayIndexY = y / spriteSide;
             int arrayIndexX = x / spriteSide;
             int[][] returnedArray = CANVAS.getID_ARRAY_MAP(actualCanvas);
-            returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASHMAP().get(id - 1).getId();
+            returnedArray[arrayIndexY][arrayIndexX] = id;
             System.out.println("returnedArray[arrayIndexY][arrayIndexX] = " + returnedArray[arrayIndexY][arrayIndexX]);
         }
-
         pointerGraphics.setColor(pointer);
         pointerGraphics.drawRect(x + 1, y + 1, spriteSide-1,
                 spriteSide-1);
@@ -1177,32 +1178,24 @@ class UserInterface implements KeyListener {
 //        }
 //    }
 
-
-    Elimina el movimiento producido por las flechas de dirección
-
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("direction = " + direction);
         if (TA.isEditable()) {
             int key = e.getKeyCode();
             //Next line is set in orderd to not allow X or Y to reach the end of the pointer BufferedImage.
             //If any coordinate reaches the end of the axis, it would generate the square to be drawn outside
             //of the buffered, since it is the top left coordinate the one which is taken9 in consideration.
-            int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
             System.out.println("Key = " + key);
             if (TA.hasFocus()) {
-                if (key == 27) {
-                    //Key 27 = Esc
+                if (key == KeyEvent.VK_ESCAPE) {
                     frame.requestFocus();
                 }
             } else {
-                if (key == 17) {
-                    //Key 17 = Ctrl
+                if (key == KeyEvent.VK_CONTROL) {
                     if (!toggleMapMovement) {
                         toggleMapMovement = true;
                     }
-                } else if (key == 16) {
-                    //Key 17 = Shift
+                } else if (key == KeyEvent.VK_SHIFT) {
                     if (!toggleSpriteMovement) {
                         toggleSpriteMovement = true;
                     }
@@ -1220,6 +1213,7 @@ class UserInterface implements KeyListener {
                     if (toggleMapMovement || toggleSpriteMovement) {
                         newMoveViewPort();
                     } else {
+                        int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
                         if ((x + movementIncrement) <= width) {
                             pointerMovement();
                         }
@@ -1238,25 +1232,25 @@ class UserInterface implements KeyListener {
                     if (toggleMapMovement || toggleSpriteMovement) {
                         newMoveViewPort();
                     } else {
+                        int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
                         if ((y + movementIncrement) <= width) {
                             pointerMovement();
                         }
                     }
                 } else if (key == KeyEvent.VK_PLUS || key == KeyEvent.VK_ADD) {
-                    //+ key > key 521 = * + ] key close to enter, key 107 = + numerical number.
                     if (toggleMapMovement) {
                         biggerMap.doClick();
                     } else if (toggleSpriteMovement) {
                         biggerSprite.doClick();
                     }
                 } else if (key == KeyEvent.VK_MINUS || key == KeyEvent.VK_SUBTRACT) {
-                    //+ key > key 45 = - _ key close to shift under Enter, key 109 = - numerical number.
                     if (toggleMapMovement) {
                         smallerMap.doClick();
                     } else if (toggleSpriteMovement) {
                         smallerSprite.doClick();
                     }
                 } else if (key == KeyEvent.VK_ENTER) {
+                    int spriteSide = SPRITESHEET.getSpriteSide() - 1;
                     fillingBrush = !fillingBrush;
                     Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
                     pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
@@ -1265,13 +1259,15 @@ class UserInterface implements KeyListener {
                     } else {
                         pointerGraphics.setColor(Color.RED);
                     }
-                    pointerGraphics.drawRect(x + 1, y + 1, 15, 15);
+                    pointerGraphics.drawRect(x + 1, y + 1, spriteSide, spriteSide);
                     pointerGraphics.dispose();
                     updateMainCanvas(mapScale);
                 }
             }
         }
     }
+
+    check the frame gap
 
     @Override
     public void keyReleased(KeyEvent e) {
