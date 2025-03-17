@@ -13,7 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,6 +51,7 @@ class UserInterface implements KeyListener {
     private int id = 0;
     //The amount of pixels
     private int movementIncrement;
+    private int direction = 0; //1 = left, 2 = right, 3 = up, 4 = down
     private final int maxActualCanvasLength = 17;
     //Screen size
     private final int MAP_SCALE_RATIO = 1;
@@ -911,7 +911,7 @@ class UserInterface implements KeyListener {
         TA.setText("");
     }
 
-    private void pointerMovement(String direction) {
+    private void pointerMovement() {
         int spriteSide = SPRITESHEET.getSpriteSide();
         Color pointer = Color.RED;
         Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
@@ -920,17 +920,17 @@ class UserInterface implements KeyListener {
                 x + 1, y + 1, spriteSide, spriteSide, null);
 
         switch (direction) {
-            case "up":
-                y -= movementIncrement;
-                break;
-            case "down":
-                y += movementIncrement;
-                break;
-            case "left":
+            case 1:
                 x -= movementIncrement;
                 break;
-            case "right":
+            case 2:
                 x += movementIncrement;
+                break;
+            case 3:
+                y -= movementIncrement;
+                break;
+            default:
+                y += movementIncrement;
                 break;
         }
         if (fillingBrush) {
@@ -955,24 +955,24 @@ class UserInterface implements KeyListener {
         updateMainCanvas(mapScale);
     }
 
-    private void moveMapViewPort(String direction) {
+    private void moveMapViewPort() {
         Point newPicViewPosition = MAP_VIEW.getViewPosition();
         int viewMovement = SPRITESHEET.getSpriteSide() * mapScale;
         switch (direction) {
-            case "left":
+            case 1:
                 if ((newPicViewPosition.x - viewMovement) >= -viewMovement) {
                     newPicViewPosition.x -= viewMovement;
                 }
                 break;
-            case "right":
+            case 2:
                 newPicViewPosition.x += viewMovement;
                 break;
-            case "up":
+            case 3:
                 if ((newPicViewPosition.y - viewMovement) >= -viewMovement) {
                     newPicViewPosition.y -= viewMovement;
                 }
                 break;
-            case "down":
+            default:
                 newPicViewPosition.y += viewMovement;
                 break;
         }
@@ -980,24 +980,62 @@ class UserInterface implements KeyListener {
         picScroller.setViewport(MAP_VIEW);
     }
 
-    private void moveSpriteViewPort(String direction) {
-        Point newPicViewPosition = SPRITE_VIEW.getViewPosition();
-        int viewMovement = SPRITESHEET.getSpriteSide() * spriteListScale;
+    private void newMoveViewPort() {
+        Point newPicViewPosition = new Point();
+        int viewMovement = 0;
+        if (toggleMapMovement) {
+            newPicViewPosition.x = MAP_VIEW.getViewPosition().x;
+            newPicViewPosition.y = MAP_VIEW.getViewPosition().y;
+            viewMovement = SPRITESHEET.getSpriteSide() * mapScale;
+        } else if (toggleSpriteMovement) {
+            newPicViewPosition.x = SPRITE_VIEW.getViewPosition().x;
+            newPicViewPosition.y = SPRITE_VIEW.getViewPosition().y;
+            viewMovement = SPRITESHEET.getSpriteSide() * spriteListScale;
+        }
         switch (direction) {
-            case "left":
+            case 1:
                 if ((newPicViewPosition.x - viewMovement) >= -viewMovement) {
                     newPicViewPosition.x -= viewMovement;
                 }
                 break;
-            case "right":
+            case 2:
                 newPicViewPosition.x += viewMovement;
                 break;
-            case "up":
+            case 3:
                 if ((newPicViewPosition.y - viewMovement) >= -viewMovement) {
                     newPicViewPosition.y -= viewMovement;
                 }
                 break;
-            case "down":
+            default:
+                newPicViewPosition.y += viewMovement;
+                break;
+        }
+        if (toggleMapMovement) {
+            MAP_VIEW.setViewPosition(newPicViewPosition);
+            picScroller.setViewport(MAP_VIEW);
+        } else if (toggleSpriteMovement) {
+            SPRITE_VIEW.setViewPosition(newPicViewPosition);
+            spriteListScroller.setViewport(SPRITE_VIEW);
+        }
+    }
+    private void moveSpriteViewPort() {
+        Point newPicViewPosition = SPRITE_VIEW.getViewPosition();
+        int viewMovement = SPRITESHEET.getSpriteSide() * spriteListScale;
+        switch (direction) {
+            case 1:
+                if ((newPicViewPosition.x - viewMovement) >= -viewMovement) {
+                    newPicViewPosition.x -= viewMovement;
+                }
+                break;
+            case 2:
+                newPicViewPosition.x += viewMovement;
+                break;
+            case 3:
+                if ((newPicViewPosition.y - viewMovement) >= -viewMovement) {
+                    newPicViewPosition.y -= viewMovement;
+                }
+                break;
+            default:
                 newPicViewPosition.y += viewMovement;
                 break;
         }
@@ -1038,13 +1076,118 @@ class UserInterface implements KeyListener {
 
     }
 
+//    @Override
+//    public void keyPressed(KeyEvent e) {
+//        System.out.println("direction = " + direction);
+//        if (TA.isEditable()) {
+//            int key = e.getKeyCode();
+//            //Next line is set in orderd to not allow X or Y to reach the end of the pointer BufferedImage.
+//            //If any coordinate reaches the end of the axis, it would generate the square to be drawn outside
+//            //of the buffered, since it is the top left coordinate the one which is taken9 in consideration.
+//            int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
+//            System.out.println("Key = " + key);
+//            if (TA.hasFocus()) {
+//                if (key == 27) {
+//                    //Key 27 = Esc
+//                    frame.requestFocus();
+//                }
+//            } else {
+//                if (key == 17) {
+//                    //Key 17 = Ctrl
+//                    if (!toggleMapMovement) {
+//                        toggleMapMovement = true;
+//                    }
+//                } else if (key == 16) {
+//                    //Key 17 = Shift
+//                    if (!toggleSpriteMovement) {
+//                        toggleSpriteMovement = true;
+//                    }
+//                } else if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+//                    direction = 1;
+//                    if (toggleMapMovement) {
+//                        moveMapViewPort();
+//                    } else if (toggleSpriteMovement) {
+//                        moveSpriteViewPort();
+//                    } else {
+//                        if ((x - movementIncrement) >= 0) {
+//                            pointerMovement();
+//                        }
+//                    }
+//                } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+//                    direction = 2;
+//                    if (toggleMapMovement) {
+//                        moveMapViewPort();
+//                    } else if (toggleSpriteMovement) {
+//                        moveSpriteViewPort();
+//                    } else {
+//                        if ((x + movementIncrement) <= width) {
+//                            pointerMovement();
+//                        }
+//                    }
+//                } else if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+//                    direction = 3;
+//                    if (toggleMapMovement) {
+//                        moveMapViewPort();
+//                    } else if (toggleSpriteMovement) {
+//                        moveSpriteViewPort();
+//                    } else {
+//                        if ((y - movementIncrement) >= 0) {
+//                            pointerMovement();
+//                        }
+//                    }
+//                } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+//                    direction = 4;
+//                    if (toggleMapMovement) {
+//                        moveMapViewPort();
+//                    } else if (toggleSpriteMovement) {
+//                        moveSpriteViewPort();
+//                    } else {
+//                        if ((y + movementIncrement) <= width) {
+//                            pointerMovement();
+//                        }
+//                    }
+//                } else if (key == KeyEvent.VK_PLUS || key == KeyEvent.VK_ADD) {
+//                    //+ key > key 521 = * + ] key close to enter, key 107 = + numerical number.
+//                    if (toggleMapMovement) {
+//                        biggerMap.doClick();
+//                    } else if (toggleSpriteMovement) {
+//                        biggerSprite.doClick();
+//                    }
+//                } else if (key == KeyEvent.VK_MINUS || key == KeyEvent.VK_SUBTRACT) {
+//                    //+ key > key 45 = - _ key close to shift under Enter, key 109 = - numerical number.
+//                    if (toggleMapMovement) {
+//                        smallerMap.doClick();
+//                    } else if (toggleSpriteMovement) {
+//                        smallerSprite.doClick();
+//                    }
+//                } else if (key == KeyEvent.VK_ENTER) {
+//                    fillingBrush = !fillingBrush;
+//                    Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
+//                    pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
+//                    if (fillingBrush) {
+//                        pointerGraphics.setColor(Color.GREEN);
+//                    } else {
+//                        pointerGraphics.setColor(Color.RED);
+//                    }
+//                    pointerGraphics.drawRect(x + 1, y + 1, 15, 15);
+//                    pointerGraphics.dispose();
+//                    updateMainCanvas(mapScale);
+//                }
+//            }
+//        }
+//    }
+
+
+    Elimina el movimiento producido por las flechas de dirección
+
     @Override
     public void keyPressed(KeyEvent e) {
+        System.out.println("direction = " + direction);
         if (TA.isEditable()) {
             int key = e.getKeyCode();
             //Next line is set in orderd to not allow X or Y to reach the end of the pointer BufferedImage.
             //If any coordinate reaches the end of the axis, it would generate the square to be drawn outside
-            //of the buffered, since it is the top left coordinate the one which is taken in consideration.
+            //of the buffered, since it is the top left coordinate the one which is taken9 in consideration.
             int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
             System.out.println("Key = " + key);
             if (TA.hasFocus()) {
@@ -1064,43 +1207,39 @@ class UserInterface implements KeyListener {
                         toggleSpriteMovement = true;
                     }
                 } else if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-                    if (toggleMapMovement) {
-                        moveMapViewPort("left");
-                    } else if (toggleSpriteMovement) {
-                        moveSpriteViewPort("left");
+                    direction = 1;
+                    if (toggleMapMovement || toggleSpriteMovement) {
+                        newMoveViewPort();
                     } else {
                         if ((x - movementIncrement) >= 0) {
-                            pointerMovement("left");
+                            pointerMovement();
                         }
                     }
                 } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-                    if (toggleMapMovement) {
-                        moveMapViewPort("right");
-                    } else if (toggleSpriteMovement) {
-                        moveSpriteViewPort("right");
+                    direction = 2;
+                    if (toggleMapMovement || toggleSpriteMovement) {
+                        newMoveViewPort();
                     } else {
                         if ((x + movementIncrement) <= width) {
-                            pointerMovement("right");
+                            pointerMovement();
                         }
                     }
                 } else if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-                    if (toggleMapMovement) {
-                        moveMapViewPort("up");
-                    } else if (toggleSpriteMovement) {
-                        moveSpriteViewPort("up");
+                    direction = 3;
+                    if (toggleMapMovement || toggleSpriteMovement) {
+                        newMoveViewPort();
                     } else {
                         if ((y - movementIncrement) >= 0) {
-                            pointerMovement("up");
+                            pointerMovement();
                         }
                     }
                 } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-                    if (toggleMapMovement) {
-                        moveMapViewPort("down");
-                    } else if (toggleSpriteMovement) {
-                        moveSpriteViewPort("down");
+                    direction = 4;
+                    if (toggleMapMovement || toggleSpriteMovement) {
+                        newMoveViewPort();
                     } else {
                         if ((y + movementIncrement) <= width) {
-                            pointerMovement("down");
+                            pointerMovement();
                         }
                     }
                 } else if (key == KeyEvent.VK_PLUS || key == KeyEvent.VK_ADD) {
