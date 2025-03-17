@@ -1063,8 +1063,7 @@ class UserInterface implements KeyListener {
                     if (!toggleSpriteMovement) {
                         toggleSpriteMovement = true;
                     }
-                } else if (key == 65 || key == 37) {
-                    //Left > Key 65 = 'A', key 37 = left arrow
+                } else if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
                     if (toggleMapMovement) {
                         moveMapViewPort("left");
                     } else if (toggleSpriteMovement) {
@@ -1074,8 +1073,7 @@ class UserInterface implements KeyListener {
                             pointerMovement("left");
                         }
                     }
-                } else if (key == 68 || key == 39) {
-                    //Right > Key 68 = 'D', key 39 = right arrow
+                } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
                     if (toggleMapMovement) {
                         moveMapViewPort("right");
                     } else if (toggleSpriteMovement) {
@@ -1085,8 +1083,7 @@ class UserInterface implements KeyListener {
                             pointerMovement("right");
                         }
                     }
-                } else if (key == 87 || key == 38) {
-                    //Up > Key 65 = 'W', key 37 = up arrow
+                } else if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
                     if (toggleMapMovement) {
                         moveMapViewPort("up");
                     } else if (toggleSpriteMovement) {
@@ -1096,8 +1093,7 @@ class UserInterface implements KeyListener {
                             pointerMovement("up");
                         }
                     }
-                } else if (key == 83 || key == 40) {
-                    //Down > Key 65 = 'S', key 37 = down arrow
+                } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
                     if (toggleMapMovement) {
                         moveMapViewPort("down");
                     } else if (toggleSpriteMovement) {
@@ -1107,14 +1103,14 @@ class UserInterface implements KeyListener {
                             pointerMovement("down");
                         }
                     }
-                } else if (key == 521 || key == 107) {
+                } else if (key == KeyEvent.VK_PLUS || key == KeyEvent.VK_ADD) {
                     //+ key > key 521 = * + ] key close to enter, key 107 = + numerical number.
                     if (toggleMapMovement) {
                         biggerMap.doClick();
                     } else if (toggleSpriteMovement) {
                         biggerSprite.doClick();
                     }
-                } else if (key == 45 || key == 109) {
+                } else if (key == KeyEvent.VK_MINUS || key == KeyEvent.VK_SUBTRACT) {
                     //+ key > key 45 = - _ key close to shift under Enter, key 109 = - numerical number.
                     if (toggleMapMovement) {
                         smallerMap.doClick();
