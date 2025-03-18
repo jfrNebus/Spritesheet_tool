@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -53,7 +52,8 @@ class UserInterface implements KeyListener {
     //The amount of pixels
     private int movementIncrement;
     private int direction = 0; //1 = left, 2 = right, 3 = up, 4 = down
-    private final int maxActualCanvasLength = 17;
+    private final int MAX_LABEL_LENGHT = 17;
+    private final int FRAME_GAP = 1;
     //Screen size
     private final int MAP_SCALE_RATIO = 1;
     private String actualCanvas = "noLayer";
@@ -202,7 +202,7 @@ class UserInterface implements KeyListener {
             @Override
             public void mouseExited(MouseEvent e) {
                 String layerLabel = "Actual layer: " +
-                        (actualCanvas.length() > maxActualCanvasLength ? actualCanvas.substring(0, 5) + "..." +
+                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
                                 actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas);
                 actualLayerLabel.setText(layerLabel);
             }
@@ -243,7 +243,7 @@ class UserInterface implements KeyListener {
                 CANVAS.addNewCanvas(newLayerName);
                 actualCanvas = newLayerName;
                 actualLayerLabel.setText("Actual layer:\n" +
-                        (actualCanvas.length() > maxActualCanvasLength ? actualCanvas.substring(0, 5) + "..." +
+                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
                                 actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
             } else {
                 subWindow.runInfoWindo("invalidLayerHelp");
@@ -611,7 +611,7 @@ class UserInterface implements KeyListener {
                             CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASHMAP());
                             updateMainCanvas(mapScale);
                         } else {
-                            if(!validPictureFile){
+                            if (!validPictureFile) {
                                 subWindow.runInfoWindo("invalidImagePath");
                             } else {
                                 subWindow.runInfoWindo("corruptedFile");
@@ -714,7 +714,7 @@ class UserInterface implements KeyListener {
         };
 
         String matchedString = matcherFunc.apply("(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)");
-        int amountOfSprites = matchedString.matches("\\d+") ? (int) Math.pow(Integer.parseInt(matchedString), 2) :  0;
+        int amountOfSprites = matchedString.matches("\\d+") ? (int) Math.pow(Integer.parseInt(matchedString), 2) : 0;
 
         if (amountOfSprites == 0) {
             keep = false;
@@ -724,10 +724,10 @@ class UserInterface implements KeyListener {
             if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
                     (SPRITESHEET.getSpriteSide() == 0)) {
                 matchedString = matcherFunc.apply("(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)");
-                int side = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) :  0;
+                int side = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
 
                 matchedString = matcherFunc.apply("(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)");
-                int newCanvasSize = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) :  0;
+                int newCanvasSize = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
 
                 if (side != 0 && newCanvasSize != 0) {
                     CANVAS.initializeCanvas(side, newCanvasSize);
@@ -791,10 +791,10 @@ class UserInterface implements KeyListener {
         for (Map.Entry<String, int[]> newLayers : newlayerSelector.entrySet()) {
             addNewLayerButtons(newLayers.getKey());
             CANVAS.addNewCanvas(newLayers.getKey());
-            if(firstLayerName) {
+            if (firstLayerName) {
                 actualCanvas = newLayers.getKey();
                 actualLayerLabel.setText("Actual layer:\n" +
-                        (actualCanvas.length() > maxActualCanvasLength ? actualCanvas.substring(0, 5) + "..." +
+                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
                                 actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
                 firstLayerName = false;
             }
@@ -880,7 +880,7 @@ class UserInterface implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 actualCanvas = layerName;
                 actualLayerLabel.setText("Actual layer: " +
-                        (actualCanvas.length() > maxActualCanvasLength ? actualCanvas.substring(0, 5) + "..." +
+                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
                                 actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
             }
         });
@@ -919,7 +919,7 @@ class UserInterface implements KeyListener {
         Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
         pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
         pointerGraphics.drawImage(new BufferedImage(spriteSide, spriteSide, BufferedImage.TYPE_INT_ARGB),
-                x + 1, y + 1, spriteSide, spriteSide, null);
+                x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide, null);
 
         switch (direction) {
             case 1:
@@ -949,39 +949,14 @@ class UserInterface implements KeyListener {
             System.out.println("returnedArray[arrayIndexY][arrayIndexX] = " + returnedArray[arrayIndexY][arrayIndexX]);
         }
         pointerGraphics.setColor(pointer);
-        pointerGraphics.drawRect(x + 1, y + 1, spriteSide-1,
-                spriteSide-1);
+        pointerGraphics.drawRect(x + FRAME_GAP, y + FRAME_GAP, spriteSide - FRAME_GAP,
+                spriteSide - FRAME_GAP);
         pointerGraphics.dispose();
 
         updateMainCanvas(mapScale);
     }
 
-    private void moveMapViewPort() {
-        Point newPicViewPosition = MAP_VIEW.getViewPosition();
-        int viewMovement = SPRITESHEET.getSpriteSide() * mapScale;
-        switch (direction) {
-            case 1:
-                if ((newPicViewPosition.x - viewMovement) >= -viewMovement) {
-                    newPicViewPosition.x -= viewMovement;
-                }
-                break;
-            case 2:
-                newPicViewPosition.x += viewMovement;
-                break;
-            case 3:
-                if ((newPicViewPosition.y - viewMovement) >= -viewMovement) {
-                    newPicViewPosition.y -= viewMovement;
-                }
-                break;
-            default:
-                newPicViewPosition.y += viewMovement;
-                break;
-        }
-        MAP_VIEW.setViewPosition(newPicViewPosition);
-        picScroller.setViewport(MAP_VIEW);
-    }
-
-    private void newMoveViewPort() {
+    private void moveViewPort() {
         Point newPicViewPosition = new Point();
         int viewMovement = 0;
         if (toggleMapMovement) {
@@ -1019,30 +994,6 @@ class UserInterface implements KeyListener {
             spriteListScroller.setViewport(SPRITE_VIEW);
         }
     }
-    private void moveSpriteViewPort() {
-        Point newPicViewPosition = SPRITE_VIEW.getViewPosition();
-        int viewMovement = SPRITESHEET.getSpriteSide() * spriteListScale;
-        switch (direction) {
-            case 1:
-                if ((newPicViewPosition.x - viewMovement) >= -viewMovement) {
-                    newPicViewPosition.x -= viewMovement;
-                }
-                break;
-            case 2:
-                newPicViewPosition.x += viewMovement;
-                break;
-            case 3:
-                if ((newPicViewPosition.y - viewMovement) >= -viewMovement) {
-                    newPicViewPosition.y -= viewMovement;
-                }
-                break;
-            default:
-                newPicViewPosition.y += viewMovement;
-                break;
-        }
-        SPRITE_VIEW.setViewPosition(newPicViewPosition);
-        spriteListScroller.setViewport(SPRITE_VIEW);
-    }
 
     private final MouseListener mouseListener = new MouseListener() {
         @Override
@@ -1077,107 +1028,6 @@ class UserInterface implements KeyListener {
 
     }
 
-//    @Override
-//    public void keyPressed(KeyEvent e) {
-//        System.out.println("direction = " + direction);
-//        if (TA.isEditable()) {
-//            int key = e.getKeyCode();
-//            //Next line is set in orderd to not allow X or Y to reach the end of the pointer BufferedImage.
-//            //If any coordinate reaches the end of the axis, it would generate the square to be drawn outside
-//            //of the buffered, since it is the top left coordinate the one which is taken9 in consideration.
-//            int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
-//            System.out.println("Key = " + key);
-//            if (TA.hasFocus()) {
-//                if (key == 27) {
-//                    //Key 27 = Esc
-//                    frame.requestFocus();
-//                }
-//            } else {
-//                if (key == 17) {
-//                    //Key 17 = Ctrl
-//                    if (!toggleMapMovement) {
-//                        toggleMapMovement = true;
-//                    }
-//                } else if (key == 16) {
-//                    //Key 17 = Shift
-//                    if (!toggleSpriteMovement) {
-//                        toggleSpriteMovement = true;
-//                    }
-//                } else if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-//                    direction = 1;
-//                    if (toggleMapMovement) {
-//                        moveMapViewPort();
-//                    } else if (toggleSpriteMovement) {
-//                        moveSpriteViewPort();
-//                    } else {
-//                        if ((x - movementIncrement) >= 0) {
-//                            pointerMovement();
-//                        }
-//                    }
-//                } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-//                    direction = 2;
-//                    if (toggleMapMovement) {
-//                        moveMapViewPort();
-//                    } else if (toggleSpriteMovement) {
-//                        moveSpriteViewPort();
-//                    } else {
-//                        if ((x + movementIncrement) <= width) {
-//                            pointerMovement();
-//                        }
-//                    }
-//                } else if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-//                    direction = 3;
-//                    if (toggleMapMovement) {
-//                        moveMapViewPort();
-//                    } else if (toggleSpriteMovement) {
-//                        moveSpriteViewPort();
-//                    } else {
-//                        if ((y - movementIncrement) >= 0) {
-//                            pointerMovement();
-//                        }
-//                    }
-//                } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-//                    direction = 4;
-//                    if (toggleMapMovement) {
-//                        moveMapViewPort();
-//                    } else if (toggleSpriteMovement) {
-//                        moveSpriteViewPort();
-//                    } else {
-//                        if ((y + movementIncrement) <= width) {
-//                            pointerMovement();
-//                        }
-//                    }
-//                } else if (key == KeyEvent.VK_PLUS || key == KeyEvent.VK_ADD) {
-//                    //+ key > key 521 = * + ] key close to enter, key 107 = + numerical number.
-//                    if (toggleMapMovement) {
-//                        biggerMap.doClick();
-//                    } else if (toggleSpriteMovement) {
-//                        biggerSprite.doClick();
-//                    }
-//                } else if (key == KeyEvent.VK_MINUS || key == KeyEvent.VK_SUBTRACT) {
-//                    //+ key > key 45 = - _ key close to shift under Enter, key 109 = - numerical number.
-//                    if (toggleMapMovement) {
-//                        smallerMap.doClick();
-//                    } else if (toggleSpriteMovement) {
-//                        smallerSprite.doClick();
-//                    }
-//                } else if (key == KeyEvent.VK_ENTER) {
-//                    fillingBrush = !fillingBrush;
-//                    Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
-//                    pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-//                    if (fillingBrush) {
-//                        pointerGraphics.setColor(Color.GREEN);
-//                    } else {
-//                        pointerGraphics.setColor(Color.RED);
-//                    }
-//                    pointerGraphics.drawRect(x + 1, y + 1, 15, 15);
-//                    pointerGraphics.dispose();
-//                    updateMainCanvas(mapScale);
-//                }
-//            }
-//        }
-//    }
-
     @Override
     public void keyPressed(KeyEvent e) {
         if (TA.isEditable()) {
@@ -1202,7 +1052,7 @@ class UserInterface implements KeyListener {
                 } else if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
                     direction = 1;
                     if (toggleMapMovement || toggleSpriteMovement) {
-                        newMoveViewPort();
+                        moveViewPort();
                     } else {
                         if ((x - movementIncrement) >= 0) {
                             pointerMovement();
@@ -1211,7 +1061,7 @@ class UserInterface implements KeyListener {
                 } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
                     direction = 2;
                     if (toggleMapMovement || toggleSpriteMovement) {
-                        newMoveViewPort();
+                        moveViewPort();
                     } else {
                         int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
                         if ((x + movementIncrement) <= width) {
@@ -1221,7 +1071,7 @@ class UserInterface implements KeyListener {
                 } else if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
                     direction = 3;
                     if (toggleMapMovement || toggleSpriteMovement) {
-                        newMoveViewPort();
+                        moveViewPort();
                     } else {
                         if ((y - movementIncrement) >= 0) {
                             pointerMovement();
@@ -1230,7 +1080,7 @@ class UserInterface implements KeyListener {
                 } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
                     direction = 4;
                     if (toggleMapMovement || toggleSpriteMovement) {
-                        newMoveViewPort();
+                        moveViewPort();
                     } else {
                         int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
                         if ((y + movementIncrement) <= width) {
@@ -1250,7 +1100,7 @@ class UserInterface implements KeyListener {
                         smallerSprite.doClick();
                     }
                 } else if (key == KeyEvent.VK_ENTER) {
-                    int spriteSide = SPRITESHEET.getSpriteSide() - 1;
+                    int spriteSide = SPRITESHEET.getSpriteSide() - FRAME_GAP;
                     fillingBrush = !fillingBrush;
                     Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
                     pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
@@ -1259,7 +1109,7 @@ class UserInterface implements KeyListener {
                     } else {
                         pointerGraphics.setColor(Color.RED);
                     }
-                    pointerGraphics.drawRect(x + 1, y + 1, spriteSide, spriteSide);
+                    pointerGraphics.drawRect(x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide);
                     pointerGraphics.dispose();
                     updateMainCanvas(mapScale);
                 }
@@ -1267,7 +1117,38 @@ class UserInterface implements KeyListener {
         }
     }
 
-    check the frame gap
+
+
+    if (toggleMapMovement || toggleSpriteMovement) {
+        moveViewPort();
+    }
+                        switch (direction) {
+        case 1:
+            if ((x - movementIncrement) >= 0) {
+                pointerMovement();
+            }
+            break;
+        case 2:
+            if ((x + movementIncrement) >= 0) {
+                pointerMovement();
+            }
+            break;
+        case 3:
+            if ((y - movementIncrement) >= 0) {
+                pointerMovement();
+            }
+            break;
+        case 4:
+            if ((y + movementIncrement) >= 0) {
+                pointerMovement();
+            }
+            break;
+    }
+
+
+
+
+
 
     @Override
     public void keyReleased(KeyEvent e) {
