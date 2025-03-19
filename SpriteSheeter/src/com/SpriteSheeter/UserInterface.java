@@ -956,6 +956,36 @@ class UserInterface implements KeyListener {
         updateMainCanvas(mapScale);
     }
 
+    void movementSelector() {
+        if (toggleMapMovement || toggleSpriteMovement) {
+            moveViewPort();
+        } else {
+            int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
+            switch (direction) {
+                case 1:
+                    if ((x - movementIncrement) >= 0) {
+                        pointerMovement();
+                    }
+                    break;
+                case 2:
+                    if ((x + movementIncrement) <= width) {
+                        pointerMovement();
+                    }
+                    break;
+                case 3:
+                    if ((y - movementIncrement) >= 0) {
+                        pointerMovement();
+                    }
+                    break;
+                case 4:
+                    if ((y + movementIncrement) <= width) {
+                        pointerMovement();
+                    }
+                    break;
+            }
+        }
+    }
+
     private void moveViewPort() {
         Point newPicViewPosition = new Point();
         int viewMovement = 0;
@@ -1028,126 +1058,68 @@ class UserInterface implements KeyListener {
 
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (TA.isEditable()) {
-            int key = e.getKeyCode();
-            //Next line is set in orderd to not allow X or Y to reach the end of the pointer BufferedImage.
-            //If any coordinate reaches the end of the axis, it would generate the square to be drawn outside
-            //of the buffered, since it is the top left coordinate the one which is taken9 in consideration.
-            System.out.println("Key = " + key);
-            if (TA.hasFocus()) {
-                if (key == KeyEvent.VK_ESCAPE) {
-                    frame.requestFocus();
+@Override
+public void keyPressed(KeyEvent e) {
+    if (TA.isEditable()) {
+        int key = e.getKeyCode();
+        //Next line is set in orderd to not allow X or Y to reach the end of the pointer BufferedImage.
+        //If any coordinate reaches the end of the axis, it would generate the square to be drawn outside
+        //of the buffered, since it is the top left coordinate the one which is taken9 in consideration.
+        System.out.println("Key = " + key);
+        if (TA.hasFocus()) {
+            if (key == KeyEvent.VK_ESCAPE) {
+                frame.requestFocus();
+            }
+        } else {
+            if (key == KeyEvent.VK_CONTROL) {
+                if (!toggleMapMovement) {
+                    toggleMapMovement = true;
                 }
-            } else {
-                if (key == KeyEvent.VK_CONTROL) {
-                    if (!toggleMapMovement) {
-                        toggleMapMovement = true;
-                    }
-                } else if (key == KeyEvent.VK_SHIFT) {
-                    if (!toggleSpriteMovement) {
-                        toggleSpriteMovement = true;
-                    }
-                } else if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-                    direction = 1;
-                    if (toggleMapMovement || toggleSpriteMovement) {
-                        moveViewPort();
-                    } else {
-                        if ((x - movementIncrement) >= 0) {
-                            pointerMovement();
-                        }
-                    }
-                } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-                    direction = 2;
-                    if (toggleMapMovement || toggleSpriteMovement) {
-                        moveViewPort();
-                    } else {
-                        int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
-                        if ((x + movementIncrement) <= width) {
-                            pointerMovement();
-                        }
-                    }
-                } else if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-                    direction = 3;
-                    if (toggleMapMovement || toggleSpriteMovement) {
-                        moveViewPort();
-                    } else {
-                        if ((y - movementIncrement) >= 0) {
-                            pointerMovement();
-                        }
-                    }
-                } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-                    direction = 4;
-                    if (toggleMapMovement || toggleSpriteMovement) {
-                        moveViewPort();
-                    } else {
-                        int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
-                        if ((y + movementIncrement) <= width) {
-                            pointerMovement();
-                        }
-                    }
-                } else if (key == KeyEvent.VK_PLUS || key == KeyEvent.VK_ADD) {
-                    if (toggleMapMovement) {
-                        biggerMap.doClick();
-                    } else if (toggleSpriteMovement) {
-                        biggerSprite.doClick();
-                    }
-                } else if (key == KeyEvent.VK_MINUS || key == KeyEvent.VK_SUBTRACT) {
-                    if (toggleMapMovement) {
-                        smallerMap.doClick();
-                    } else if (toggleSpriteMovement) {
-                        smallerSprite.doClick();
-                    }
-                } else if (key == KeyEvent.VK_ENTER) {
-                    int spriteSide = SPRITESHEET.getSpriteSide() - FRAME_GAP;
-                    fillingBrush = !fillingBrush;
-                    Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
-                    pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-                    if (fillingBrush) {
-                        pointerGraphics.setColor(Color.GREEN);
-                    } else {
-                        pointerGraphics.setColor(Color.RED);
-                    }
-                    pointerGraphics.drawRect(x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide);
-                    pointerGraphics.dispose();
-                    updateMainCanvas(mapScale);
+            } else if (key == KeyEvent.VK_SHIFT) {
+                if (!toggleSpriteMovement) {
+                    toggleSpriteMovement = true;
                 }
+            } else if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+                direction = 1;
+                movementSelector();
+            } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+                direction = 2;
+                movementSelector();
+            } else if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+                direction = 3;
+                movementSelector();
+            } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+                direction = 4;
+                movementSelector();
+            } else if (key == KeyEvent.VK_PLUS || key == KeyEvent.VK_ADD) {
+                if (toggleMapMovement) {
+                    biggerMap.doClick();
+                } else if (toggleSpriteMovement) {
+                    biggerSprite.doClick();
+                }
+            } else if (key == KeyEvent.VK_MINUS || key == KeyEvent.VK_SUBTRACT) {
+                if (toggleMapMovement) {
+                    smallerMap.doClick();
+                } else if (toggleSpriteMovement) {
+                    smallerSprite.doClick();
+                }
+            } else if (key == KeyEvent.VK_ENTER) {
+                int spriteSide = SPRITESHEET.getSpriteSide() - FRAME_GAP;
+                fillingBrush = !fillingBrush;
+                Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
+                pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
+                if (fillingBrush) {
+                    pointerGraphics.setColor(Color.GREEN);
+                } else {
+                    pointerGraphics.setColor(Color.RED);
+                }
+                pointerGraphics.drawRect(x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide);
+                pointerGraphics.dispose();
+                updateMainCanvas(mapScale);
             }
         }
     }
-
-
-
-    if (toggleMapMovement || toggleSpriteMovement) {
-        moveViewPort();
-    }
-                        switch (direction) {
-        case 1:
-            if ((x - movementIncrement) >= 0) {
-                pointerMovement();
-            }
-            break;
-        case 2:
-            if ((x + movementIncrement) >= 0) {
-                pointerMovement();
-            }
-            break;
-        case 3:
-            if ((y - movementIncrement) >= 0) {
-                pointerMovement();
-            }
-            break;
-        case 4:
-            if ((y + movementIncrement) >= 0) {
-                pointerMovement();
-            }
-            break;
-    }
-
-
-
-
+}
 
 
     @Override
@@ -1328,7 +1300,6 @@ class UserInterface implements KeyListener {
         ok.addActionListener(e -> {
             String firstTFS = firstTF.getText().isEmpty() ? "" : firstTF.getText();
             String secondTFS = secondTF.getText();
-//            String thirdTFS = thirdTF.getText();
             if (menuName.equals("exportCanvas")) {
                 if (!firstTFS.isEmpty() && !secondTFS.isEmpty()) {
                     boolean secondNumber = secondTFS.matches("\\d+");
