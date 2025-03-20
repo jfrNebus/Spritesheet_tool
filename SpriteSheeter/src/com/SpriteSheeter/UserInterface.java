@@ -648,8 +648,7 @@ class UserInterface implements KeyListener {
                     String arrayPrinted = CANVAS.getExportString(SPRITESHEET.getPicturePath());
                     writer.write(arrayPrinted);
                     writer.close();
-                    System.out.println("Successfully wrote to the file.");
-                    System.out.println(fc.getSelectedFile().getAbsolutePath());
+                    TA.setText("Successfully saved to the file.\n" + fc.getSelectedFile().getAbsolutePath());
                 } else {
                     System.out.println("Open command cancelled by user.");
                 }

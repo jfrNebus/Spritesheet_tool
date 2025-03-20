@@ -58,22 +58,14 @@ public class Canvas {
             int[][] layerArray = array.getValue();
             for (int i = 0; i < arraySize; i++) {
                 for (int j = 0; j < arraySize; j++) {
-                    arrayNumbers.append(layerArray[y][x]).append(" ");
-                    data.append(layerArray[y][x]);
+                    int value = layerArray[y][x];
+                    arrayNumbers.append(value).append(" ");
+                    data.append(value).append(x < arraySize - 1 ? "," : "}");
                     x++;
-                    if (x < arraySize) {
-                        data.append(",");
-                    } else {
-                        data.append("}");
-                    }
                 }
                 x = 0;
                 y++;
-                if (y < arraySize) {
-                    data.append(",\n{");
-                } else {
-                    data.append("\n};\n");
-                }
+                data.append(y < arraySize ? ",\n{" : "\n};\n");
             }
             y = 0;
             data.append("//").append(array.getKey()).append(":").append(arrayNumbers).append("\n-\n");
