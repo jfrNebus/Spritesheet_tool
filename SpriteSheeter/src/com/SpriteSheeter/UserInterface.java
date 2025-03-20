@@ -56,7 +56,7 @@ class UserInterface implements KeyListener {
     private final int FRAME_GAP = 1;
     //Screen size
     private final int MAP_SCALE_RATIO = 1;
-    private String actualCanvas = "noLayer";
+    private String actualCanvas = Strings.NO_LAYER;
     private final SpriteSheet SPRITESHEET = new SpriteSheet();
     private final Canvas CANVAS = new Canvas();
     private JFrame frame;
@@ -96,7 +96,7 @@ class UserInterface implements KeyListener {
 
         JMenuBar jMenuBar = getjMenuBar();
 
-        frame = new JFrame("Spriter");
+        frame = new JFrame(Strings.FRAME_NAME);
         frame.setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
@@ -154,7 +154,10 @@ class UserInterface implements KeyListener {
         spriteLabelPanel.setLayout(new BoxLayout(spriteLabelPanel, BoxLayout.X_AXIS));
         spriteLabelPanel.addKeyListener(this);
         //>>> Inside panel1 > Inside panel2 > Inside spritesFather > Inside spriteLabelPanel
-        JLabel spriteLabel = new JLabel("Sprites list:");
+        JLabel spriteLabel = new JLabel(Strings.SPRITE_LABEL_NAME);
+
+        VAS POR AQUÍ
+
         //>>> Inside panel1 > Inside spritesFather
         spriteListScroller = new JScrollPane();
         spriteListScroller.addKeyListener(this);
