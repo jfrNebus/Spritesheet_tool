@@ -713,7 +713,7 @@ class UserInterface implements KeyListener {
             return output;
         };
 
-        String matchedString = matcherFunc.apply("(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)");
+        String matchedString = matcherFunc.apply(Strings.IMPORTED_FIRST_REGEX);
         int amountOfSprites = matchedString.matches("\\d+") ? (int) Math.pow(Integer.parseInt(matchedString), 2) : 0;
 
         if (amountOfSprites == 0) {
@@ -723,10 +723,10 @@ class UserInterface implements KeyListener {
         if (keep) {
             if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
                     (SPRITESHEET.getSpriteSide() == 0)) {
-                matchedString = matcherFunc.apply("(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)");
+                matchedString = matcherFunc.apply(Strings.IMPORTED_SECOND_REGEX);
                 int side = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
 
-                matchedString = matcherFunc.apply("(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)");
+                matchedString = matcherFunc.apply(Strings.IMPORTED_THIRD_REGEX);
                 int newCanvasSize = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
 
                 if (side != 0 && newCanvasSize != 0) {
@@ -742,13 +742,14 @@ class UserInterface implements KeyListener {
         }
 
         if (keep) {
-            Matcher matcher = Pattern.compile("(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])")
+            Matcher matcher = Pattern.compile(Strings.IMPORTED_FOURTH_REGEX)
                     .matcher(loadedData);
             while (matcher.find()) {
                 layers.put(matcher.group(), null);
             }
             for (Map.Entry<String, int[]> numbersMap : layers.entrySet()) {
-                String numbersRegex = "(?<=};\\n//" + numbersMap.getKey() + ":)((\\d)+\\s)+(?=\\n)";
+                String numbersRegex = Strings.IMPORTED_FIFTH_REGEX_1 + numbersMap.getKey() +
+                        Strings.IMPORTED_FIFTH_REGEX_2;
                 String[] justNumbers = matcherFunc.apply(numbersRegex).split("\\s");
                 if (amountOfSprites == justNumbers.length) {
                     int[] numbers = new int[justNumbers.length];
@@ -770,7 +771,7 @@ class UserInterface implements KeyListener {
 
     private String getLoadedPath(String loadedData) {
         String path = "";
-        Matcher matcher = Pattern.compile("(?<=\\n##)(\\w:(.*))(?=##)").matcher(loadedData);
+        Matcher matcher = Pattern.compile(Strings.LOADED_REGEX).matcher(loadedData);
         while (matcher.find()) {
             path = matcher.group();
         }
@@ -778,11 +779,13 @@ class UserInterface implements KeyListener {
         return path;
     }
 
+    REVISA POR ÚLTIMA VEZ LA CLASE Strings y luego verifica el sprite numero 0 para fotos sin espacio en blanco
+
     private void deleteAllLayer() {
-        actualLayerLabel.setText("Actual layer: ");
+        actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " ");
         CANVAS.deleteAllLayers();
         layerSelector.removeAll();
-        actualCanvas = "noLayer";
+        actualCanvas = Strings.NO_LAYER;
         updateMainCanvas(mapScale);
     }
 
@@ -793,7 +796,7 @@ class UserInterface implements KeyListener {
             CANVAS.addNewCanvas(newLayers.getKey());
             if (firstLayerName) {
                 actualCanvas = newLayers.getKey();
-                actualLayerLabel.setText("Actual layer:\n" +
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " +
                         (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
                                 actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
                 firstLayerName = false;
@@ -842,7 +845,7 @@ class UserInterface implements KeyListener {
                     System.out.println("Pressed sprite id: " + SPRITESHEET.getSPRITES_HASHMAP().get(innerId - 1).getId());
                     //Used to set the kind of Composite to be used in the BufferedImage in use. Check the above
                     //link.
-                    if (!actualCanvas.equals("noLayer")) {
+                    if (!actualCanvas.equals(Strings.NO_LAYER)) {
                         Graphics2D pictureGraphics = CANVAS.getLayer(actualCanvas).createGraphics();
                         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC);
                         pictureGraphics.setComposite(ac);
@@ -879,7 +882,7 @@ class UserInterface implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 actualCanvas = layerName;
-                actualLayerLabel.setText("Actual layer: " +
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " +
                         (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
                                 actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
             }
@@ -1028,8 +1031,7 @@ class UserInterface implements KeyListener {
     private final MouseListener mouseListener = new MouseListener() {
         @Override
         public void mouseClicked(MouseEvent e) {
-            TA.setText("You have to create a new canvas. Create a new" +
-                    " canvas throught the \"Options\" menu.");
+            TA.setText(Strings.NEW_LAYER_REQUIRED);
         }
 
         @Override
@@ -1189,14 +1191,14 @@ public void keyPressed(KeyEvent e) {
                 firstLabelS = "Path:  ";
                 firstToolTip = "Paste your path here.";
                 secondLabelS = "Scale:";
-                secondToolTip = "Eenter a valid scale factor. Type an integer greater than 0.\n" + "The actual canvas size will be multiplied by the scale.\nActual canvas size: " + CANVAS.getCanvasSize() + ".";
+                secondToolTip = Strings.SUBMENU_EXPORTCANVAS_TOOLTIP + CANVAS.getCanvasSize() + ".";
                 break;
             case "requestNewCanvasValues":
                 frameName = "Canvas data";
                 firstLabelS = "Sprite side:";
                 firstToolTip = "The side size of each individual sprite in pixels.";
                 secondLabelS = "New canvas side:";
-                secondToolTip = "The new canvas' side size in pixels. .";
+                secondToolTip = "The new canvas side size in pixels.";
                 break;
         }
 
@@ -1257,7 +1259,7 @@ public void keyPressed(KeyEvent e) {
                     int returnVal = fc.showOpenDialog(firstTF);
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         firstTF.setText(fc.getSelectedFile().getAbsolutePath());
-                        System.out.println("Path located: " + fc.getSelectedFile().getAbsolutePath());
+                        TA.setText("Path located: " + fc.getSelectedFile().getAbsolutePath());
                     } else {
                         System.out.println("Open command cancelled by user.");
                     }

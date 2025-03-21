@@ -25,7 +25,19 @@ public class Strings {
     public static final String EXPORT_SAVED_MESSAGE = "Successfully saved to the file.\n";
     public static final String EXPORT_CANVAS_ITEM = "Export canvas           ";
     public static final String HELP_ITEM = "Help           ";
+    public static final String IMPORTED_FIRST_REGEX = "(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)";
+    public static final String IMPORTED_SECOND_REGEX = "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)";
+    public static final String IMPORTED_THIRD_REGEX = "(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)";
+    public static final String IMPORTED_FOURTH_REGEX = "(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])";
+    public static final String IMPORTED_FIFTH_REGEX_1 = "(?<=};\\n//";
+    public static final String IMPORTED_FIFTH_REGEX_2 = ":)((\\d)+\\s)+(?=\\n)";
+    public static final String LOADED_REGEX = "(?<=\\n##)(\\w:(.*))(?=##)";
+    public static final String NEW_LAYER_REQUIRED = "You have to create a new canvas. Create a new" +
+            " canvas throught the \"Options\" menu.";
 
+    //runSubMenu
+
+    public static final String SUBMENU_EXPORTCANVAS_TOOLTIP = "Eenter a valid scale factor. Type an integer greater than 0.\nThe actual canvas size will be multiplied by the scale.\nActual canvas size: ";
 
 
     //SubWindow
