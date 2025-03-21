@@ -96,7 +96,7 @@ class UserInterface implements KeyListener {
 
         JMenuBar jMenuBar = getjMenuBar();
 
-        frame = new JFrame(Strings.FRAME_NAME);
+        frame = new JFrame(Strings.FRAME_NAME_UI);
         frame.setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
@@ -156,8 +156,6 @@ class UserInterface implements KeyListener {
         //>>> Inside panel1 > Inside panel2 > Inside spritesFather > Inside spriteLabelPanel
         JLabel spriteLabel = new JLabel(Strings.SPRITE_LABEL_NAME);
 
-        VAS POR AQUÍ
-
         //>>> Inside panel1 > Inside spritesFather
         spriteListScroller = new JScrollPane();
         spriteListScroller.addKeyListener(this);
@@ -180,7 +178,7 @@ class UserInterface implements KeyListener {
         layerLabelPanel.setLayout(new BoxLayout(layerLabelPanel, BoxLayout.X_AXIS));
         layerLabelPanel.addKeyListener(this);
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerLabelPanel
-        actualLayerLabel = new JLabel("Actual layer: " + actualCanvas);
+        actualLayerLabel = new JLabel(Strings.ACTUAL_LAYER_LABEL + " " + actualCanvas);
         actualLayerLabel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -204,7 +202,7 @@ class UserInterface implements KeyListener {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                String layerLabel = "Actual layer: " +
+                String layerLabel = Strings.ACTUAL_LAYER_LABEL + " " +
                         (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
                                 actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas);
                 actualLayerLabel.setText(layerLabel);
@@ -227,7 +225,7 @@ class UserInterface implements KeyListener {
         newLayerBPanel.setMaximumSize(new Dimension(layerPanel.getMaximumSize().width, (int) (layerPanel.getMaximumSize().getHeight() * 0.03)));
         newLayerBPanel.setPreferredSize(newLayerBPanel.getMaximumSize());
 
-        newLayerB = new JButton("New layer");
+        newLayerB = new JButton(Strings.NEW_LAYER_BUTTON);
         newLayerB.setFocusable(true);
         newLayerB.setEnabled(false);
         newLayerB.addKeyListener(this);
@@ -245,7 +243,7 @@ class UserInterface implements KeyListener {
                 }
                 CANVAS.addNewCanvas(newLayerName);
                 actualCanvas = newLayerName;
-                actualLayerLabel.setText("Actual layer:\n" +
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + "\n" +
                         (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
                                 actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
             } else {
@@ -290,7 +288,7 @@ class UserInterface implements KeyListener {
         //>>> Inside panel1 > Inside panel3 > Inside panel5
         Dimension buttonsDimension = new Dimension(panel4.getMaximumSize().width / 2, panel4.getMaximumSize().height / 2);
 
-        biggerSprite = new JButton("Sprite zoom +");
+        biggerSprite = new JButton(Strings.BIGGER_SPRITE_BUTTON);
         biggerSprite.setFocusable(true);
         biggerSprite.setEnabled(false);
         biggerSprite.setActionCommand("+");
@@ -306,7 +304,7 @@ class UserInterface implements KeyListener {
         });
         biggerSprite.setMaximumSize(buttonsDimension);
 
-        smallerSprite = new JButton("Sprite zoom -");
+        smallerSprite = new JButton(Strings.SMALLER_SPRITE_BUTTON);
         smallerSprite.setFocusable(true);
         smallerSprite.setEnabled(false);
         smallerSprite.setActionCommand("-");
@@ -329,7 +327,7 @@ class UserInterface implements KeyListener {
         //to match the length of the strings used for the sprite buttons. both groups of strings
         //must be equally long in order to be resized in the same way when the screen resolution
         //changes.
-        biggerMap = new JButton(" Map zoom +  ");
+        biggerMap = new JButton(Strings.BIGGER_MAP_BUTTON);
         biggerMap.setFocusable(true);
         biggerMap.setEnabled(false);
         biggerMap.addKeyListener(this);
@@ -340,7 +338,7 @@ class UserInterface implements KeyListener {
         });
         biggerMap.setMaximumSize(buttonsDimension);
 
-        smallerMap = new JButton(" Map zoom -  ");
+        smallerMap = new JButton(Strings.SMALLER_MAP_BUTTTON);
         smallerMap.setFocusable(true);
         smallerMap.setEnabled(false);
         smallerMap.addKeyListener(this);
@@ -506,13 +504,13 @@ class UserInterface implements KeyListener {
         JMenu options = new JMenu("Options");
 
         //----------
-        JMenuItem newCanvas = new JMenuItem("Create a new canvas           ");
+        JMenuItem newCanvas = new JMenuItem(Strings.NEW_CANVAS_MENU);
         newCanvas.addActionListener(e -> {
             runSubMenu("requestNewCanvasValues");
             enableUI();
         });
         //----------
-        loadSpriteSheet = new JMenuItem("Load spritesheet");
+        loadSpriteSheet = new JMenuItem(Strings.LOAD_SPRITESHEET_ITEM);
         loadSpriteSheet.addActionListener(e -> {
             final JFileChooser fc = new JFileChooser();
             int returnVal = fc.showOpenDialog(loadSpriteSheet);
@@ -544,27 +542,27 @@ class UserInterface implements KeyListener {
         loadSpriteSheet.setEnabled(false);
         loadSpriteSheet.addMouseListener(mouseListener);
         //----------
-        layerManagement = new JMenu("Layer management           ");
+        layerManagement = new JMenu(Strings.LAYER_MANAGEMENT_MENU);
         layerManagement.setEnabled(false);
         layerManagement.addMouseListener(mouseListener);
         //------
-        JMenu clearLayerMenu = new JMenu("Clear layer           ");
+        JMenu clearLayerMenu = new JMenu(Strings.CLEAR_LAYER_MENU);
         //--
-        JMenuItem clearLayer = new JMenuItem("Clear actual layer           ");
+        JMenuItem clearLayer = new JMenuItem(Strings.CLEAR_LAYER_ITEM);
         clearLayer.addActionListener(e -> {
             CANVAS.clearLayer(actualCanvas);
             updateMainCanvas(mapScale);
         });
         //--
-        JMenuItem clearAllLayer = new JMenuItem("Clear all layers           ");
+        JMenuItem clearAllLayer = new JMenuItem(Strings.CLEAR_ALL_LAYER_ITEM);
         clearAllLayer.addActionListener(e -> {
             CANVAS.clearAllLayers();
             updateMainCanvas(mapScale);
         });
         //------
-        JMenu deleteLayerMenu = new JMenu("Delete layer           ");
+        JMenu deleteLayerMenu = new JMenu(Strings.DELETE_LAYER_MENU);
         //--
-        JMenuItem deleteLayer = new JMenuItem("Delete actual layer           ");
+        JMenuItem deleteLayer = new JMenuItem(Strings.DELETE_LAYER_ITEM);
         deleteLayer.addActionListener(e -> {
             CANVAS.deleteLayer(actualCanvas);
             layerSelector.removeAll();
@@ -574,12 +572,12 @@ class UserInterface implements KeyListener {
             updateMainCanvas(mapScale);
         });
         //--
-        JMenuItem deleteAllLayerMenu = new JMenuItem("Delete all layers           ");
+        JMenuItem deleteAllLayerMenu = new JMenuItem(Strings.DELETE_ALL_LAYER_ITEM);
         deleteAllLayerMenu.addActionListener(e -> {
             deleteAllLayer();
         });
         //----------
-        JMenu importExport = new JMenu("Import / export code");
+        JMenu importExport = new JMenu(Strings.IMPORT_EXPORT_MENU);
         //------
         JMenuItem importCode = new JMenuItem("Import");
         importCode.addActionListener(e -> {
@@ -648,7 +646,7 @@ class UserInterface implements KeyListener {
                     String arrayPrinted = CANVAS.getExportString(SPRITESHEET.getPicturePath());
                     writer.write(arrayPrinted);
                     writer.close();
-                    TA.setText("Successfully saved to the file.\n" + fc.getSelectedFile().getAbsolutePath());
+                    TA.setText(Strings.EXPORT_SAVED_MESSAGE + fc.getSelectedFile().getAbsolutePath());
                 } else {
                     System.out.println("Open command cancelled by user.");
                 }
@@ -659,14 +657,14 @@ class UserInterface implements KeyListener {
         exportCode.setEnabled(false);
         exportCode.addMouseListener(mouseListener);
         //----------
-        exportCanvas = new JMenuItem("Export canvas           ");
+        exportCanvas = new JMenuItem(Strings.EXPORT_CANVAS_ITEM);
         exportCanvas.addActionListener(e -> {
             runSubMenu("exportCanvas");
         });
         exportCanvas.setEnabled(false);
         exportCanvas.addMouseListener(mouseListener);
         //----------
-        JMenuItem help = new JMenuItem("Help           ");
+        JMenuItem help = new JMenuItem(Strings.HELP_ITEM);
         help.addActionListener(e -> {
             subWindow.runInfoWindo("help");
         });
