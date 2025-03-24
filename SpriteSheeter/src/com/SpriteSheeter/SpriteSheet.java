@@ -89,7 +89,7 @@ public class SpriteSheet {
             tilesInRow = picture.getWidth() / spriteSide;
             tilesInColumn = picture.getHeight() / spriteSide;
 
-            int spriteHashMapKey = 0;
+            int spriteHashMapKey = 1;
             int cornerX = 0;
             int cornerY = 0;
             for (int y = 0; y < tilesInColumn; y++) {

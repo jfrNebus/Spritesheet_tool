@@ -106,9 +106,8 @@ public class Canvas {
      * this map contains no mapping for the key,
      *
      * @param idArrayName The key for the desired mapped value.
-     *
      * @return A {@code int[][]} as result of {@code ID_ARRAY_MAP.get(idArrayName);}
-     * */
+     */
     public int[][] getID_ARRAY_MAP(String idArrayName) {
         return ID_ARRAY_MAP.get(idArrayName);
     }
@@ -117,7 +116,7 @@ public class Canvas {
      * Returns the size of canvas side.
      *
      * @return {@code canvasSize}
-     * */
+     */
     public int getCanvasSize() {
         return canvasSize;
     }
@@ -127,7 +126,6 @@ public class Canvas {
      * this map contains no mapping for the key,
      *
      * @param layerName The key for the desired mapped value.
-     *
      * @return A {@code BufferedImage} as result of {@code LAYERS.get(layerName);}
      */
     public BufferedImage getLayer(String layerName) {
@@ -138,7 +136,7 @@ public class Canvas {
      * Returns the map {@code LAYERS}.
      *
      * @return {@code Map<String, BufferedImage>}
-     * */
+     */
     public Map<String, BufferedImage> getLAYERS() {
         return LAYERS;
     }
@@ -147,7 +145,7 @@ public class Canvas {
      * Returns the layer which displays the square pointer and the frame.
      *
      * @return {@code BufferedImage}
-     * */
+     */
     public BufferedImage getPOINTER_LAYER() {
         return POINTER_LAYER;
     }
@@ -156,10 +154,9 @@ public class Canvas {
      * Returns a scaled copy of the provided BufferedImage, using the specified sacale ratio.
      *
      * @param canvasToScale The BufferedImage to scale.
-     * @param scaleRatio The ratio to be used to scale {@code canvasToScale}.
-     *
+     * @param scaleRatio    The ratio to be used to scale {@code canvasToScale}.
      * @return A scaled {@code BufferedImage} version of the provided BufferedImage.
-     * */
+     */
     public BufferedImage getScaledCanvas(BufferedImage canvasToScale, int scaleRatio) {
         int targetSide = (canvasSize * scaleRatio) + 2;
         BufferedImage b = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
@@ -220,8 +217,11 @@ public class Canvas {
             pictureGraphics.setComposite(ac);
             for (int y = 0; y < sideSprites; y++) {
                 for (int x = 0; x < sideSprites; x++) {
-                    pictureGraphics.drawImage(spritesHasmap.get(currentLayerIds[idCount]).getSprite(), xSprite, ySprite, null);
-                    loadedIdArray[y][x] = currentLayerIds[idCount];
+                    int newId = currentLayerIds[idCount];
+                    if (newId > 0) {
+                        pictureGraphics.drawImage(spritesHasmap.get(newId).getSprite(), xSprite, ySprite, null);
+                        loadedIdArray[y][x] = newId;
+                    }
                     idCount++;
                     xSprite += spriteSide;
                 }
@@ -281,9 +281,8 @@ public class Canvas {
      * Checks if {@code LAYERS} contains any value mapped for the specified key.
      *
      * @param layerName Name of the layer.
-     *
      * @return True if there is any mapping in {@code LAYERS} for the specified key, or null if there is not.
-     * */
+     */
     public boolean hasLayer(String layerName) {
         return LAYERS.containsKey(layerName);
     }
@@ -292,9 +291,9 @@ public class Canvas {
      * Initializes the values {@code spriteSide} and {@code canvasSize}, with the specified parameters. It
      * also creates the {@code POINTER_LAYER} layer.
      *
-     * @param side The sprite side size.
+     * @param side          The sprite side size.
      * @param newCanvasSize The canvas side size.
-     * */
+     */
     public void initializeCanvas(int side, int newCanvasSize) {
         spriteSide = side;
         canvasSize = newCanvasSize;
@@ -309,7 +308,7 @@ public class Canvas {
         pictureGraphics.setPaint(Color.BLACK);
         pictureGraphics.drawRect(0, 0, canvasSize + 1, canvasSize + 1);
         pictureGraphics.setColor(Color.RED);
-        pictureGraphics.drawRect(1, 1, spriteSide-1, spriteSide-1);
+        pictureGraphics.drawRect(1, 1, spriteSide - 1, spriteSide - 1);
         pictureGraphics.dispose();
     }
 

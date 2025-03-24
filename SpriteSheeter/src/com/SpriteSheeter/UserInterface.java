@@ -769,6 +769,9 @@ class UserInterface implements KeyListener {
         return layers;
     }
 
+
+    Sigue revisando que hayas hecho bien el tema de eliminar el componente 0. Añade un botón de borrar en algún sitio.
+
     private String getLoadedPath(String loadedData) {
         String path = "";
         Matcher matcher = Pattern.compile(Strings.LOADED_REGEX).matcher(loadedData);
@@ -778,8 +781,6 @@ class UserInterface implements KeyListener {
         matcher.reset();
         return path;
     }
-
-    REVISA POR ÚLTIMA VEZ LA CLASE Strings y luego verifica el sprite numero 0 para fotos sin espacio en blanco
 
     private void deleteAllLayer() {
         actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " ");
@@ -819,7 +820,7 @@ class UserInterface implements KeyListener {
             j++;
             for (; j < (SPRITESHEET.getTilesInColumn() * SPRITESHEET.getTilesInRow()) + 1; j++) {
                 newImage = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
-                BufferedImage spriteToPrint = SPRITESHEET.getSPRITES_HASHMAP().get(j - 1).getSprite();
+                BufferedImage spriteToPrint = SPRITESHEET.getSPRITES_HASHMAP().get(j ).getSprite();
                 newImage.createGraphics().drawImage(spriteToPrint, 0, 0, targetSide, targetSide, null);
                 JButton button = new JButton();
                 button.setIcon(new ImageIcon(newImage));
@@ -842,7 +843,7 @@ class UserInterface implements KeyListener {
                 button.addActionListener(e -> {
 //                        https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
 
-                    System.out.println("Pressed sprite id: " + SPRITESHEET.getSPRITES_HASHMAP().get(innerId - 1).getId());
+                    System.out.println("Pressed sprite id: " + SPRITESHEET.getSPRITES_HASHMAP().get(innerId ).getId());
                     //Used to set the kind of Composite to be used in the BufferedImage in use. Check the above
                     //link.
                     if (!actualCanvas.equals(Strings.NO_LAYER)) {
@@ -856,7 +857,7 @@ class UserInterface implements KeyListener {
                         int arrayIndexY = y / SPRITESHEET.getSpriteSide();
                         int arrayIndexX = x / SPRITESHEET.getSpriteSide();
                         int[][] returnedArray = CANVAS.getID_ARRAY_MAP(actualCanvas);
-                        returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASHMAP().get(innerId - 1).getId();
+                        returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASHMAP().get(innerId).getId();
                         id = innerId;
                         updateMainCanvas(mapScale);
                     } else {
