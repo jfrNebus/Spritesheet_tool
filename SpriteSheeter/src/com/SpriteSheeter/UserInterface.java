@@ -51,7 +51,7 @@ class UserInterface implements KeyListener {
     private int id = 0;
     //The amount of pixels
     private int movementIncrement;
-    private int direction = 0; //1 = left, 2 = right, 3 = up, 4 = down
+    private int direction = 0; //0 = no movement, 1 = left, 2 = right, 3 = up, 4 = down
     private final int MAX_LABEL_LENGHT = 17;
     private final int FRAME_GAP = 1;
     //Screen size
@@ -603,10 +603,10 @@ class UserInterface implements KeyListener {
                         if (loadedMap != null && validPictureFile) {
                             enableUI();
                             initializePicLabel();
-                            deleteAllLayer();
+                            deleteAllLayer();//todo mira si puedes hacer que esto sea condicional en función de si hay capas o no
                             resetLayerSelector(loadedMap);
                             spritesPanel.removeAll();
-                            SPRITESHEET.setPicturePath(getLoadedPath(sb.toString()));
+                            SPRITESHEET.setPicturePath(newPicturePath);
                             SPRITESHEET.loadSpriteSheet(newPicture);
                             buildJLabelList(spritesPanel, spriteListScale);
                             CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASHMAP());
@@ -769,9 +769,6 @@ class UserInterface implements KeyListener {
         return layers;
     }
 
-
-    Sigue revisando que hayas hecho bien el tema de eliminar el componente 0. Añade un botón de borrar en algún sitio.
-
     private String getLoadedPath(String loadedData) {
         String path = "";
         Matcher matcher = Pattern.compile(Strings.LOADED_REGEX).matcher(loadedData);
@@ -810,24 +807,34 @@ class UserInterface implements KeyListener {
     }
 
     private void buildJLabelList(JPanel spritesPanel, int spriteListScaleRatio) {
-        int targetSide = SPRITESHEET.getSpriteSide() * spriteListScaleRatio;
+        int spriteSide = SPRITESHEET.getSpriteSide();
+        int targetSide = spriteSide * spriteListScaleRatio;
         int j = 0;
         BufferedImage newImage;
-        for (int i = 0; i < SPRITESHEET.getTilesInColumn(); i++) {
+        for (int i = -1; i < SPRITESHEET.getTilesInColumn(); i++) {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.X_AXIS));
             spritesPanel.add(jPanel);
-            j++;
             for (; j < (SPRITESHEET.getTilesInColumn() * SPRITESHEET.getTilesInRow()) + 1; j++) {
+                BufferedImage spriteToPrint;
                 newImage = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
-                BufferedImage spriteToPrint = SPRITESHEET.getSPRITES_HASHMAP().get(j ).getSprite();
-                newImage.createGraphics().drawImage(spriteToPrint, 0, 0, targetSide, targetSide, null);
+                Dimension dimension = new Dimension((i == -1) ? targetSide * SPRITESHEET.getTilesInRow() : targetSide
+                        , targetSide);
+
                 JButton button = new JButton();
-                button.setIcon(new ImageIcon(newImage));
-                button.setPreferredSize(new Dimension(targetSide, targetSide));
-                button.setMaximumSize(new Dimension(targetSide, targetSide));
                 button.addKeyListener(this);
                 button.setFocusable(false);
+                button.setPreferredSize(dimension);
+                button.setMaximumSize(dimension);
+                if (i == -1) {
+                    button.setText("Empty sprite");
+                    button.setHorizontalAlignment(SwingConstants.LEFT);
+                    spriteToPrint = new BufferedImage(spriteSide, spriteSide, BufferedImage.TYPE_INT_ARGB);;
+                } else {
+                    spriteToPrint = SPRITESHEET.getSPRITES_HASHMAP().get(j).getSprite();
+                    newImage.createGraphics().drawImage(spriteToPrint, 0, 0, targetSide, targetSide, null);
+                    button.setIcon(new ImageIcon(newImage));
+                }
                 //Se tiene que crear una variable local id, aunque ya exista una global, porque para poder
                 //usar el valor de j dentro de la declaración del actionListener del botón, dicha variable debe
                 //ser final o effectively final. No podemos hacer id = j; y asignarle id al método get
@@ -840,10 +847,10 @@ class UserInterface implements KeyListener {
                 //cuál es la id que ha de utilizar a la hora de pintar. La función de pintar usa la última id
                 //conocida, y esa id se actualiza cada vez que se presiona un botón.
                 int innerId = j;
+                int finalI = i;
                 button.addActionListener(e -> {
 //                        https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
-
-                    System.out.println("Pressed sprite id: " + SPRITESHEET.getSPRITES_HASHMAP().get(innerId ).getId());
+                    System.out.println("Sprite pressed = " + innerId);
                     //Used to set the kind of Composite to be used in the BufferedImage in use. Check the above
                     //link.
                     if (!actualCanvas.equals(Strings.NO_LAYER)) {
@@ -852,23 +859,24 @@ class UserInterface implements KeyListener {
                         pictureGraphics.setComposite(ac);
                         pictureGraphics.drawImage(spriteToPrint, x, y, null);
                         pictureGraphics.dispose();
-                        previousSprite = spriteToPrint;
-
-                        int arrayIndexY = y / SPRITESHEET.getSpriteSide();
-                        int arrayIndexX = x / SPRITESHEET.getSpriteSide();
+                        int arrayIndexY = y / spriteSide;
+                        int arrayIndexX = x / spriteSide;
                         int[][] returnedArray = CANVAS.getID_ARRAY_MAP(actualCanvas);
-                        returnedArray[arrayIndexY][arrayIndexX] = SPRITESHEET.getSPRITES_HASHMAP().get(innerId).getId();
+                        returnedArray[arrayIndexY][arrayIndexX] =
+                                (finalI == -1) ? innerId : SPRITESHEET.getSPRITES_HASHMAP().get(innerId).getId();
                         id = innerId;
                         updateMainCanvas(mapScale);
+                        previousSprite = spriteToPrint;
                     } else {
                         TA.setText("No layer selected.");
                     }
                 });
                 jPanel.add(button);
-                if (j % SPRITESHEET.getTilesInRow() == 0) {
+                if (j % SPRITESHEET.getTilesInRow() == 0 || i == -1) {
                     break;
                 }
             }
+            j++;
         }
     }
 
@@ -935,7 +943,7 @@ class UserInterface implements KeyListener {
             case 3:
                 y -= movementIncrement;
                 break;
-            default:
+            case 4:
                 y += movementIncrement;
                 break;
         }
@@ -959,6 +967,7 @@ class UserInterface implements KeyListener {
 
         updateMainCanvas(mapScale);
     }
+
 
     void movementSelector() {
         if (toggleMapMovement || toggleSpriteMovement) {
@@ -1061,69 +1070,80 @@ class UserInterface implements KeyListener {
 
     }
 
-@Override
-public void keyPressed(KeyEvent e) {
-    if (TA.isEditable()) {
-        int key = e.getKeyCode();
-        //Next line is set in orderd to not allow X or Y to reach the end of the pointer BufferedImage.
-        //If any coordinate reaches the end of the axis, it would generate the square to be drawn outside
-        //of the buffered, since it is the top left coordinate the one which is taken9 in consideration.
-        System.out.println("Key = " + key);
-        if (TA.hasFocus()) {
-            if (key == KeyEvent.VK_ESCAPE) {
-                frame.requestFocus();
-            }
-        } else {
-            if (key == KeyEvent.VK_CONTROL) {
-                if (!toggleMapMovement) {
-                    toggleMapMovement = true;
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (TA.isEditable()) {
+            int key = e.getKeyCode();
+            //Next line is set in orderd to not allow X or Y to reach the end of the pointer BufferedImage.
+            //If any coordinate reaches the end of the axis, it would generate the square to be drawn outside
+            //of the buffered, since it is the top left coordinate the one which is taken9 in consideration.
+            System.out.println("Key = " + key);
+            if (TA.hasFocus()) {
+                if (key == KeyEvent.VK_ESCAPE) {
+                    frame.requestFocus();
                 }
-            } else if (key == KeyEvent.VK_SHIFT) {
-                if (!toggleSpriteMovement) {
-                    toggleSpriteMovement = true;
+            } else {
+                if (key == KeyEvent.VK_CONTROL) {
+                    if (!toggleMapMovement) {
+                        toggleMapMovement = true;
+                    }
+                } else if (key == KeyEvent.VK_SHIFT) {
+                    if (!toggleSpriteMovement) {
+                        toggleSpriteMovement = true;
+                    }
+                } else if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+                    direction = 1;
+                    movementSelector();
+                } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+                    direction = 2;
+                    movementSelector();
+                } else if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+                    direction = 3;
+                    movementSelector();
+                } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+                    direction = 4;
+                    movementSelector();
+                } else if (key == KeyEvent.VK_PLUS || key == KeyEvent.VK_ADD) {
+                    if (toggleMapMovement) {
+                        biggerMap.doClick();
+                    } else if (toggleSpriteMovement) {
+                        biggerSprite.doClick();
+                    }
+                } else if (key == KeyEvent.VK_MINUS || key == KeyEvent.VK_SUBTRACT) {
+                    if (toggleMapMovement) {
+                        smallerMap.doClick();
+                    } else if (toggleSpriteMovement) {
+                        smallerSprite.doClick();
+                    }
+                } else if (key == KeyEvent.VK_ENTER) {
+                    if(!actualCanvas.equals(Strings.NO_LAYER)) {
+                        int spriteSide = SPRITESHEET.getSpriteSide() - FRAME_GAP;
+                        fillingBrush = !fillingBrush;
+                        Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
+                        pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
+                        if (fillingBrush) {
+                            pointerGraphics.setColor(Color.GREEN);
+                        } else {
+                            pointerGraphics.setColor(Color.RED);
+                        }
+                        pointerGraphics.drawRect(x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide);
+                        pointerGraphics.dispose();
+                        direction = 0;
+                        pointerMovement();
+                    } else {
+                        TA.setText("No layer selected.");
+                    }
                 }
-            } else if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-                direction = 1;
-                movementSelector();
-            } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-                direction = 2;
-                movementSelector();
-            } else if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-                direction = 3;
-                movementSelector();
-            } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-                direction = 4;
-                movementSelector();
-            } else if (key == KeyEvent.VK_PLUS || key == KeyEvent.VK_ADD) {
-                if (toggleMapMovement) {
-                    biggerMap.doClick();
-                } else if (toggleSpriteMovement) {
-                    biggerSprite.doClick();
-                }
-            } else if (key == KeyEvent.VK_MINUS || key == KeyEvent.VK_SUBTRACT) {
-                if (toggleMapMovement) {
-                    smallerMap.doClick();
-                } else if (toggleSpriteMovement) {
-                    smallerSprite.doClick();
-                }
-            } else if (key == KeyEvent.VK_ENTER) {
-                int spriteSide = SPRITESHEET.getSpriteSide() - FRAME_GAP;
-                fillingBrush = !fillingBrush;
-                Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
-                pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-                if (fillingBrush) {
-                    pointerGraphics.setColor(Color.GREEN);
-                } else {
-                    pointerGraphics.setColor(Color.RED);
-                }
-                pointerGraphics.drawRect(x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide);
-                pointerGraphics.dispose();
-                updateMainCanvas(mapScale);
             }
         }
     }
-}
 
+    Check:
+
+    - All ids are properly set
+    - That everything in the enter key function is ok
+    - Write that the sprite list zoom in/out gets lagged and crashed when the spritesheet is big
+    - The empty sprite works as it is supposed to
 
     @Override
     public void keyReleased(KeyEvent e) {
@@ -1329,7 +1349,7 @@ public void keyPressed(KeyEvent e) {
                     boolean firstNumber = firstTFS.matches("\\d+");
                     boolean secondNumber = secondTFS.matches("\\d+");
                     if (firstNumber && secondNumber) {
-                        condition = true;
+                        condition = true;//todo revisa si puedes bajar esta línea debajo de side y newCanvasSize
                         side = Integer.parseInt(firstTFS);
                         newCanvasSize = Integer.parseInt(secondTFS);
                     } else {
