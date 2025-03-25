@@ -23,7 +23,7 @@ DONE revisa el tema de los nombres de capa y las restricciones por regex
 DONE agrega al archivo guardado la ruta al spritesheet
 
 
-todo Maneja la excepción cuando el archivo txt no tiene ruta
+done Maneja la excepción cuando el archivo txt no tiene ruta
 
 todo revisa aquellas variables de tipo string que sirvan para indicar el estado, por ejemplo una variable cuyos valores
  sean "empty" y "full" para indicar el estado de algo, y sustituyelos por valores int del tipo i = 1 para full, i = 0

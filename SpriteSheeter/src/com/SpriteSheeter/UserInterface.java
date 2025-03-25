@@ -818,23 +818,24 @@ class UserInterface implements KeyListener {
             for (; j < (SPRITESHEET.getTilesInColumn() * SPRITESHEET.getTilesInRow()) + 1; j++) {
                 BufferedImage spriteToPrint;
                 newImage = new BufferedImage(targetSide, targetSide, BufferedImage.TYPE_INT_ARGB);
-                Dimension dimension = new Dimension((i == -1) ? targetSide * SPRITESHEET.getTilesInRow() : targetSide
-                        , targetSide);
-
+                Dimension dimension = new Dimension();
                 JButton button = new JButton();
                 button.addKeyListener(this);
                 button.setFocusable(false);
-                button.setPreferredSize(dimension);
-                button.setMaximumSize(dimension);
                 if (i == -1) {
                     button.setText("Empty sprite");
                     button.setHorizontalAlignment(SwingConstants.LEFT);
-                    spriteToPrint = new BufferedImage(spriteSide, spriteSide, BufferedImage.TYPE_INT_ARGB);;
+                    spriteToPrint = new BufferedImage(spriteSide, spriteSide, BufferedImage.TYPE_INT_ARGB);
+                    dimension.width = targetSide * SPRITESHEET.getTilesInRow();
+                    dimension.height = targetSide;
                 } else {
                     spriteToPrint = SPRITESHEET.getSPRITES_HASHMAP().get(j).getSprite();
                     newImage.createGraphics().drawImage(spriteToPrint, 0, 0, targetSide, targetSide, null);
                     button.setIcon(new ImageIcon(newImage));
+                    dimension.setSize(targetSide, targetSide);
                 }
+                button.setPreferredSize(dimension);
+                button.setMaximumSize(dimension);
                 //Se tiene que crear una variable local id, aunque ya exista una global, porque para poder
                 //usar el valor de j dentro de la declaración del actionListener del botón, dicha variable debe
                 //ser final o effectively final. No podemos hacer id = j; y asignarle id al método get
@@ -872,7 +873,7 @@ class UserInterface implements KeyListener {
                     }
                 });
                 jPanel.add(button);
-                if (j % SPRITESHEET.getTilesInRow() == 0 || i == -1) {
+                if (j % SPRITESHEET.getTilesInRow() == 0 ) {
                     break;
                 }
             }
