@@ -3,6 +3,7 @@ package com.SpriteSheeter;
 public class Strings {
 
     //UserInterface
+
     public static final String NO_LAYER = "noLayer";
     public static final String FRAME_NAME_UI = "Spriter";
     public static final String SPRITE_LABEL_NAME = "Sprites list:";

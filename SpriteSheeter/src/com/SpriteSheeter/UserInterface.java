@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 //        To explain layout for frame > https://stackoverflow.com/questions/24840860/boxlayout-for-a-jframe
 
 
-class UserInterface implements KeyListener {
+class UserInterface implements KeyListener, MouseListener {
 
     //Boolean to be used to  toggle on/off the movement of the main map scroller by using directional keys.
     private boolean toggleMapMovement = false;
@@ -81,623 +81,6 @@ class UserInterface implements KeyListener {
     private BufferedImage previousSprite;
     private final SubWindow subWindow = new SubWindow();
 
-
-    /**
-     * Builds up the whole user interface.
-     */
-    public void setUpEverything() {
-
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        final int SCREEN_HEIGHT = (int) screenSize.getHeight();
-        final int SCREEN_WIDTH = (int) screenSize.getWidth();
-
-        int FRAME_WIDTH = (int) (SCREEN_WIDTH * 0.6);
-        int FRAME_HEIGHT = (int) (SCREEN_HEIGHT * 0.6);
-
-        JMenuBar jMenuBar = getjMenuBar();
-
-        frame = new JFrame(Strings.FRAME_NAME_UI);
-        frame.setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
-        frame.addKeyListener(this);
-        frame.setFocusable(true);
-        frame.setFocusTraversalKeysEnabled(false);
-        frame.setLocationRelativeTo(null);
-        frame.setIconImage(null);
-        frame.setJMenuBar(jMenuBar);
-
-        //>>>Inside frame
-        //Panel1
-        int panel1Width = (int) (SCREEN_WIDTH * 0.40);
-        JPanel panel1 = new JPanel();
-        panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
-        panel1.setFocusable(true);
-        panel1.addKeyListener(this);
-        panel1.setMaximumSize(new Dimension(panel1Width, SCREEN_HEIGHT));
-        panel1.setPreferredSize(panel1.getMaximumSize());
-
-        //Map Management
-        JPanel picScrollerHolder = new JPanel();
-        picScrollerHolder.setLayout(new BoxLayout(picScrollerHolder, BoxLayout.Y_AXIS));
-        picScrollerHolder.addKeyListener(this);
-        picScrollerHolder.setFocusable(true);
-        picScrollerHolder.setMaximumSize(new Dimension(SCREEN_WIDTH - panel1Width, SCREEN_HEIGHT));
-        picScrollerHolder.setPreferredSize(picScrollerHolder.getMaximumSize());
-
-        picScroller = new JScrollPane();
-        picScroller.addKeyListener(this);
-        picScroller.setFocusable(true);
-        picScroller.setWheelScrollingEnabled(true);
-        picScroller.setEnabled(false); //Enabled false allows the JScrollPane movement throught arrow keys.
-
-        //>>> Inside panel1
-        int panel2Width = (int) (SCREEN_WIDTH * 0.40);
-        int panel2Height = (int) (SCREEN_HEIGHT * 0.90);
-        JPanel panel2 = new JPanel();
-        panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
-        panel2.addKeyListener(this);
-        panel2.setFocusable(true);
-        panel2.setMaximumSize(new Dimension(panel2Width, panel2Height));
-        panel2.setPreferredSize(panel2.getMaximumSize());
-
-        //>>> Inside panel1 > Inside panel2
-        //Sprites management
-        JPanel spritesFather = new JPanel();
-        spritesFather.setLayout(new BoxLayout(spritesFather, BoxLayout.Y_AXIS));
-        spritesFather.addKeyListener(this);
-        spritesFather.setMaximumSize(new Dimension((int) (panel2.getMaximumSize().getWidth() * 0.75), panel2Height));
-        spritesFather.setPreferredSize(spritesFather.getMaximumSize());
-
-        //>>> Inside panel1 > Inside panel2 > Inside spritesFather
-        JPanel spriteLabelPanel = new JPanel();
-        spriteLabelPanel.setLayout(new BoxLayout(spriteLabelPanel, BoxLayout.X_AXIS));
-        spriteLabelPanel.addKeyListener(this);
-        //>>> Inside panel1 > Inside panel2 > Inside spritesFather > Inside spriteLabelPanel
-        JLabel spriteLabel = new JLabel(Strings.SPRITE_LABEL_NAME);
-
-        //>>> Inside panel1 > Inside spritesFather
-        spriteListScroller = new JScrollPane();
-        spriteListScroller.addKeyListener(this);
-        spriteListScroller.setWheelScrollingEnabled(true);
-        //>>> Inside panel1 > Inside panel2 > Inside spritesFather > Inside spriteListScroller
-        spritesPanel = new JPanel();
-        spritesPanel.setLayout(new BoxLayout(spritesPanel, BoxLayout.PAGE_AXIS));
-        spritesPanel.addKeyListener(this);
-
-        SPRITE_VIEW.setView(spritesPanel);
-
-        //Layer Management
-        //>>> Inside panel1 > Inside panel2
-        JPanel layerPanel = new JPanel();
-        layerPanel.setLayout(new BoxLayout(layerPanel, BoxLayout.Y_AXIS));
-        layerPanel.setMaximumSize(new Dimension((int) (panel2.getMaximumSize().getWidth() * 0.25), panel2Height));
-        layerPanel.setPreferredSize(layerPanel.getMaximumSize());
-        //>>> Inside panel1 > Inside panel2 > Inside layerPanel
-        JPanel layerLabelPanel = new JPanel();
-        layerLabelPanel.setLayout(new BoxLayout(layerLabelPanel, BoxLayout.X_AXIS));
-        layerLabelPanel.addKeyListener(this);
-        //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerLabelPanel
-        actualLayerLabel = new JLabel(Strings.ACTUAL_LAYER_LABEL + " " + actualCanvas);
-        actualLayerLabel.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                actualLayerLabel.setText(actualCanvas);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                String layerLabel = Strings.ACTUAL_LAYER_LABEL + " " +
-                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
-                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas);
-                actualLayerLabel.setText(layerLabel);
-            }
-        });
-
-        //>>> Inside panel1 > Inside panel2 > Inside layerPanel
-        JScrollPane layerScroller = new JScrollPane();
-        layerScroller.setFocusable(true);
-        layerScroller.addKeyListener(this);
-        layerScroller.setWheelScrollingEnabled(true);
-        //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller
-        layerSelector = new JPanel();
-        layerSelector.setLayout(new BoxLayout(layerSelector, BoxLayout.Y_AXIS));
-        layerSelector.setFocusable(false);
-
-        //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller > layerSelector
-        JPanel newLayerBPanel = new JPanel();
-        newLayerBPanel.setLayout(new BoxLayout(newLayerBPanel, BoxLayout.X_AXIS));
-        newLayerBPanel.setMaximumSize(new Dimension(layerPanel.getMaximumSize().width, (int) (layerPanel.getMaximumSize().getHeight() * 0.03)));
-        newLayerBPanel.setPreferredSize(newLayerBPanel.getMaximumSize());
-
-        newLayerB = new JButton(Strings.NEW_LAYER_BUTTON);
-        newLayerB.setFocusable(true);
-        newLayerB.setEnabled(false);
-        newLayerB.addKeyListener(this);
-        newLayerB.addMouseListener(mouseListener);
-        newLayerB.addActionListener(e -> {
-            String newLayerName = TA.getText().trim();
-            if (!newLayerName.isEmpty() &&
-                    newLayerName.matches("(\\w+(\\s+\\w+)*)") &&
-                    !CANVAS.hasLayer(newLayerName)) {
-                newLayerName = newLayerName.replaceAll("\\s+", "_").toLowerCase();
-                addNewLayerButtons(newLayerName);
-                if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getCanvasSize() == 0)
-                        && (SPRITESHEET.getSpriteSide() == 0)) {
-                    runSubMenu("requestNewCanvasValues");
-                }
-                CANVAS.addNewCanvas(newLayerName);
-                actualCanvas = newLayerName;
-                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + "\n" +
-                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
-                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
-            } else {
-                subWindow.runInfoWindo("invalidLayerHelp");
-            }
-        });
-        newLayerB.setMaximumSize(new Dimension(newLayerBPanel.getMaximumSize().width, (int) (newLayerBPanel.getMaximumSize().height)));
-        newLayerB.setPreferredSize(newLayerB.getMaximumSize());
-
-        //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller
-        layerScroller.setViewportView(layerSelector);
-
-        //>>> Inside panel1
-        JPanel panel3 = new JPanel();
-        panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
-        panel3.addKeyListener(this);
-        panel3.setFocusable(true);
-        panel3.setMaximumSize(new Dimension(panel1Width, SCREEN_HEIGHT - panel2Height));
-        panel3.setPreferredSize(panel3.getMaximumSize());
-
-
-        //>>> Inside panel1 > Inside panel3
-        JPanel panel4 = new JPanel();
-        panel4.setLayout(new BoxLayout(panel4, BoxLayout.Y_AXIS));
-        panel4.addKeyListener(this);
-        panel4.setFocusable(true);
-        panel4.setMaximumSize(new Dimension((int) (SCREEN_WIDTH * 0.15), panel3.getMaximumSize().height));
-
-        //>>> Inside panel1 > Inside panel3 > Inside panel4
-        JPanel panel5 = new JPanel();
-        panel5.setLayout(new BoxLayout(panel5, BoxLayout.X_AXIS));
-        panel5.addKeyListener(this);
-        panel5.setFocusable(true);
-        panel5.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
-
-        JPanel panel6 = new JPanel();
-        panel6.setLayout(new BoxLayout(panel6, BoxLayout.X_AXIS));
-        panel6.addKeyListener(this);
-        panel6.setFocusable(true);
-        panel6.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
-
-        //>>> Inside panel1 > Inside panel3 > Inside panel5
-        Dimension buttonsDimension = new Dimension(panel4.getMaximumSize().width / 2, panel4.getMaximumSize().height / 2);
-
-        biggerSprite = new JButton(Strings.BIGGER_SPRITE_BUTTON);
-        biggerSprite.setFocusable(true);
-        biggerSprite.setEnabled(false);
-        biggerSprite.setActionCommand("+");
-        biggerSprite.addKeyListener(this);
-        biggerSprite.addMouseListener(mouseListener);
-        biggerSprite.addActionListener(e -> {
-            setSpriteListScale(++spriteListScale);
-            int size = CANVAS.getCanvasSize() * spriteListScale;
-            spritesPanel.setSize(new Dimension(size, size));
-            spritesPanel.removeAll();
-            buildJLabelList(spritesPanel, spriteListScale);
-            spritesPanel.updateUI();
-        });
-        biggerSprite.setMaximumSize(buttonsDimension);
-
-        smallerSprite = new JButton(Strings.SMALLER_SPRITE_BUTTON);
-        smallerSprite.setFocusable(true);
-        smallerSprite.setEnabled(false);
-        smallerSprite.setActionCommand("-");
-        smallerSprite.addKeyListener(this);
-        smallerSprite.addMouseListener(mouseListener);
-        smallerSprite.addActionListener(e -> {
-            if (spriteListScale > 1) {
-                setSpriteListScale(--spriteListScale);
-            }
-            int size = CANVAS.getCanvasSize() * spriteListScale;
-            spritesPanel.setSize(new Dimension(size, size));
-            spritesPanel.removeAll();
-            buildJLabelList(spritesPanel, spriteListScale);
-            spritesPanel.updateUI();
-        });
-        smallerSprite.setMaximumSize(buttonsDimension);
-
-        //>>> Inside panel1 > Inside panel3 > Inside panel5 > Inside panel6
-        //The string used for the name of map buttons must include extra empty spaces in order
-        //to match the length of the strings used for the sprite buttons. both groups of strings
-        //must be equally long in order to be resized in the same way when the screen resolution
-        //changes.
-        biggerMap = new JButton(Strings.BIGGER_MAP_BUTTON);
-        biggerMap.setFocusable(true);
-        biggerMap.setEnabled(false);
-        biggerMap.addKeyListener(this);
-        biggerMap.addMouseListener(mouseListener);
-        biggerMap.addActionListener(e -> {
-            setMapScale(MAP_SCALE_RATIO);
-            updateMainCanvas(mapScale);
-        });
-        biggerMap.setMaximumSize(buttonsDimension);
-
-        smallerMap = new JButton(Strings.SMALLER_MAP_BUTTTON);
-        smallerMap.setFocusable(true);
-        smallerMap.setEnabled(false);
-        smallerMap.addKeyListener(this);
-        smallerMap.addMouseListener(mouseListener);
-        smallerMap.addActionListener(e -> {
-            if ((mapScale - MAP_SCALE_RATIO) > 0) {
-                setMapScale(-MAP_SCALE_RATIO);
-                updateMainCanvas(mapScale);
-            }
-        });
-        smallerMap.setMaximumSize(buttonsDimension);
-
-        //>>> Inside panel1 > Inside panel3
-        int panel7Width = panel3.getMaximumSize().width - panel4.getMaximumSize().width;
-        int panel7Height = panel3.getMaximumSize().height;
-        JPanel panel7 = new JPanel();
-        panel7.setLayout(new BoxLayout(panel7, BoxLayout.Y_AXIS));
-        panel7.addKeyListener(this);
-        panel7.setFocusable(true);
-        panel7.setMaximumSize(new Dimension(panel7Width, panel7Height));
-
-        //>>> Inside panel1 > Inside panel3 > panel7
-        JScrollPane taScroller = new JScrollPane();
-        taScroller.addKeyListener(this);
-        taScroller.setFocusable(true);
-        taScroller.setWheelScrollingEnabled(true);
-
-        //>>> Inside panel1 > Inside panel3 > panel7 > Inside taScroller
-        TA.addKeyListener(this);
-        TA.addMouseListener(mouseListener);
-        TA.setEditable(false);
-        TA.setFont(new Font("", Font.BOLD, 15));
-        TA.setLineWrap(true);
-        TA.setWrapStyleWord(true);
-        TA.setCaretColor(Color.WHITE);
-        taScroller.setViewportView(TA);
-
-        //Layout adding.
-
-        //>>> Inside frame
-        frame.add(Box.createRigidArea(new Dimension(5, 0)));
-        frame.add(panel1);
-
-        //>>> Inside frame > Inside panel1
-        panel1.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel1.add(panel2);
-
-        //>>> Inside frame > Inside panel1 > Inside panel2
-        panel2.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel2.add(spritesFather);
-        //>>> Inside frame > Inside panel1 > Inside panel2 > Inside spritesFather
-        spritesFather.add(Box.createRigidArea(new Dimension(0, 5)));
-        spritesFather.add(spriteLabelPanel);
-        //>>> Inside frame > Inside panel1 > Inside panel2 > Inside spritesFather > Inside spriteLabelPanel
-        spriteLabelPanel.add(spriteLabel);
-        spriteLabelPanel.add(Box.createHorizontalGlue());
-        //>>> Inside frame > Inside panel1 > Inside panel2 > Inside spritesFather
-        spritesFather.add(Box.createRigidArea(new Dimension(0, 5)));
-        spritesFather.add(spriteListScroller);
-        spriteListScroller.setViewportView(SPRITE_VIEW);
-        spritesFather.add(Box.createRigidArea(new Dimension(0, 5)));
-
-        //>>> Inside frame > Inside panel1 > Inside panel2
-        panel2.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel2.add(layerPanel);
-        //>>> Inside frame > Inside panel1 > Inside panel2
-
-        //>>> Inside frame > Inside panel1 > Inside panel2 > Inside layerPanel
-        layerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        layerPanel.add(layerLabelPanel);
-        //>>> Inside frame > Inside panel1 > Inside panel2 > layerPanel > layerLabelPanel
-        layerLabelPanel.add(actualLayerLabel);
-        layerLabelPanel.add(Box.createHorizontalGlue());
-        //>>> Inside frame > Inside panel1 > Inside panel2 > layerPanel
-        layerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        layerPanel.add(layerScroller);
-        layerScroller.setViewportView(layerSelector);
-        layerPanel.add(Box.createRigidArea(new Dimension(0, 3)));
-        layerPanel.add(newLayerBPanel);
-        //>>> Inside frame > Inside panel1 > Inside panel2 > layerPanel > Inside newLayerBPanel
-        newLayerBPanel.add(newLayerB);
-        //>>> Inside frame > Inside panel1 > Inside panel2 > layerPanel
-        layerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
-        //>>> Inside frame > Inside panel1 > Inside panel2
-        panel2.add(Box.createRigidArea(new Dimension(5, 0)));
-
-        //>>> Inside frame > Inside panel1
-        panel1.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel1.add(panel3);
-        panel1.add(Box.createRigidArea(new Dimension(5, 0)));
-
-        //>>> Inside frame > Inside panel1 > Inside panel3
-        panel3.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel3.add(panel4);
-        panel3.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel3.add(panel7);
-        panel3.add(Box.createRigidArea(new Dimension(5, 0)));
-
-        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4
-        panel4.add(Box.createRigidArea(new Dimension(0, 5)));
-        panel4.add(panel5);
-
-        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4 > Inside panel5
-        panel5.add(biggerSprite);
-        panel5.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel5.add(smallerSprite);
-
-        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4
-        panel4.add(Box.createRigidArea(new Dimension(0, 5)));
-        panel4.add(panel6);
-
-        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4 > Inside panel6
-        panel6.add(biggerMap);
-        panel6.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel6.add(smallerMap);
-
-        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4
-        panel4.add(Box.createRigidArea(new Dimension(0, 5)));
-
-
-        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel7
-        panel7.add(Box.createRigidArea(new Dimension(0, 5)));
-        panel7.add(taScroller);
-        panel7.add(Box.createRigidArea(new Dimension(0, 5)));
-
-        //>>> Inside frame
-        frame.add(Box.createRigidArea(new Dimension(5, 0)));
-        frame.add(picScrollerHolder);
-
-        //>>> Inside frame > picScrollerHolder
-        picScrollerHolder.add(Box.createRigidArea(new Dimension(0, 5)));
-        picScrollerHolder.add(picScroller);
-        picScrollerHolder.add(Box.createRigidArea(new Dimension(0, 5)));
-
-        //>>> Inside frame
-        frame.add(Box.createRigidArea(new Dimension(5, 0)));
-
-        //Setting everything visible
-        frame.setVisible(true);
-        panel1.setVisible(true);
-        picScrollerHolder.setVisible(true);
-        picScroller.setVisible(true);
-        panel2.setVisible(true);
-        spritesFather.setVisible(true);
-        spriteLabel.setVisible(true);
-        spriteListScroller.setVisible(true);
-        spritesPanel.setVisible(true);
-        layerPanel.setVisible(true);
-        layerScroller.setVisible(true);
-        layerSelector.setVisible(true);
-        newLayerB.setVisible(true);
-        panel3.setVisible(true);
-        biggerSprite.setVisible(true);
-        smallerSprite.setVisible(true);
-        biggerMap.setVisible(true);
-        smallerMap.setVisible(true);
-        TA.setVisible(true);
-    }
-
-    private JMenuBar getjMenuBar() {
-        JMenuBar jMenuBar = new JMenuBar();
-        JMenu options = new JMenu("Options");
-
-        //----------
-        JMenuItem newCanvas = new JMenuItem(Strings.NEW_CANVAS_MENU);
-        newCanvas.addActionListener(e -> {
-            runSubMenu("requestNewCanvasValues");
-            enableUI();
-        });
-        //----------
-        loadSpriteSheet = new JMenuItem(Strings.LOAD_SPRITESHEET_ITEM);
-        loadSpriteSheet.addActionListener(e -> {
-            final JFileChooser fc = new JFileChooser();
-            int returnVal = fc.showOpenDialog(loadSpriteSheet);
-            if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
-                String newPicturePath = fc.getSelectedFile().getAbsolutePath();
-                boolean validPictureFile = false;
-                BufferedImage newPicture = null;
-                try {
-                    newPicture = ImageIO.read(new File(newPicturePath));
-                    validPictureFile = newPicture != null;
-                } catch (IOException | NullPointerException | SecurityException ex) {
-                    subWindow.runInfoWindo("invalidPath");
-                    loadSpriteSheet.doClick();
-                }
-                if (validPictureFile) {
-                    if (spritesPanel.getComponentCount() > 0) {
-                        spritesPanel.removeAll();
-                    }
-                    SPRITESHEET.setPicturePath(newPicturePath);
-                    SPRITESHEET.loadSpriteSheet(newPicture);
-                    buildJLabelList(spritesPanel, spriteListScale);
-                    spritesPanel.updateUI();
-                } else {
-                    subWindow.runInfoWindo("invalidImage");
-                    loadSpriteSheet.doClick();
-                }
-            }
-        });
-        loadSpriteSheet.setEnabled(false);
-        loadSpriteSheet.addMouseListener(mouseListener);
-        //----------
-        layerManagement = new JMenu(Strings.LAYER_MANAGEMENT_MENU);
-        layerManagement.setEnabled(false);
-        layerManagement.addMouseListener(mouseListener);
-        //------
-        JMenu clearLayerMenu = new JMenu(Strings.CLEAR_LAYER_MENU);
-        //--
-        JMenuItem clearLayer = new JMenuItem(Strings.CLEAR_LAYER_ITEM);
-        clearLayer.addActionListener(e -> {
-            CANVAS.clearLayer(actualCanvas);
-            updateMainCanvas(mapScale);
-        });
-        //--
-        JMenuItem clearAllLayer = new JMenuItem(Strings.CLEAR_ALL_LAYER_ITEM);
-        clearAllLayer.addActionListener(e -> {
-            CANVAS.clearAllLayers();
-            updateMainCanvas(mapScale);
-        });
-        //------
-        JMenu deleteLayerMenu = new JMenu(Strings.DELETE_LAYER_MENU);
-        //--
-        JMenuItem deleteLayer = new JMenuItem(Strings.DELETE_LAYER_ITEM);
-        deleteLayer.addActionListener(e -> {
-            CANVAS.deleteLayer(actualCanvas);
-            layerSelector.removeAll();
-            for (Map.Entry<String, BufferedImage> layers : CANVAS.getLAYERS().entrySet()) {
-                addNewLayerButtons(layers.getKey());
-            }
-            updateMainCanvas(mapScale);
-        });
-        //--
-        JMenuItem deleteAllLayerMenu = new JMenuItem(Strings.DELETE_ALL_LAYER_ITEM);
-        deleteAllLayerMenu.addActionListener(e -> {
-            deleteAllLayer();
-        });
-        //----------
-        JMenu importExport = new JMenu(Strings.IMPORT_EXPORT_MENU);
-        //------
-        JMenuItem importCode = new JMenuItem("Import");
-        importCode.addActionListener(e -> {
-            final JFileChooser fc = new JFileChooser();
-            int returnVal = fc.showOpenDialog(importCode);
-            if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
-                boolean validPictureFile;
-                BufferedImage newPicture;
-                try {
-                    validPictureFile = Files.probeContentType(fc.getSelectedFile().toPath()).startsWith("text");
-                    if (validPictureFile) {
-                        File notePad = new File(fc.getSelectedFile().getAbsolutePath());
-                        Scanner scanner = new Scanner(notePad);
-                        StringBuilder sb = new StringBuilder();
-                        while (scanner.hasNextLine()) {
-                            sb.append(scanner.nextLine());
-                            sb.append("\n");
-                        }
-                        String newPicturePath = getLoadedPath(sb.toString());
-                        newPicture = ImageIO.read(new File(newPicturePath));
-                        validPictureFile = newPicture != null;
-                        Map<String, int[]> loadedMap = getImportedData(sb.toString());
-                        if (loadedMap != null && validPictureFile) {
-                            enableUI();
-                            initializePicLabel();
-                            deleteAllLayer();//todo mira si puedes hacer que esto sea condicional en función de si hay capas o no
-                            resetLayerSelector(loadedMap);
-                            spritesPanel.removeAll();
-                            SPRITESHEET.setPicturePath(newPicturePath);
-                            SPRITESHEET.loadSpriteSheet(newPicture);
-                            buildJLabelList(spritesPanel, spriteListScale);
-                            CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASHMAP());
-                            updateMainCanvas(mapScale);
-                        } else {
-                            if (!validPictureFile) {
-                                subWindow.runInfoWindo("invalidImagePath");
-                            } else {
-                                subWindow.runInfoWindo("corruptedFile");
-                            }
-                            importCode.doClick();
-                        }
-                    } else {
-                        subWindow.runInfoWindo("invalidText");
-                        importCode.doClick();
-                    }
-                } catch (IOException | NullPointerException exception) {
-                    if (exception instanceof IOException) {
-                        subWindow.runInfoWindo("corruptedFile");
-                    } else {
-                        subWindow.runInfoWindo("invalidPath");
-                    }
-                    importCode.doClick();
-                }
-            }
-        });
-        //------
-        exportCode = new JMenuItem("Export");
-        exportCode.addActionListener(e -> {
-            final JFileChooser fc = new JFileChooser();
-            fc.setApproveButtonText("OK");
-            try {
-                int returnVal = fc.showOpenDialog(exportCode);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    File notePad = new File(fc.getSelectedFile() + ".txt");
-                    FileWriter writer = new FileWriter(notePad);
-                    String arrayPrinted = CANVAS.getExportString(SPRITESHEET.getPicturePath());
-                    writer.write(arrayPrinted);
-                    writer.close();
-                    TA.setText(Strings.EXPORT_SAVED_MESSAGE + fc.getSelectedFile().getAbsolutePath());
-                } else {
-                    System.out.println("Open command cancelled by user.");
-                }
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-        exportCode.setEnabled(false);
-        exportCode.addMouseListener(mouseListener);
-        //----------
-        exportCanvas = new JMenuItem(Strings.EXPORT_CANVAS_ITEM);
-        exportCanvas.addActionListener(e -> {
-            runSubMenu("exportCanvas");
-        });
-        exportCanvas.setEnabled(false);
-        exportCanvas.addMouseListener(mouseListener);
-        //----------
-        JMenuItem help = new JMenuItem(Strings.HELP_ITEM);
-        help.addActionListener(e -> {
-            subWindow.runInfoWindo("help");
-        });
-
-        jMenuBar.add(options);
-        options.add(newCanvas);
-        options.add(loadSpriteSheet);
-        options.add(layerManagement);
-        layerManagement.add(clearLayerMenu);
-        clearLayerMenu.add(clearLayer);
-        clearLayerMenu.add(clearAllLayer);
-        layerManagement.add(deleteLayerMenu);
-        deleteLayerMenu.add(deleteLayer);
-        deleteLayerMenu.add(deleteAllLayerMenu);
-        options.add(importExport);
-        importExport.add(importCode);
-        importExport.add(exportCode);
-        options.add(exportCanvas);
-        options.add(help);
-
-        jMenuBar.setVisible(true);
-        options.setVisible(true);
-
-        return jMenuBar;
-    }
-
-    private void setMapScale(int movementIncrement) {
-        this.mapScale += movementIncrement;
-    }
-
-    private void setSpriteListScale(int spriteListScale) {
-        this.spriteListScale = spriteListScale;
-    }
 
     private Map<String, int[]> getImportedData(String loadedData) {
         //Update the existing documentation
@@ -769,6 +152,208 @@ class UserInterface implements KeyListener {
         return layers;
     }
 
+    Refactoriza getJMenuBar siguiendo lo sugerido por chat
+
+    Revisa la siguiente opción
+    private void showError(String errorType) {
+        switch (errorType) {
+            case "corruptedFile" -> subWindow.runInfoWindo("corruptedFile");
+            case "invalidImagePath" -> subWindow.runInfoWindo("invalidImagePath");
+            case "invalidPath" -> subWindow.runInfoWindo("invalidPath");
+            default -> subWindow.runInfoWindo("unknownError");
+        }
+    }
+
+    Dentro de importCode o alguno de estos, cambia los nombres como sb para referirte a StringBuilder,
+    por nombres más descriptivos
+
+
+    private JMenuBar getJMenuBar() {
+        JMenuBar jMenuBar = new JMenuBar();
+        JMenu options = new JMenu("Options");
+
+        //1
+        JMenuItem newCanvas = new JMenuItem(Strings.NEW_CANVAS_MENU);
+        newCanvas.addActionListener(e -> {
+            runSubMenu("requestNewCanvasValues");
+            enableUI();
+        });
+        //2
+        loadSpriteSheet = new JMenuItem(Strings.LOAD_SPRITESHEET_ITEM);
+        loadSpriteSheet.addActionListener(e -> {
+            final JFileChooser fc = new JFileChooser();
+            int returnVal = fc.showOpenDialog(loadSpriteSheet);
+            if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
+                String newPicturePath = fc.getSelectedFile().getAbsolutePath();
+                boolean validPictureFile = false;
+                BufferedImage newPicture = null;
+                try {
+                    newPicture = ImageIO.read(new File(newPicturePath));
+                    validPictureFile = newPicture != null;
+                } catch (IOException | NullPointerException | SecurityException ex) {
+                    subWindow.runInfoWindo("invalidPath");
+                    loadSpriteSheet.doClick();
+                }
+                if (validPictureFile) {
+                    if (spritesPanel.getComponentCount() > 0) {
+                        spritesPanel.removeAll();
+                    }
+                    SPRITESHEET.setPicturePath(newPicturePath);
+                    SPRITESHEET.loadSpriteSheet(newPicture);
+                    buildJLabelList(spritesPanel, spriteListScale);
+                    spritesPanel.updateUI();
+                } else {
+                    subWindow.runInfoWindo("invalidImage");
+                    loadSpriteSheet.doClick();
+                }
+            }
+        });
+        loadSpriteSheet.setEnabled(false);
+        loadSpriteSheet.addMouseListener(this);
+        //3
+        layerManagement = new JMenu(Strings.LAYER_MANAGEMENT_MENU);
+        layerManagement.setEnabled(false);
+        layerManagement.addMouseListener(this);
+        //3.1
+        JMenu clearLayerMenu = new JMenu(Strings.CLEAR_LAYER_MENU);
+        //3.1.1
+        JMenuItem clearLayer = new JMenuItem(Strings.CLEAR_LAYER_ITEM);
+        clearLayer.addActionListener(e -> {
+            CANVAS.clearLayer(actualCanvas);
+            updateMainCanvas(mapScale);
+        });
+        //3.1.2
+        JMenuItem clearAllLayer = new JMenuItem(Strings.CLEAR_ALL_LAYER_ITEM);
+        clearAllLayer.addActionListener(e -> {
+            CANVAS.clearAllLayers();
+            updateMainCanvas(mapScale);
+        });
+        //3.2
+        JMenu deleteLayerMenu = new JMenu(Strings.DELETE_LAYER_MENU);
+        //3.2.1
+        JMenuItem deleteLayer = new JMenuItem(Strings.DELETE_LAYER_ITEM);
+        deleteLayer.addActionListener(e -> {
+            CANVAS.deleteLayer(actualCanvas);
+            layerSelector.removeAll();
+            for (Map.Entry<String, BufferedImage> layers : CANVAS.getLAYERS().entrySet()) {
+                addNewLayerButtons(layers.getKey());
+            }
+            updateMainCanvas(mapScale);
+        });
+        //3.2.1
+        JMenuItem deleteAllLayerMenu = new JMenuItem(Strings.DELETE_ALL_LAYER_ITEM);
+        deleteAllLayerMenu.addActionListener(e -> deleteAllLayer());
+        //4
+        JMenu importExport = new JMenu(Strings.IMPORT_EXPORT_MENU);
+        //4.1
+        JMenuItem importCode = new JMenuItem("Import");
+        importCode.addActionListener(e -> {
+            final JFileChooser fc = new JFileChooser();
+            int returnVal = fc.showOpenDialog(importCode);
+            if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
+                boolean validPictureFile;
+                BufferedImage newPicture;
+                try {
+                    validPictureFile = Files.probeContentType(fc.getSelectedFile().toPath()).startsWith("text");
+                    if (validPictureFile) {
+                        File notePad = new File(fc.getSelectedFile().getAbsolutePath());
+                        Scanner scanner = new Scanner(notePad);
+                        StringBuilder sb = new StringBuilder();
+                        while (scanner.hasNextLine()) {
+                            sb.append(scanner.nextLine());
+                            sb.append("\n");
+                        }
+                        String newPicturePath = getLoadedPath(sb.toString());
+                        newPicture = ImageIO.read(new File(newPicturePath));
+                        validPictureFile = newPicture != null;
+                        Map<String, int[]> loadedMap = getImportedData(sb.toString());
+                        if (loadedMap != null && validPictureFile) {
+                            enableUI();
+                            initializePicLabel();
+                            deleteAllLayer();//todo mira si puedes hacer que esto sea condicional en función de si hay capas o no
+                            resetLayerSelector(loadedMap);
+                            spritesPanel.removeAll();
+                            SPRITESHEET.setPicturePath(newPicturePath);
+                            SPRITESHEET.loadSpriteSheet(newPicture);
+                            buildJLabelList(spritesPanel, spriteListScale);
+                            CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASHMAP());
+                            updateMainCanvas(mapScale);
+                        } else {
+                            if (!validPictureFile) {
+                                subWindow.runInfoWindo("invalidImagePath");
+                            } else {
+                                subWindow.runInfoWindo("corruptedFile");
+                            }
+                            importCode.doClick();
+                        }
+                    } else {
+                        subWindow.runInfoWindo("invalidText");
+                        importCode.doClick();
+                    }
+                } catch (IOException | NullPointerException exception) {
+                    if (exception instanceof IOException) {
+                        subWindow.runInfoWindo("corruptedFile");
+                    } else {
+                        subWindow.runInfoWindo("invalidPath");
+                    }
+                    importCode.doClick();
+                }
+            }
+        });
+        //4.2
+        exportCode = new JMenuItem("Export");
+        exportCode.addActionListener(e -> {
+            final JFileChooser fc = new JFileChooser();
+            fc.setApproveButtonText("OK");
+            try {
+                int returnVal = fc.showOpenDialog(exportCode);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File notePad = new File(fc.getSelectedFile() + ".txt");
+                    FileWriter writer = new FileWriter(notePad);
+                    String arrayPrinted = CANVAS.getExportString(SPRITESHEET.getPicturePath());
+                    writer.write(arrayPrinted);
+                    writer.close();
+                    TA.setText(Strings.EXPORT_SAVED_MESSAGE + fc.getSelectedFile().getAbsolutePath());
+                } else {
+                    System.out.println("Open command cancelled by user.");
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        exportCode.setEnabled(false);
+        exportCode.addMouseListener(this);
+        //5
+        exportCanvas = new JMenuItem(Strings.EXPORT_CANVAS_ITEM);
+        exportCanvas.addActionListener(e -> runSubMenu("exportCanvas"));
+        exportCanvas.setEnabled(false);
+        exportCanvas.addMouseListener(this);
+        //6
+        JMenuItem help = new JMenuItem(Strings.HELP_ITEM);
+        help.addActionListener(e -> subWindow.runInfoWindo("help"));
+
+        jMenuBar.add(options);
+        options.add(newCanvas);
+        options.add(loadSpriteSheet);
+        options.add(layerManagement);
+        layerManagement.add(clearLayerMenu);
+        clearLayerMenu.add(clearLayer);
+        clearLayerMenu.add(clearAllLayer);
+        layerManagement.add(deleteLayerMenu);
+        deleteLayerMenu.add(deleteLayer);
+        deleteLayerMenu.add(deleteAllLayerMenu);
+        options.add(importExport);
+        importExport.add(importCode);
+        importExport.add(exportCode);
+        options.add(exportCanvas);
+        options.add(help);
+
+        jMenuBar.setVisible(true);
+        options.setVisible(true);
+
+        return jMenuBar;
+    }
+
     private String getLoadedPath(String loadedData) {
         String path = "";
         Matcher matcher = Pattern.compile(Strings.LOADED_REGEX).matcher(loadedData);
@@ -779,31 +364,51 @@ class UserInterface implements KeyListener {
         return path;
     }
 
-    private void deleteAllLayer() {
-        actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " ");
-        CANVAS.deleteAllLayers();
-        layerSelector.removeAll();
-        actualCanvas = Strings.NO_LAYER;
-        updateMainCanvas(mapScale);
+    private void setMapScale(int movementIncrement) {
+        this.mapScale += movementIncrement;
     }
 
-    private void resetLayerSelector(Map<String, int[]> newlayerSelector) {
-        boolean firstLayerName = true;
-        for (Map.Entry<String, int[]> newLayers : newlayerSelector.entrySet()) {
-            addNewLayerButtons(newLayers.getKey());
-            CANVAS.addNewCanvas(newLayers.getKey());
-            if (firstLayerName) {
-                actualCanvas = newLayers.getKey();
-                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " +
-                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
-                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
-                firstLayerName = false;
+    private void setSpriteListScale(int spriteListScale) {
+        this.spriteListScale = spriteListScale;
+    }
+
+    private void addNewLayerButtons(String layerName) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+        JButton layerButton = new JButton(layerName);
+        layerButton.addKeyListener(this);
+        layerButton.setFocusable(false);
+        layerButton.addActionListener(e -> {
+            actualCanvas = layerName;
+            actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " +
+                    (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
+                            actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+        });
+
+        JRadioButton radioButton = new JRadioButton();
+        radioButton.addKeyListener(this);
+        radioButton.setFocusable(true);
+        radioButton.addActionListener(e -> {
+            if (radioButton.isSelected()) {
+                CANVAS.hideLayer(layerName);
+            } else {
+                CANVAS.showLayer(layerName);
             }
-        }
-    }
+            updateMainCanvas(mapScale);
+        });
 
-    private void updateMainCanvas(int scale) {
-        picLabel.setIcon(new ImageIcon(CANVAS.getScaledCanvas(CANVAS.getFramedCanvas(), scale)));
+        panel.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel.add(radioButton);
+        panel.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel.add(layerButton);
+        panel.add(Box.createHorizontalGlue());
+
+        layerSelector.add(Box.createRigidArea(new Dimension(0, 3)));
+        layerSelector.add(panel);
+        layerSelector.updateUI();
+
+        TA.setText("");
     }
 
     private void buildJLabelList(JPanel spritesPanel, int spriteListScaleRatio) {
@@ -873,7 +478,7 @@ class UserInterface implements KeyListener {
                     }
                 });
                 jPanel.add(button);
-                if (j % SPRITESHEET.getTilesInRow() == 0 ) {
+                if (j % SPRITESHEET.getTilesInRow() == 0) {
                     break;
                 }
             }
@@ -881,52 +486,80 @@ class UserInterface implements KeyListener {
         }
     }
 
-    private void addNewLayerButtons(String layerName) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-
-        JButton layerButton = new JButton(layerName);
-        layerButton.addKeyListener(this);
-        layerButton.setFocusable(false);
-        layerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actualCanvas = layerName;
-                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " +
-                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
-                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
-            }
-        });
-
-        JRadioButton radioButton = new JRadioButton();
-        radioButton.addKeyListener(this);
-        radioButton.setFocusable(true);
-        radioButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (radioButton.isSelected()) {
-                    CANVAS.hideLayer(layerName);
-                } else {
-                    CANVAS.showLayer(layerName);
-                }
-                updateMainCanvas(mapScale);
-            }
-        });
-
-        panel.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel.add(radioButton);
-        panel.add(Box.createRigidArea(new Dimension(5, 0)));
-        panel.add(layerButton);
-        panel.add(Box.createHorizontalGlue());
-
-        layerSelector.add(Box.createRigidArea(new Dimension(0, 3)));
-        layerSelector.add(panel);
-        layerSelector.updateUI();
-
-        TA.setText("");
+    private void deleteAllLayer() {
+        actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " ");
+        CANVAS.deleteAllLayers();
+        layerSelector.removeAll();
+        actualCanvas = Strings.NO_LAYER;
+        updateMainCanvas(mapScale);
     }
 
-    private void pointerMovement() {
+    private void enableUI() {
+        loadSpriteSheet.setEnabled(true);
+        layerManagement.setEnabled(true);
+        exportCode.setEnabled(true);
+        exportCanvas.setEnabled(true);
+        biggerSprite.setEnabled(true);
+        biggerMap.setEnabled(true);
+        smallerSprite.setEnabled(true);
+        smallerMap.setEnabled(true);
+        newLayerB.setEnabled(true);
+        TA.setEditable(true);
+        loadSpriteSheet.removeMouseListener(this);
+        layerManagement.removeMouseListener(this);
+        exportCode.removeMouseListener(this);
+        exportCanvas.removeMouseListener(this);
+        biggerSprite.removeMouseListener(this);
+        biggerMap.removeMouseListener(this);
+        smallerSprite.removeMouseListener(this);
+        smallerMap.removeMouseListener(this);
+        newLayerB.removeMouseListener(this);
+        TA.removeMouseListener(this);
+        TA.setCaretColor(Color.BLACK);
+        TA.setText("");
+        picScroller.requestFocus();
+    }
+
+    private void initializePicLabel() {
+        picLabel = new JLabel(new ImageIcon(CANVAS.getFramedCanvas()));
+        picLabel.addKeyListener(this);
+        picLabel.setFocusable(true);
+        picLabel.setVisible(true);
+        MAP_VIEW.setView(picLabel);
+        picScroller.setViewportView(MAP_VIEW);
+    }
+
+    private void movementSelector() {
+        if (toggleMapMovement || toggleSpriteMovement) {
+            moveViewPort();
+        } else {
+            int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
+            switch (direction) {
+                case 1:
+                    if ((x - movementIncrement) >= 0) {
+                        movePointer();
+                    }
+                    break;
+                case 2:
+                    if ((x + movementIncrement) <= width) {
+                        movePointer();
+                    }
+                    break;
+                case 3:
+                    if ((y - movementIncrement) >= 0) {
+                        movePointer();
+                    }
+                    break;
+                case 4:
+                    if ((y + movementIncrement) <= width) {
+                        movePointer();
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void movePointer() {
         int spriteSide = SPRITESHEET.getSpriteSide();
         Color pointer = Color.RED;
         Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
@@ -969,37 +602,6 @@ class UserInterface implements KeyListener {
         updateMainCanvas(mapScale);
     }
 
-
-    void movementSelector() {
-        if (toggleMapMovement || toggleSpriteMovement) {
-            moveViewPort();
-        } else {
-            int width = CANVAS.getPOINTER_LAYER().getWidth() - SPRITESHEET.getSpriteSide();
-            switch (direction) {
-                case 1:
-                    if ((x - movementIncrement) >= 0) {
-                        pointerMovement();
-                    }
-                    break;
-                case 2:
-                    if ((x + movementIncrement) <= width) {
-                        pointerMovement();
-                    }
-                    break;
-                case 3:
-                    if ((y - movementIncrement) >= 0) {
-                        pointerMovement();
-                    }
-                    break;
-                case 4:
-                    if ((y + movementIncrement) <= width) {
-                        pointerMovement();
-                    }
-                    break;
-            }
-        }
-    }
-
     private void moveViewPort() {
         Point newPicViewPosition = new Point();
         int viewMovement = 0;
@@ -1039,160 +641,19 @@ class UserInterface implements KeyListener {
         }
     }
 
-    private final MouseListener mouseListener = new MouseListener() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            TA.setText(Strings.NEW_LAYER_REQUIRED);
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-
-        }
-    };
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (TA.isEditable()) {
-            int key = e.getKeyCode();
-            //Next line is set in orderd to not allow X or Y to reach the end of the pointer BufferedImage.
-            //If any coordinate reaches the end of the axis, it would generate the square to be drawn outside
-            //of the buffered, since it is the top left coordinate the one which is taken9 in consideration.
-            System.out.println("Key = " + key);
-            if (TA.hasFocus()) {
-                if (key == KeyEvent.VK_ESCAPE) {
-                    frame.requestFocus();
-                }
-            } else {
-                if (key == KeyEvent.VK_CONTROL) {
-                    if (!toggleMapMovement) {
-                        toggleMapMovement = true;
-                    }
-                } else if (key == KeyEvent.VK_SHIFT) {
-                    if (!toggleSpriteMovement) {
-                        toggleSpriteMovement = true;
-                    }
-                } else if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-                    direction = 1;
-                    movementSelector();
-                } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-                    direction = 2;
-                    movementSelector();
-                } else if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-                    direction = 3;
-                    movementSelector();
-                } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-                    direction = 4;
-                    movementSelector();
-                } else if (key == KeyEvent.VK_PLUS || key == KeyEvent.VK_ADD) {
-                    if (toggleMapMovement) {
-                        biggerMap.doClick();
-                    } else if (toggleSpriteMovement) {
-                        biggerSprite.doClick();
-                    }
-                } else if (key == KeyEvent.VK_MINUS || key == KeyEvent.VK_SUBTRACT) {
-                    if (toggleMapMovement) {
-                        smallerMap.doClick();
-                    } else if (toggleSpriteMovement) {
-                        smallerSprite.doClick();
-                    }
-                } else if (key == KeyEvent.VK_ENTER) {
-                    if(!actualCanvas.equals(Strings.NO_LAYER)) {
-                        int spriteSide = SPRITESHEET.getSpriteSide() - FRAME_GAP;
-                        fillingBrush = !fillingBrush;
-                        Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
-                        pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-                        if (fillingBrush) {
-                            pointerGraphics.setColor(Color.GREEN);
-                        } else {
-                            pointerGraphics.setColor(Color.RED);
-                        }
-                        pointerGraphics.drawRect(x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide);
-                        pointerGraphics.dispose();
-                        direction = 0;
-                        pointerMovement();
-                    } else {
-                        TA.setText("No layer selected.");
-                    }
-                }
+    private void resetLayerSelector(Map<String, int[]> newlayerSelector) {
+        boolean firstLayerName = true;
+        for (Map.Entry<String, int[]> newLayers : newlayerSelector.entrySet()) {
+            addNewLayerButtons(newLayers.getKey());
+            CANVAS.addNewCanvas(newLayers.getKey());
+            if (firstLayerName) {
+                actualCanvas = newLayers.getKey();
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " +
+                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
+                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+                firstLayerName = false;
             }
         }
-    }
-
-    Check:
-
-    - All ids are properly set
-    - That everything in the enter key function is ok
-    - Write that the sprite list zoom in/out gets lagged and crashed when the spritesheet is big
-    - The empty sprite works as it is supposed to
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        int key = e.getKeyCode();
-        if (key == 17) {
-            if (toggleMapMovement) {
-                toggleMapMovement = false;
-            }
-        } else if (key == 16) {
-            if (toggleSpriteMovement) {
-                toggleSpriteMovement = false;
-            }
-        }
-    }
-
-    private void initializePicLabel() {
-        picLabel = new JLabel(new ImageIcon(CANVAS.getFramedCanvas()));
-        picLabel.addKeyListener(this);
-        picLabel.setFocusable(true);
-        picLabel.setVisible(true);
-        MAP_VIEW.setView(picLabel);
-        picScroller.setViewportView(MAP_VIEW);
-    }
-
-    private void enableUI() {
-        loadSpriteSheet.setEnabled(true);
-        layerManagement.setEnabled(true);
-        exportCode.setEnabled(true);
-        exportCanvas.setEnabled(true);
-        biggerSprite.setEnabled(true);
-        biggerMap.setEnabled(true);
-        smallerSprite.setEnabled(true);
-        smallerMap.setEnabled(true);
-        newLayerB.setEnabled(true);
-        TA.setEditable(true);
-        loadSpriteSheet.removeMouseListener(mouseListener);
-        layerManagement.removeMouseListener(mouseListener);
-        exportCode.removeMouseListener(mouseListener);
-        exportCanvas.removeMouseListener(mouseListener);
-        biggerSprite.removeMouseListener(mouseListener);
-        biggerMap.removeMouseListener(mouseListener);
-        smallerSprite.removeMouseListener(mouseListener);
-        smallerMap.removeMouseListener(mouseListener);
-        newLayerB.removeMouseListener(mouseListener);
-        TA.removeMouseListener(mouseListener);
-        TA.setCaretColor(Color.BLACK);
-        TA.setText("");
-        picScroller.requestFocus();
     }
 
     private void runSubMenu(String menuName) {
@@ -1376,9 +837,7 @@ class UserInterface implements KeyListener {
         JButton cancel = new JButton("Cancel");
         cancel.setMaximumSize(new Dimension(buttonWidth, buttonPHeight));
         cancel.setMinimumSize(cancel.getMaximumSize());
-        cancel.addActionListener(e -> {
-            subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
-        });
+        cancel.addActionListener(e -> subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING)));
 
 
         //Layout adding
@@ -1454,5 +913,537 @@ class UserInterface implements KeyListener {
         buttonsP.setVisible(true);
         ok.setVisible(true);
         cancel.setVisible(true);
+    }
+
+    public void windowSetup() {
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        final int SCREEN_HEIGHT = (int) screenSize.getHeight();
+        final int SCREEN_WIDTH = (int) screenSize.getWidth();
+
+        int FRAME_WIDTH = (int) (SCREEN_WIDTH * 0.6);
+        int FRAME_HEIGHT = (int) (SCREEN_HEIGHT * 0.6);
+
+        JMenuBar jMenuBar = getJMenuBar();
+
+        frame = new JFrame(Strings.FRAME_NAME_UI);
+        frame.setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
+        frame.addKeyListener(this);
+        frame.setFocusable(true);
+        frame.setFocusTraversalKeysEnabled(false);
+        frame.setLocationRelativeTo(null);
+        frame.setIconImage(null);
+        frame.setJMenuBar(jMenuBar);
+
+        //>>>Inside frame
+        //Panel1
+        int panel1Width = (int) (SCREEN_WIDTH * 0.40);
+        JPanel panel1 = new JPanel();
+        panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
+        panel1.setFocusable(true);
+        panel1.addKeyListener(this);
+        panel1.setMaximumSize(new Dimension(panel1Width, SCREEN_HEIGHT));
+        panel1.setPreferredSize(panel1.getMaximumSize());
+
+        //Map Management
+        JPanel picScrollerHolder = new JPanel();
+        picScrollerHolder.setLayout(new BoxLayout(picScrollerHolder, BoxLayout.Y_AXIS));
+        picScrollerHolder.addKeyListener(this);
+        picScrollerHolder.setFocusable(true);
+        picScrollerHolder.setMaximumSize(new Dimension(SCREEN_WIDTH - panel1Width, SCREEN_HEIGHT));
+        picScrollerHolder.setPreferredSize(picScrollerHolder.getMaximumSize());
+
+        picScroller = new JScrollPane();
+        picScroller.addKeyListener(this);
+        picScroller.setFocusable(true);
+        picScroller.setWheelScrollingEnabled(true);
+        picScroller.setEnabled(false); //Enabled false allows the JScrollPane movement through arrow keys.
+
+        //>>> Inside panel1
+        int panel2Width = (int) (SCREEN_WIDTH * 0.40);
+        int panel2Height = (int) (SCREEN_HEIGHT * 0.90);
+        JPanel panel2 = new JPanel();
+        panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
+        panel2.addKeyListener(this);
+        panel2.setFocusable(true);
+        panel2.setMaximumSize(new Dimension(panel2Width, panel2Height));
+        panel2.setPreferredSize(panel2.getMaximumSize());
+
+        //>>> Inside panel1 > Inside panel2
+        //Sprites management
+        JPanel spritesFather = new JPanel();
+        spritesFather.setLayout(new BoxLayout(spritesFather, BoxLayout.Y_AXIS));
+        spritesFather.addKeyListener(this);
+        spritesFather.setMaximumSize(new Dimension((int) (panel2.getMaximumSize().getWidth() * 0.75), panel2Height));
+        spritesFather.setPreferredSize(spritesFather.getMaximumSize());
+
+        //>>> Inside panel1 > Inside panel2 > Inside spritesFather
+        JPanel spriteLabelPanel = new JPanel();
+        spriteLabelPanel.setLayout(new BoxLayout(spriteLabelPanel, BoxLayout.X_AXIS));
+        spriteLabelPanel.addKeyListener(this);
+        //>>> Inside panel1 > Inside panel2 > Inside spritesFather > Inside spriteLabelPanel
+        JLabel spriteLabel = new JLabel(Strings.SPRITE_LABEL_NAME);
+
+        //>>> Inside panel1 > Inside spritesFather
+        spriteListScroller = new JScrollPane();
+        spriteListScroller.addKeyListener(this);
+        spriteListScroller.setWheelScrollingEnabled(true);
+        //>>> Inside panel1 > Inside panel2 > Inside spritesFather > Inside spriteListScroller
+        spritesPanel = new JPanel();
+        spritesPanel.setLayout(new BoxLayout(spritesPanel, BoxLayout.PAGE_AXIS));
+        spritesPanel.addKeyListener(this);
+
+        SPRITE_VIEW.setView(spritesPanel);
+
+        //Layer Management
+        //>>> Inside panel1 > Inside panel2
+        JPanel layerPanel = new JPanel();
+        layerPanel.setLayout(new BoxLayout(layerPanel, BoxLayout.Y_AXIS));
+        layerPanel.setMaximumSize(new Dimension((int) (panel2.getMaximumSize().getWidth() * 0.25), panel2Height));
+        layerPanel.setPreferredSize(layerPanel.getMaximumSize());
+        //>>> Inside panel1 > Inside panel2 > Inside layerPanel
+        JPanel layerLabelPanel = new JPanel();
+        layerLabelPanel.setLayout(new BoxLayout(layerLabelPanel, BoxLayout.X_AXIS));
+        layerLabelPanel.addKeyListener(this);
+        //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerLabelPanel
+        actualLayerLabel = new JLabel(Strings.ACTUAL_LAYER_LABEL + " " + actualCanvas);
+        actualLayerLabel.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                actualLayerLabel.setText(actualCanvas);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                String layerLabel = Strings.ACTUAL_LAYER_LABEL + " " +
+                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
+                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas);
+                actualLayerLabel.setText(layerLabel);
+            }
+        });
+
+        //>>> Inside panel1 > Inside panel2 > Inside layerPanel
+        JScrollPane layerScroller = new JScrollPane();
+        layerScroller.setFocusable(true);
+        layerScroller.addKeyListener(this);
+        layerScroller.setWheelScrollingEnabled(true);
+        //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller
+        layerSelector = new JPanel();
+        layerSelector.setLayout(new BoxLayout(layerSelector, BoxLayout.Y_AXIS));
+        layerSelector.setFocusable(false);
+
+        //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller > layerSelector
+        JPanel newLayerBPanel = new JPanel();
+        newLayerBPanel.setLayout(new BoxLayout(newLayerBPanel, BoxLayout.X_AXIS));
+        newLayerBPanel.setMaximumSize(new Dimension(layerPanel.getMaximumSize().width, (int) (layerPanel.getMaximumSize().getHeight() * 0.03)));
+        newLayerBPanel.setPreferredSize(newLayerBPanel.getMaximumSize());
+
+        newLayerB = new JButton(Strings.NEW_LAYER_BUTTON);
+        newLayerB.setFocusable(true);
+        newLayerB.setEnabled(false);
+        newLayerB.addKeyListener(this);
+        newLayerB.addMouseListener(this);
+        newLayerB.addActionListener(e -> {
+            String newLayerName = TA.getText().trim();
+            if (!newLayerName.isEmpty() &&
+                    newLayerName.matches("(\\w+(\\s+\\w+)*)") &&
+                    !CANVAS.hasLayer(newLayerName)) {
+                newLayerName = newLayerName.replaceAll("\\s+", "_").toLowerCase();
+                addNewLayerButtons(newLayerName);
+                if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getCanvasSize() == 0)
+                        && (SPRITESHEET.getSpriteSide() == 0)) {
+                    runSubMenu("requestNewCanvasValues");
+                }
+                CANVAS.addNewCanvas(newLayerName);
+                actualCanvas = newLayerName;
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + "\n" +
+                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
+                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+            } else {
+                subWindow.runInfoWindo("invalidLayerHelp");
+            }
+        });
+        newLayerB.setMaximumSize(new Dimension(newLayerBPanel.getMaximumSize().width, (newLayerBPanel.getMaximumSize().height)));
+        newLayerB.setPreferredSize(newLayerB.getMaximumSize());
+
+        //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller
+        layerScroller.setViewportView(layerSelector);
+
+        //>>> Inside panel1
+        JPanel panel3 = new JPanel();
+        panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
+        panel3.addKeyListener(this);
+        panel3.setFocusable(true);
+        panel3.setMaximumSize(new Dimension(panel1Width, SCREEN_HEIGHT - panel2Height));
+        panel3.setPreferredSize(panel3.getMaximumSize());
+
+
+        //>>> Inside panel1 > Inside panel3
+        JPanel panel4 = new JPanel();
+        panel4.setLayout(new BoxLayout(panel4, BoxLayout.Y_AXIS));
+        panel4.addKeyListener(this);
+        panel4.setFocusable(true);
+        panel4.setMaximumSize(new Dimension((int) (SCREEN_WIDTH * 0.15), panel3.getMaximumSize().height));
+
+        //>>> Inside panel1 > Inside panel3 > Inside panel4
+        JPanel panel5 = new JPanel();
+        panel5.setLayout(new BoxLayout(panel5, BoxLayout.X_AXIS));
+        panel5.addKeyListener(this);
+        panel5.setFocusable(true);
+        panel5.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
+
+        JPanel panel6 = new JPanel();
+        panel6.setLayout(new BoxLayout(panel6, BoxLayout.X_AXIS));
+        panel6.addKeyListener(this);
+        panel6.setFocusable(true);
+        panel6.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
+
+        //>>> Inside panel1 > Inside panel3 > Inside panel5
+        Dimension buttonsDimension = new Dimension(panel4.getMaximumSize().width / 2, panel4.getMaximumSize().height / 2);
+
+        biggerSprite = new JButton(Strings.BIGGER_SPRITE_BUTTON);
+        biggerSprite.setFocusable(true);
+        biggerSprite.setEnabled(false);
+        biggerSprite.setActionCommand("+");
+        biggerSprite.addKeyListener(this);
+        biggerSprite.addMouseListener(this);
+        biggerSprite.addActionListener(e -> {
+            setSpriteListScale(++spriteListScale);
+            int size = CANVAS.getCanvasSize() * spriteListScale;
+            spritesPanel.setSize(new Dimension(size, size));
+            spritesPanel.removeAll();
+            buildJLabelList(spritesPanel, spriteListScale);
+            spritesPanel.updateUI();
+        });
+        biggerSprite.setMaximumSize(buttonsDimension);
+
+        smallerSprite = new JButton(Strings.SMALLER_SPRITE_BUTTON);
+        smallerSprite.setFocusable(true);
+        smallerSprite.setEnabled(false);
+        smallerSprite.setActionCommand("-");
+        smallerSprite.addKeyListener(this);
+        smallerSprite.addMouseListener(this);
+        smallerSprite.addActionListener(e -> {
+            if (spriteListScale > 1) {
+                setSpriteListScale(--spriteListScale);
+            }
+            int size = CANVAS.getCanvasSize() * spriteListScale;
+            spritesPanel.setSize(new Dimension(size, size));
+            spritesPanel.removeAll();
+            buildJLabelList(spritesPanel, spriteListScale);
+            spritesPanel.updateUI();
+        });
+        smallerSprite.setMaximumSize(buttonsDimension);
+
+        //>>> Inside panel1 > Inside panel3 > Inside panel5 > Inside panel6
+        //The string used for the name of map buttons must include extra empty spaces in order
+        //to match the length of the strings used for the sprite buttons. both groups of strings
+        //must be equally long in order to be resized in the same way when the screen resolution
+        //changes.
+        biggerMap = new JButton(Strings.BIGGER_MAP_BUTTON);
+        biggerMap.setFocusable(true);
+        biggerMap.setEnabled(false);
+        biggerMap.addKeyListener(this);
+        biggerMap.addMouseListener(this);
+        biggerMap.addActionListener(e -> {
+            setMapScale(MAP_SCALE_RATIO);
+            updateMainCanvas(mapScale);
+        });
+        biggerMap.setMaximumSize(buttonsDimension);
+
+        smallerMap = new JButton(Strings.SMALLER_MAP_BUTTTON);
+        smallerMap.setFocusable(true);
+        smallerMap.setEnabled(false);
+        smallerMap.addKeyListener(this);
+        smallerMap.addMouseListener(this);
+        smallerMap.addActionListener(e -> {
+            if ((mapScale - MAP_SCALE_RATIO) > 0) {
+                setMapScale(-MAP_SCALE_RATIO);
+                updateMainCanvas(mapScale);
+            }
+        });
+        smallerMap.setMaximumSize(buttonsDimension);
+
+        //>>> Inside panel1 > Inside panel3
+        int panel7Width = panel3.getMaximumSize().width - panel4.getMaximumSize().width;
+        int panel7Height = panel3.getMaximumSize().height;
+        JPanel panel7 = new JPanel();
+        panel7.setLayout(new BoxLayout(panel7, BoxLayout.Y_AXIS));
+        panel7.addKeyListener(this);
+        panel7.setFocusable(true);
+        panel7.setMaximumSize(new Dimension(panel7Width, panel7Height));
+
+        //>>> Inside panel1 > Inside panel3 > panel7
+        JScrollPane taScroller = new JScrollPane();
+        taScroller.addKeyListener(this);
+        taScroller.setFocusable(true);
+        taScroller.setWheelScrollingEnabled(true);
+
+        //>>> Inside panel1 > Inside panel3 > panel7 > Inside taScroller
+        TA.addKeyListener(this);
+        TA.addMouseListener(this);
+        TA.setEditable(false);
+        TA.setFont(new Font("", Font.BOLD, 15));
+        TA.setLineWrap(true);
+        TA.setWrapStyleWord(true);
+        TA.setCaretColor(Color.WHITE);
+        taScroller.setViewportView(TA);
+
+        //Layout adding.
+
+        //>>> Inside frame
+        frame.add(Box.createRigidArea(new Dimension(5, 0)));
+        frame.add(panel1);
+
+        //>>> Inside frame > Inside panel1
+        panel1.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel1.add(panel2);
+
+        //>>> Inside frame > Inside panel1 > Inside panel2
+        panel2.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel2.add(spritesFather);
+        //>>> Inside frame > Inside panel1 > Inside panel2 > Inside spritesFather
+        spritesFather.add(Box.createRigidArea(new Dimension(0, 5)));
+        spritesFather.add(spriteLabelPanel);
+        //>>> Inside frame > Inside panel1 > Inside panel2 > Inside spritesFather > Inside spriteLabelPanel
+        spriteLabelPanel.add(spriteLabel);
+        spriteLabelPanel.add(Box.createHorizontalGlue());
+        //>>> Inside frame > Inside panel1 > Inside panel2 > Inside spritesFather
+        spritesFather.add(Box.createRigidArea(new Dimension(0, 5)));
+        spritesFather.add(spriteListScroller);
+        spriteListScroller.setViewportView(SPRITE_VIEW);
+        spritesFather.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        //>>> Inside frame > Inside panel1 > Inside panel2
+        panel2.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel2.add(layerPanel);
+        //>>> Inside frame > Inside panel1 > Inside panel2
+
+        //>>> Inside frame > Inside panel1 > Inside panel2 > Inside layerPanel
+        layerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        layerPanel.add(layerLabelPanel);
+        //>>> Inside frame > Inside panel1 > Inside panel2 > layerPanel > layerLabelPanel
+        layerLabelPanel.add(actualLayerLabel);
+        layerLabelPanel.add(Box.createHorizontalGlue());
+        //>>> Inside frame > Inside panel1 > Inside panel2 > layerPanel
+        layerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        layerPanel.add(layerScroller);
+        layerScroller.setViewportView(layerSelector);
+        layerPanel.add(Box.createRigidArea(new Dimension(0, 3)));
+        layerPanel.add(newLayerBPanel);
+        //>>> Inside frame > Inside panel1 > Inside panel2 > layerPanel > Inside newLayerBPanel
+        newLayerBPanel.add(newLayerB);
+        //>>> Inside frame > Inside panel1 > Inside panel2 > layerPanel
+        layerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        //>>> Inside frame > Inside panel1 > Inside panel2
+        panel2.add(Box.createRigidArea(new Dimension(5, 0)));
+
+        //>>> Inside frame > Inside panel1
+        panel1.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel1.add(panel3);
+        panel1.add(Box.createRigidArea(new Dimension(5, 0)));
+
+        //>>> Inside frame > Inside panel1 > Inside panel3
+        panel3.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel3.add(panel4);
+        panel3.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel3.add(panel7);
+        panel3.add(Box.createRigidArea(new Dimension(5, 0)));
+
+        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4
+        panel4.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel4.add(panel5);
+
+        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4 > Inside panel5
+        panel5.add(biggerSprite);
+        panel5.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel5.add(smallerSprite);
+
+        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4
+        panel4.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel4.add(panel6);
+
+        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4 > Inside panel6
+        panel6.add(biggerMap);
+        panel6.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel6.add(smallerMap);
+
+        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel4
+        panel4.add(Box.createRigidArea(new Dimension(0, 5)));
+
+
+        //>>> Inside frame > Inside panel1 > Inside panel3 > Inside panel7
+        panel7.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel7.add(taScroller);
+        panel7.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        //>>> Inside frame
+        frame.add(Box.createRigidArea(new Dimension(5, 0)));
+        frame.add(picScrollerHolder);
+
+        //>>> Inside frame > picScrollerHolder
+        picScrollerHolder.add(Box.createRigidArea(new Dimension(0, 5)));
+        picScrollerHolder.add(picScroller);
+        picScrollerHolder.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        //>>> Inside frame
+        frame.add(Box.createRigidArea(new Dimension(5, 0)));
+
+        //Setting everything visible
+        frame.setVisible(true);
+        panel1.setVisible(true);
+        picScrollerHolder.setVisible(true);
+        picScroller.setVisible(true);
+        panel2.setVisible(true);
+        spritesFather.setVisible(true);
+        spriteLabel.setVisible(true);
+        spriteListScroller.setVisible(true);
+        spritesPanel.setVisible(true);
+        layerPanel.setVisible(true);
+        layerScroller.setVisible(true);
+        layerSelector.setVisible(true);
+        newLayerB.setVisible(true);
+        panel3.setVisible(true);
+        biggerSprite.setVisible(true);
+        smallerSprite.setVisible(true);
+        biggerMap.setVisible(true);
+        smallerMap.setVisible(true);
+        TA.setVisible(true);
+    }
+
+
+    private void updateMainCanvas(int scale) {
+        picLabel.setIcon(new ImageIcon(CANVAS.getScaledCanvas(CANVAS.getFramedCanvas(), scale)));
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (TA.isEditable()) {
+            int key = e.getKeyCode();
+            //Next line is set in order to not allow X or Y to reach the end of the pointer BufferedImage.
+            //If any coordinate reaches the end of the axis, it would generate the square to be drawn outside
+            //of the buffered, since it is the top left coordinate the one which is taken9 in consideration.
+            System.out.println("Key = " + key);
+            if (TA.hasFocus()) {
+                if (key == KeyEvent.VK_ESCAPE) {
+                    frame.requestFocus();
+                }
+            } else {
+                if (key == KeyEvent.VK_CONTROL) {
+                    if (!toggleMapMovement) {
+                        toggleMapMovement = true;
+                    }
+                } else if (key == KeyEvent.VK_SHIFT) {
+                    if (!toggleSpriteMovement) {
+                        toggleSpriteMovement = true;
+                    }
+                } else if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+                    direction = 1;
+                    movementSelector();
+                } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+                    direction = 2;
+                    movementSelector();
+                } else if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+                    direction = 3;
+                    movementSelector();
+                } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+                    direction = 4;
+                    movementSelector();
+                } else if (key == KeyEvent.VK_PLUS || key == KeyEvent.VK_ADD) {
+                    if (toggleMapMovement) {
+                        biggerMap.doClick();
+                    } else if (toggleSpriteMovement) {
+                        biggerSprite.doClick();
+                    }
+                } else if (key == KeyEvent.VK_MINUS || key == KeyEvent.VK_SUBTRACT) {
+                    if (toggleMapMovement) {
+                        smallerMap.doClick();
+                    } else if (toggleSpriteMovement) {
+                        smallerSprite.doClick();
+                    }
+                } else if (key == KeyEvent.VK_ENTER) {
+                    if (!actualCanvas.equals(Strings.NO_LAYER)) {
+                        int spriteSide = SPRITESHEET.getSpriteSide() - FRAME_GAP;
+                        fillingBrush = !fillingBrush;
+                        Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
+                        pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
+                        if (fillingBrush) {
+                            pointerGraphics.setColor(Color.GREEN);
+                        } else {
+                            pointerGraphics.setColor(Color.RED);
+                        }
+                        pointerGraphics.drawRect(x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide);
+                        pointerGraphics.dispose();
+                        direction = 0;
+                        movePointer();
+                    } else {
+                        TA.setText("No layer selected.");
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+
+    public void keyReleased(KeyEvent e) {
+        int key = e.getKeyCode();
+        if (key == 17) {
+            if (toggleMapMovement) {
+                toggleMapMovement = false;
+            }
+        } else if (key == 16) {
+            if (toggleSpriteMovement) {
+                toggleSpriteMovement = false;
+            }
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        TA.setText(Strings.NEW_LAYER_REQUIRED);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

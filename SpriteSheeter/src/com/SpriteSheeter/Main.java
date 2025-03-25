@@ -45,6 +45,6 @@ Done es para darle el formato .txt al archivo creado a través de la ruta fc.get
 public class Main {
     public static void main(String[] args) {
         UserInterface userInterface = new UserInterface();
-        userInterface.setUpEverything();
+        userInterface.windowSetup();
     }
 }
