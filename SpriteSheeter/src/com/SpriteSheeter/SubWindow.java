@@ -5,7 +5,7 @@ import java.awt.*;
 
 
 public class SubWindow {
-    public void runInfoWindo(String menuName) {
+    public static void runInfoWindow(SubWindowOptions value) {
         String messageS = "";
         int frameHeight = 150;
         int fontSize = 15;
@@ -14,44 +14,44 @@ public class SubWindow {
 
         //REPASA EL INGLÉS
 
-        switch (menuName) {
-            case "corruptedFile":
+        switch (value) {
+            case CORRUPTED_FILE:
                 messageS = Strings.CORRUPED_FILE;
                 break;
-            case "help":
+            case HELP:
                 frameHeight = 400;
                 frameName = "Info";
                 messageS = Strings.HELP;
                 break;
-            case "invalidImage":
+            case INVALID_IMAGE:
                 messageS = Strings.INVALID_IMAGE;
                 break;
-            case "invalidImagePath":
+            case INVALID_IMAGE_PATH:
                 messageS = Strings.INVALID_IMAGE_PATH;
                 break;
-            case "invalidLayerHelp":
+            case INVALID_LAYER_HELP:
                 messageS = Strings.INVALID_LAYER_HELP;
                 break;
-            case "invalidPath":
+            case INVALID_PATH:
                 messageS = Strings.INVALID_PATH;
                 break;
-            case "invalidscale":
+            case INVALID_SCALE:
                 messageS = Strings.INVALID_SCALE;
                 break;
-            case "invalidText":
+            case INVALID_TEXT:
                 messageS = Strings.INVALID_TEXT;
                 break;
-            case "sheetAndSprite":
+            case SHEET_AND_SPRITE:
                 messageS = Strings.SHEET_AND_SPRITE;
                 break;
-            case "spriteSheetFail":
+            case SPRITESHEET_FAIL:
                 messageS = Strings.SPRITE_SHEET_FAIL;
                 break;
-            case "spriteSideFail":
+            case SPRITE_SIDE_FAIL:
                 messageS = Strings.SPRITE_SIDE_FAIL;
                 break;
-            case "unsupportedImage":
-                messageS = Strings.UNSOPORTED_IMAGE;
+            case UNSUPPORTED_IMAGE:
+                messageS = Strings.UNSUPPORTED_IMAGE;
                 break;
             default:
                 System.out.println("Default point reached for Subwindow.");
@@ -67,7 +67,8 @@ public class SubWindow {
 
         Component messageObject;
         Color translucentColor = new Color(255, 0, 0, 0);
-        if (menuName.equals("help") || menuName.equals("invalidLayerHelp") || menuName.equals("sheetAndSprite")) {
+        if (value.equals(SubWindowOptions.HELP) || value.equals(SubWindowOptions.INVALID_LAYER_HELP)
+                || value.equals(SubWindowOptions.SHEET_AND_SPRITE)) {
             JTextArea message = new JTextArea();
             message.setText(messageS);
             message.setEditable(false);

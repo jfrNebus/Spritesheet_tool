@@ -1,0 +1,16 @@
+package com.SpriteSheeter;
+
+public enum SubWindowOptions {
+    CORRUPTED_FILE,
+    HELP,
+    INVALID_IMAGE,
+    INVALID_IMAGE_PATH,
+    INVALID_LAYER_HELP,
+    INVALID_PATH,
+    INVALID_SCALE,
+    INVALID_TEXT,
+    SHEET_AND_SPRITE,
+    SPRITESHEET_FAIL,
+    SPRITE_SIDE_FAIL,
+    UNSUPPORTED_IMAGE
+}

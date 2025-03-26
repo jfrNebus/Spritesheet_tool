@@ -57,5 +57,5 @@ public class Strings {
     public static final String SHEET_AND_SPRITE = "\nThe sprite side and the spritesheet side values are invalid. Both values must be an integer type.";
     public static final String SPRITE_SHEET_FAIL = "The spritesheet side value must ba an integer value.";
     public static final String SPRITE_SIDE_FAIL = "The sprite side value must be an integer value.";
-    public static final String UNSOPORTED_IMAGE = "Unsupported image format.";
+    public static final String UNSUPPORTED_IMAGE = "Unsupported image format.";
 }

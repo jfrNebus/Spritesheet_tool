@@ -1,7 +1,5 @@
 package com.SpriteSheeter;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -81,7 +79,6 @@ class UserInterface implements KeyListener, MouseListener {
     private JMenuItem exportCode;
     private JMenuItem exportCanvas;
     private BufferedImage previousSprite;
-    private final SubWindow subWindow = new SubWindow();
 
 
     private Map<String, int[]> getImportedData(String loadedData) {
@@ -154,21 +151,6 @@ class UserInterface implements KeyListener, MouseListener {
         return layers;
     }
 
-    /* todo
-    Revisa la siguiente opción
-    private void showError(String errorType) {
-        switch (errorType) {
-            case "corruptedFile" -> subWindow.runInfoWindo("corruptedFile");
-            case "invalidImagePath" -> subWindow.runInfoWindo("invalidImagePath");
-            case "invalidPath" -> subWindow.runInfoWindo("invalidPath");
-            default -> subWindow.runInfoWindo("unknownError");
-        }
-    }
-*/
-//    todo Dentro de importCode o alguno de estos, cambia los nombres como sb para referirte a StringBuilder,
-//    todo por nombres más descriptivos
-
-
     private JMenuBar getJMenuBar() {
         JMenuBar jMenuBar = new JMenuBar();
         JMenu options = new JMenu("Options");
@@ -216,7 +198,7 @@ class UserInterface implements KeyListener, MouseListener {
         exportCanvas = handleExportCanvas();
         //6
         JMenuItem help = new JMenuItem(Strings.HELP_ITEM);
-        help.addActionListener(e -> subWindow.runInfoWindo("help"));
+        help.addActionListener(e -> showInfoMessage(SubWindowOptions.HELP));
 
         jMenuBar.add(options);
         options.add(newCanvas);
@@ -408,23 +390,7 @@ class UserInterface implements KeyListener, MouseListener {
         picScroller.requestFocus();
     }
 
-    public Enum subWindowOptions(){
-        CORRUPTED_FILE,
-        HELP,
-        INVALID_IMAGE,
-        INVALID_IMAGE_PATH,
-        INVALID_LAYER_HELP,
-        INVALID_PATH,
-        INVALID_SCALE,
-        INVALID_TEXT,
-        SHEET_AND_SPRITE,
-        SPRITESHEET_FAIL,
-        UNSOPORTED_IMAGE
-    }
-
-
-    SIGUE DESARROLLANDO LA LLAMADA A ENUM Y LA GESTIÓN DE SubWindow
-    private @NotNull JMenuItem handleDeleteLayer(){
+    private JMenuItem handleDeleteLayer(){
         JMenuItem deleteLayer = new JMenuItem(Strings.DELETE_LAYER_ITEM);
         deleteLayer.addActionListener(e -> {
             CANVAS.deleteLayer(actualCanvas);
@@ -437,7 +403,7 @@ class UserInterface implements KeyListener, MouseListener {
         return deleteLayer;
     }
 
-    private @NotNull JMenuItem handleExportCanvas(){
+    private JMenuItem handleExportCanvas(){
         JMenuItem exportCanvas = new JMenuItem(Strings.EXPORT_CANVAS_ITEM);
         exportCanvas.addActionListener(e -> runSubMenu("exportCanvas"));
         exportCanvas.setEnabled(false);
@@ -445,7 +411,7 @@ class UserInterface implements KeyListener, MouseListener {
         return exportCanvas;
     }
 
-    private @NotNull JMenuItem handleExportCode(){
+    private JMenuItem handleExportCode(){
         JMenuItem exportCode = new JMenuItem("Export");
         exportCode.addActionListener(e -> {
             final JFileChooser fc = new JFileChooser();
@@ -471,7 +437,7 @@ class UserInterface implements KeyListener, MouseListener {
         return exportCode;
     }
 
-    private @NotNull JMenuItem handleImportCode() {
+    private JMenuItem handleImportCode() {
         JMenuItem importCode = new JMenuItem("Import");
         importCode.addActionListener(e -> {
             final JFileChooser fc = new JFileChooser();
@@ -506,21 +472,21 @@ class UserInterface implements KeyListener, MouseListener {
                             updateMainCanvas(mapScale);
                         } else {
                             if (!validPictureFile) {
-                                subWindow.runInfoWindo("invalidImagePath");
+                                showInfoMessage(SubWindowOptions.INVALID_IMAGE_PATH);
                             } else {
-                                subWindow.runInfoWindo("corruptedFile");
+                                showInfoMessage(SubWindowOptions.CORRUPTED_FILE);
                             }
                             importCode.doClick();
                         }
                     } else {
-                        subWindow.runInfoWindo("invalidText");
+                        showInfoMessage(SubWindowOptions.INVALID_TEXT);
                         importCode.doClick();
                     }
                 } catch (IOException | NullPointerException exception) {
                     if (exception instanceof IOException) {
-                        subWindow.runInfoWindo("corruptedFile");
+                        showInfoMessage(SubWindowOptions.CORRUPTED_FILE);
                     } else {
-                        subWindow.runInfoWindo("invalidPath");
+                        showInfoMessage(SubWindowOptions.INVALID_PATH);
                     }
                     importCode.doClick();
                 }
@@ -529,7 +495,7 @@ class UserInterface implements KeyListener, MouseListener {
         return importCode;
     }
 
-    private @NotNull JMenuItem handleLoadSpriteSheet(){
+    private JMenuItem handleLoadSpriteSheet(){
         JMenuItem loadSpriteSheet = new JMenuItem(Strings.LOAD_SPRITESHEET_ITEM);
         loadSpriteSheet.addActionListener(e -> {
             final JFileChooser fileChooser = new JFileChooser();
@@ -542,7 +508,7 @@ class UserInterface implements KeyListener, MouseListener {
                     newPicture = ImageIO.read(new File(newPicturePath));
                     validPictureFile = newPicture != null;
                 } catch (IOException | NullPointerException | SecurityException ex) {
-                    subWindow.runInfoWindo("invalidPath");
+                    showInfoMessage(SubWindowOptions.INVALID_PATH);
                     loadSpriteSheet.doClick();
                 }
                 if (validPictureFile) {
@@ -554,7 +520,7 @@ class UserInterface implements KeyListener, MouseListener {
                     buildJLabelList(spritesPanel, spriteListScale);
                     spritesPanel.updateUI();
                 } else {
-                    subWindow.runInfoWindo("invalidImage");
+                    showInfoMessage(SubWindowOptions.INVALID_IMAGE);
                     loadSpriteSheet.doClick();
                 }
             }
@@ -839,11 +805,10 @@ class UserInterface implements KeyListener, MouseListener {
                                     "png", new File(firstTFS + ".png"));
                             subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
                         } catch (IOException ex) {
-
-                            subWindow.runInfoWindo("invalidPath");
+                            showInfoMessage(SubWindowOptions.INVALID_PATH);
                         }
                     } else {
-                        subWindow.runInfoWindo("invalidscale");
+                        showInfoMessage(SubWindowOptions.INVALID_SCALE);
                     }
                 }
             } else if (menuName.equals("requestNewCanvasValues")) {
@@ -861,11 +826,11 @@ class UserInterface implements KeyListener, MouseListener {
                         newCanvasSize = Integer.parseInt(secondTFS);
                     } else {
                         if (!firstNumber & !secondNumber) {
-                            subWindow.runInfoWindo("sheetAndSprite");
+                            showInfoMessage(SubWindowOptions.SHEET_AND_SPRITE);
                         } else if (!firstNumber) {
-                            subWindow.runInfoWindo("spriteSideFail");
+                            showInfoMessage(SubWindowOptions.SPRITE_SIDE_FAIL);
                         } else {
-                            subWindow.runInfoWindo("spriteSheetFail");
+                            showInfoMessage(SubWindowOptions.SPRITESHEET_FAIL);
                         }
                     }
                 }
@@ -959,6 +924,12 @@ class UserInterface implements KeyListener, MouseListener {
         ok.setVisible(true);
         cancel.setVisible(true);
     }
+
+    private void showInfoMessage(SubWindowOptions value){
+        SubWindow.runInfoWindow(value);
+    }
+
+    Intenta comprobar que todos los mensajes de showInfoMessage se producen con éxito
 
     public void windowSetup() {
 
@@ -1122,7 +1093,7 @@ class UserInterface implements KeyListener, MouseListener {
                         (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
                                 actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
             } else {
-                subWindow.runInfoWindo("invalidLayerHelp");
+                showInfoMessage(SubWindowOptions.INVALID_LAYER_HELP);
             }
         });
         newLayerB.setMaximumSize(new Dimension(newLayerBPanel.getMaximumSize().width, (newLayerBPanel.getMaximumSize().height)));
