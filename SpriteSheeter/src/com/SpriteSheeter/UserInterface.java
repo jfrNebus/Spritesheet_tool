@@ -1,5 +1,7 @@
 package com.SpriteSheeter;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -152,8 +154,7 @@ class UserInterface implements KeyListener, MouseListener {
         return layers;
     }
 
-    Refactoriza getJMenuBar siguiendo lo sugerido por chat
-
+    /* todo
     Revisa la siguiente opción
     private void showError(String errorType) {
         switch (errorType) {
@@ -163,9 +164,9 @@ class UserInterface implements KeyListener, MouseListener {
             default -> subWindow.runInfoWindo("unknownError");
         }
     }
-
-    Dentro de importCode o alguno de estos, cambia los nombres como sb para referirte a StringBuilder,
-    por nombres más descriptivos
+*/
+//    todo Dentro de importCode o alguno de estos, cambia los nombres como sb para referirte a StringBuilder,
+//    todo por nombres más descriptivos
 
 
     private JMenuBar getJMenuBar() {
@@ -179,37 +180,7 @@ class UserInterface implements KeyListener, MouseListener {
             enableUI();
         });
         //2
-        loadSpriteSheet = new JMenuItem(Strings.LOAD_SPRITESHEET_ITEM);
-        loadSpriteSheet.addActionListener(e -> {
-            final JFileChooser fc = new JFileChooser();
-            int returnVal = fc.showOpenDialog(loadSpriteSheet);
-            if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
-                String newPicturePath = fc.getSelectedFile().getAbsolutePath();
-                boolean validPictureFile = false;
-                BufferedImage newPicture = null;
-                try {
-                    newPicture = ImageIO.read(new File(newPicturePath));
-                    validPictureFile = newPicture != null;
-                } catch (IOException | NullPointerException | SecurityException ex) {
-                    subWindow.runInfoWindo("invalidPath");
-                    loadSpriteSheet.doClick();
-                }
-                if (validPictureFile) {
-                    if (spritesPanel.getComponentCount() > 0) {
-                        spritesPanel.removeAll();
-                    }
-                    SPRITESHEET.setPicturePath(newPicturePath);
-                    SPRITESHEET.loadSpriteSheet(newPicture);
-                    buildJLabelList(spritesPanel, spriteListScale);
-                    spritesPanel.updateUI();
-                } else {
-                    subWindow.runInfoWindo("invalidImage");
-                    loadSpriteSheet.doClick();
-                }
-            }
-        });
-        loadSpriteSheet.setEnabled(false);
-        loadSpriteSheet.addMouseListener(this);
+        loadSpriteSheet = handleLoadSpriteSheet();
         //3
         layerManagement = new JMenu(Strings.LAYER_MANAGEMENT_MENU);
         layerManagement.setEnabled(false);
@@ -231,103 +202,18 @@ class UserInterface implements KeyListener, MouseListener {
         //3.2
         JMenu deleteLayerMenu = new JMenu(Strings.DELETE_LAYER_MENU);
         //3.2.1
-        JMenuItem deleteLayer = new JMenuItem(Strings.DELETE_LAYER_ITEM);
-        deleteLayer.addActionListener(e -> {
-            CANVAS.deleteLayer(actualCanvas);
-            layerSelector.removeAll();
-            for (Map.Entry<String, BufferedImage> layers : CANVAS.getLAYERS().entrySet()) {
-                addNewLayerButtons(layers.getKey());
-            }
-            updateMainCanvas(mapScale);
-        });
+        JMenuItem deleteLayer = handleDeleteLayer();
         //3.2.1
         JMenuItem deleteAllLayerMenu = new JMenuItem(Strings.DELETE_ALL_LAYER_ITEM);
         deleteAllLayerMenu.addActionListener(e -> deleteAllLayer());
         //4
         JMenu importExport = new JMenu(Strings.IMPORT_EXPORT_MENU);
         //4.1
-        JMenuItem importCode = new JMenuItem("Import");
-        importCode.addActionListener(e -> {
-            final JFileChooser fc = new JFileChooser();
-            int returnVal = fc.showOpenDialog(importCode);
-            if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
-                boolean validPictureFile;
-                BufferedImage newPicture;
-                try {
-                    validPictureFile = Files.probeContentType(fc.getSelectedFile().toPath()).startsWith("text");
-                    if (validPictureFile) {
-                        File notePad = new File(fc.getSelectedFile().getAbsolutePath());
-                        Scanner scanner = new Scanner(notePad);
-                        StringBuilder sb = new StringBuilder();
-                        while (scanner.hasNextLine()) {
-                            sb.append(scanner.nextLine());
-                            sb.append("\n");
-                        }
-                        String newPicturePath = getLoadedPath(sb.toString());
-                        newPicture = ImageIO.read(new File(newPicturePath));
-                        validPictureFile = newPicture != null;
-                        Map<String, int[]> loadedMap = getImportedData(sb.toString());
-                        if (loadedMap != null && validPictureFile) {
-                            enableUI();
-                            initializePicLabel();
-                            deleteAllLayer();//todo mira si puedes hacer que esto sea condicional en función de si hay capas o no
-                            resetLayerSelector(loadedMap);
-                            spritesPanel.removeAll();
-                            SPRITESHEET.setPicturePath(newPicturePath);
-                            SPRITESHEET.loadSpriteSheet(newPicture);
-                            buildJLabelList(spritesPanel, spriteListScale);
-                            CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASHMAP());
-                            updateMainCanvas(mapScale);
-                        } else {
-                            if (!validPictureFile) {
-                                subWindow.runInfoWindo("invalidImagePath");
-                            } else {
-                                subWindow.runInfoWindo("corruptedFile");
-                            }
-                            importCode.doClick();
-                        }
-                    } else {
-                        subWindow.runInfoWindo("invalidText");
-                        importCode.doClick();
-                    }
-                } catch (IOException | NullPointerException exception) {
-                    if (exception instanceof IOException) {
-                        subWindow.runInfoWindo("corruptedFile");
-                    } else {
-                        subWindow.runInfoWindo("invalidPath");
-                    }
-                    importCode.doClick();
-                }
-            }
-        });
+        JMenuItem importCode = handleImportCode();
         //4.2
-        exportCode = new JMenuItem("Export");
-        exportCode.addActionListener(e -> {
-            final JFileChooser fc = new JFileChooser();
-            fc.setApproveButtonText("OK");
-            try {
-                int returnVal = fc.showOpenDialog(exportCode);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    File notePad = new File(fc.getSelectedFile() + ".txt");
-                    FileWriter writer = new FileWriter(notePad);
-                    String arrayPrinted = CANVAS.getExportString(SPRITESHEET.getPicturePath());
-                    writer.write(arrayPrinted);
-                    writer.close();
-                    TA.setText(Strings.EXPORT_SAVED_MESSAGE + fc.getSelectedFile().getAbsolutePath());
-                } else {
-                    System.out.println("Open command cancelled by user.");
-                }
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-        exportCode.setEnabled(false);
-        exportCode.addMouseListener(this);
+        exportCode = handleExportCode();
         //5
-        exportCanvas = new JMenuItem(Strings.EXPORT_CANVAS_ITEM);
-        exportCanvas.addActionListener(e -> runSubMenu("exportCanvas"));
-        exportCanvas.setEnabled(false);
-        exportCanvas.addMouseListener(this);
+        exportCanvas = handleExportCanvas();
         //6
         JMenuItem help = new JMenuItem(Strings.HELP_ITEM);
         help.addActionListener(e -> subWindow.runInfoWindo("help"));
@@ -353,6 +239,8 @@ class UserInterface implements KeyListener, MouseListener {
 
         return jMenuBar;
     }
+
+
 
     private String getLoadedPath(String loadedData) {
         String path = "";
@@ -518,6 +406,163 @@ class UserInterface implements KeyListener, MouseListener {
         TA.setCaretColor(Color.BLACK);
         TA.setText("");
         picScroller.requestFocus();
+    }
+
+    public Enum subWindowOptions(){
+        CORRUPTED_FILE,
+        HELP,
+        INVALID_IMAGE,
+        INVALID_IMAGE_PATH,
+        INVALID_LAYER_HELP,
+        INVALID_PATH,
+        INVALID_SCALE,
+        INVALID_TEXT,
+        SHEET_AND_SPRITE,
+        SPRITESHEET_FAIL,
+        UNSOPORTED_IMAGE
+    }
+
+
+    SIGUE DESARROLLANDO LA LLAMADA A ENUM Y LA GESTIÓN DE SubWindow
+    private @NotNull JMenuItem handleDeleteLayer(){
+        JMenuItem deleteLayer = new JMenuItem(Strings.DELETE_LAYER_ITEM);
+        deleteLayer.addActionListener(e -> {
+            CANVAS.deleteLayer(actualCanvas);
+            layerSelector.removeAll();
+            for (Map.Entry<String, BufferedImage> layers : CANVAS.getLAYERS().entrySet()) {
+                addNewLayerButtons(layers.getKey());
+            }
+            updateMainCanvas(mapScale);
+        });
+        return deleteLayer;
+    }
+
+    private @NotNull JMenuItem handleExportCanvas(){
+        JMenuItem exportCanvas = new JMenuItem(Strings.EXPORT_CANVAS_ITEM);
+        exportCanvas.addActionListener(e -> runSubMenu("exportCanvas"));
+        exportCanvas.setEnabled(false);
+        exportCanvas.addMouseListener(this);
+        return exportCanvas;
+    }
+
+    private @NotNull JMenuItem handleExportCode(){
+        JMenuItem exportCode = new JMenuItem("Export");
+        exportCode.addActionListener(e -> {
+            final JFileChooser fc = new JFileChooser();
+            fc.setApproveButtonText("OK");
+            try {
+                int returnVal = fc.showOpenDialog(exportCode);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File notePad = new File(fc.getSelectedFile() + ".txt");
+                    FileWriter writer = new FileWriter(notePad);
+                    String arrayPrinted = CANVAS.getExportString(SPRITESHEET.getPicturePath());
+                    writer.write(arrayPrinted);
+                    writer.close();
+                    TA.setText(Strings.EXPORT_SAVED_MESSAGE + fc.getSelectedFile().getAbsolutePath());
+                } else {
+                    System.out.println("Open command cancelled by user.");
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        exportCode.setEnabled(false);
+        exportCode.addMouseListener(this);
+        return exportCode;
+    }
+
+    private @NotNull JMenuItem handleImportCode() {
+        JMenuItem importCode = new JMenuItem("Import");
+        importCode.addActionListener(e -> {
+            final JFileChooser fc = new JFileChooser();
+            int returnVal = fc.showOpenDialog(importCode);
+            if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
+                boolean validPictureFile;
+                BufferedImage newPicture;
+                try {
+                    validPictureFile = Files.probeContentType(fc.getSelectedFile().toPath()).startsWith("text");
+                    if (validPictureFile) {
+                        File notePad = new File(fc.getSelectedFile().getAbsolutePath());
+                        Scanner scanner = new Scanner(notePad);
+                        StringBuilder stringBuilder = new StringBuilder();
+                        while (scanner.hasNextLine()) {
+                            stringBuilder.append(scanner.nextLine());
+                            stringBuilder.append("\n");
+                        }
+                        String newPicturePath = getLoadedPath(stringBuilder.toString());
+                        newPicture = ImageIO.read(new File(newPicturePath));
+                        validPictureFile = newPicture != null;
+                        Map<String, int[]> loadedMap = getImportedData(stringBuilder.toString());
+                        if (loadedMap != null && validPictureFile) {
+                            enableUI();
+                            initializePicLabel();
+                            deleteAllLayer();//todo mira si puedes hacer que esto sea condicional en función de si hay capas o no
+                            resetLayerSelector(loadedMap);
+                            spritesPanel.removeAll();
+                            SPRITESHEET.setPicturePath(newPicturePath);
+                            SPRITESHEET.loadSpriteSheet(newPicture);
+                            buildJLabelList(spritesPanel, spriteListScale);
+                            CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASHMAP());
+                            updateMainCanvas(mapScale);
+                        } else {
+                            if (!validPictureFile) {
+                                subWindow.runInfoWindo("invalidImagePath");
+                            } else {
+                                subWindow.runInfoWindo("corruptedFile");
+                            }
+                            importCode.doClick();
+                        }
+                    } else {
+                        subWindow.runInfoWindo("invalidText");
+                        importCode.doClick();
+                    }
+                } catch (IOException | NullPointerException exception) {
+                    if (exception instanceof IOException) {
+                        subWindow.runInfoWindo("corruptedFile");
+                    } else {
+                        subWindow.runInfoWindo("invalidPath");
+                    }
+                    importCode.doClick();
+                }
+            }
+        });
+        return importCode;
+    }
+
+    private @NotNull JMenuItem handleLoadSpriteSheet(){
+        JMenuItem loadSpriteSheet = new JMenuItem(Strings.LOAD_SPRITESHEET_ITEM);
+        loadSpriteSheet.addActionListener(e -> {
+            final JFileChooser fileChooser = new JFileChooser();
+            int returnVal = fileChooser.showOpenDialog(loadSpriteSheet);
+            if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
+                String newPicturePath = fileChooser.getSelectedFile().getAbsolutePath();
+                boolean validPictureFile = false;
+                BufferedImage newPicture = null;
+                try {
+                    newPicture = ImageIO.read(new File(newPicturePath));
+                    validPictureFile = newPicture != null;
+                } catch (IOException | NullPointerException | SecurityException ex) {
+                    subWindow.runInfoWindo("invalidPath");
+                    loadSpriteSheet.doClick();
+                }
+                if (validPictureFile) {
+                    if (spritesPanel.getComponentCount() > 0) {
+                        spritesPanel.removeAll();
+                    }
+                    SPRITESHEET.setPicturePath(newPicturePath);
+                    SPRITESHEET.loadSpriteSheet(newPicture);
+                    buildJLabelList(spritesPanel, spriteListScale);
+                    spritesPanel.updateUI();
+                } else {
+                    subWindow.runInfoWindo("invalidImage");
+                    loadSpriteSheet.doClick();
+                }
+            }
+        });
+        loadSpriteSheet.setEnabled(false);
+        loadSpriteSheet.addMouseListener(this);
+
+        return loadSpriteSheet;
     }
 
     private void initializePicLabel() {
