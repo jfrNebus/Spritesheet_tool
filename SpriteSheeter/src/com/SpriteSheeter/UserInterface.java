@@ -187,7 +187,14 @@ class UserInterface implements KeyListener, MouseListener {
         JMenuItem deleteLayer = handleDeleteLayer();
         //3.2.1
         JMenuItem deleteAllLayerMenu = new JMenuItem(Strings.DELETE_ALL_LAYER_ITEM);
-        deleteAllLayerMenu.addActionListener(e -> deleteAllLayer());
+        deleteAllLayerMenu.addActionListener(e -> {
+            deleteAllLayer();
+            actualLayerLabel.setText("Actual layer: " + Strings.NO_LAYER);
+        });
+
+
+
+
         //4
         JMenu importExport = new JMenu(Strings.IMPORT_EXPORT_MENU);
         //4.1
@@ -221,7 +228,6 @@ class UserInterface implements KeyListener, MouseListener {
 
         return jMenuBar;
     }
-
 
 
     private String getLoadedPath(String loadedData) {
@@ -356,6 +362,8 @@ class UserInterface implements KeyListener, MouseListener {
         }
     }
 
+    CORRIGE LA EXCEPCIÓN CUANDO BORRAS UNA CAPA. AL QUEDARSE SIN ACTUAL LAYER, SI PRESIONAS UN SPRITE DA EXCEPCIÓN.
+
     private void deleteAllLayer() {
         actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " ");
         CANVAS.deleteAllLayers();
@@ -390,7 +398,7 @@ class UserInterface implements KeyListener, MouseListener {
         picScroller.requestFocus();
     }
 
-    private JMenuItem handleDeleteLayer(){
+    private JMenuItem handleDeleteLayer() {
         JMenuItem deleteLayer = new JMenuItem(Strings.DELETE_LAYER_ITEM);
         deleteLayer.addActionListener(e -> {
             CANVAS.deleteLayer(actualCanvas);
@@ -398,12 +406,13 @@ class UserInterface implements KeyListener, MouseListener {
             for (Map.Entry<String, BufferedImage> layers : CANVAS.getLAYERS().entrySet()) {
                 addNewLayerButtons(layers.getKey());
             }
+            actualLayerLabel.setText("Actual layer: " + Strings.NO_LAYER);
             updateMainCanvas(mapScale);
         });
         return deleteLayer;
     }
 
-    private JMenuItem handleExportCanvas(){
+    private JMenuItem handleExportCanvas() {
         JMenuItem exportCanvas = new JMenuItem(Strings.EXPORT_CANVAS_ITEM);
         exportCanvas.addActionListener(e -> runSubMenu("exportCanvas"));
         exportCanvas.setEnabled(false);
@@ -411,7 +420,7 @@ class UserInterface implements KeyListener, MouseListener {
         return exportCanvas;
     }
 
-    private JMenuItem handleExportCode(){
+    private JMenuItem handleExportCode() {
         JMenuItem exportCode = new JMenuItem("Export");
         exportCode.addActionListener(e -> {
             final JFileChooser fc = new JFileChooser();
@@ -495,7 +504,7 @@ class UserInterface implements KeyListener, MouseListener {
         return importCode;
     }
 
-    private JMenuItem handleLoadSpriteSheet(){
+    private JMenuItem handleLoadSpriteSheet() {
         JMenuItem loadSpriteSheet = new JMenuItem(Strings.LOAD_SPRITESHEET_ITEM);
         loadSpriteSheet.addActionListener(e -> {
             final JFileChooser fileChooser = new JFileChooser();
@@ -925,11 +934,9 @@ class UserInterface implements KeyListener, MouseListener {
         cancel.setVisible(true);
     }
 
-    private void showInfoMessage(SubWindowOptions value){
+    private void showInfoMessage(SubWindowOptions value) {
         SubWindow.runInfoWindow(value);
     }
-
-    Intenta comprobar que todos los mensajes de showInfoMessage se producen con éxito
 
     public void windowSetup() {
 
@@ -1089,7 +1096,7 @@ class UserInterface implements KeyListener, MouseListener {
                 }
                 CANVAS.addNewCanvas(newLayerName);
                 actualCanvas = newLayerName;
-                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + "\n" +
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " +
                         (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
                                 actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
             } else {

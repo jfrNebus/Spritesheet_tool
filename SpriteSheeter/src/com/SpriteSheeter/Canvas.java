@@ -202,7 +202,8 @@ public class Canvas {
     /**
      * Builds layers out of imported ID arrays.
      *
-     * @param IDArray
+     * @param IDArray The map which stores each array of IDs for each layer.
+     * @param spritesHasmap The map of sprites and their IDs.
      */
     public void buildLayers(Map<String, int[]> IDArray, HashMap<Integer, Sprite> spritesHasmap) {
         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC);
@@ -259,6 +260,7 @@ public class Canvas {
      */
     public void deleteLayer(String layerToDelete) {
         LAYERS.remove(layerToDelete);
+        ID_ARRAY_MAP.remove(layerToDelete);
     }
 
     /**
@@ -266,6 +268,7 @@ public class Canvas {
      */
     public void deleteAllLayers() {
         LAYERS.clear();
+        ID_ARRAY_MAP.clear();
     }
 
     /**
