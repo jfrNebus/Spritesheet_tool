@@ -190,6 +190,7 @@ class UserInterface implements KeyListener, MouseListener {
         deleteAllLayerMenu.addActionListener(e -> {
             deleteAllLayer();
             actualLayerLabel.setText("Actual layer: " + Strings.NO_LAYER);
+            actualCanvas = Strings.NO_LAYER;
         });
 
 
@@ -362,8 +363,6 @@ class UserInterface implements KeyListener, MouseListener {
         }
     }
 
-    CORRIGE LA EXCEPCIÓN CUANDO BORRAS UNA CAPA. AL QUEDARSE SIN ACTUAL LAYER, SI PRESIONAS UN SPRITE DA EXCEPCIÓN.
-
     private void deleteAllLayer() {
         actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " ");
         CANVAS.deleteAllLayers();
@@ -407,6 +406,7 @@ class UserInterface implements KeyListener, MouseListener {
                 addNewLayerButtons(layers.getKey());
             }
             actualLayerLabel.setText("Actual layer: " + Strings.NO_LAYER);
+            actualCanvas = Strings.NO_LAYER;
             updateMainCanvas(mapScale);
         });
         return deleteLayer;
