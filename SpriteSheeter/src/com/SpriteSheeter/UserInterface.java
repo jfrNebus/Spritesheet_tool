@@ -16,69 +16,48 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 //        To explain layout for frame > https://stackoverflow.com/questions/24840860/boxlayout-for-a-jframe
-
 
 class UserInterface implements KeyListener, MouseListener {
 
-    //Boolean to be used to  toggle on/off the movement of the main map scroller by using directional keys.
-    private boolean toggleMapMovement = false;
-    private boolean toggleSpriteMovement = false;
     private boolean fillingBrush = false;
-
-    //The scale ratio for the main map pic. This will modify the size for the main map to be displayed,
-    //through multiplying map's values by its value.
-    private int mapScale = 1;
-    //The scale ratio for each individual sprite size. This will modify the size of the sprite side multiplying it
-    //by its value.
-    private int spriteListScale = 1;
-    /*
-    The current x and y coordinates of the actual position of the pointer in the map. The x and y coordinates of the
-    top left point.
-        0  1  2  3  4  5
-    0   *---------------------
-    1   |
-    2   | x=2 v y=3
-    3   |     *----
-    4   |     |   |
-    5   |     -----
-
-    Top left corner of current position = * => x = 2 y = 3
-     */
-    private int x = 0;
-    private int y = 0;
-    private int id = 0;
-    //The amount of pixels
-    private int movementIncrement;
-    private int direction = 0; //0 = no movement, 1 = left, 2 = right, 3 = up, 4 = down
-    private final int MAX_LABEL_LENGHT = 17;
-    private final int FRAME_GAP = 1;
-    //Screen size
-    private final int MAP_SCALE_RATIO = 1;
-    private String actualCanvas = Strings.NO_LAYER;
-    private final SpriteSheet SPRITESHEET = new SpriteSheet();
+    private boolean toggleMapMovement = false;
+    private boolean toggleSpriteMovement = false; //UserInterface_notes
+    private BufferedImage previousSprite;
     private final Canvas CANVAS = new Canvas();
+    private int direction = 0; //0 = no movement, 1 = left, 2 = right, 3 = up, 4 = down
+    private int id = 0;
+    private int mapScale = 1;
+    private int movementIncrement; //UserInterface_notes
+    private int spriteListScale = 1; //UserInterface_notes
+    private int y = 0; //UserInterface_notes
+    private int x = 0; //UserInterface_notes
+    private final int FRAME_GAP = 1; //UserInterface_notes
+    private final int MAX_LABEL_LENGHT = 17;
+    private final int MAP_SCALE_RATIO = 1;
+    //User interface
     private JFrame frame;
     private JScrollPane picScroller;
-    private JLabel picLabel;
+    private JScrollPane spriteListScroller;
     private JPanel spritesPanel;
+    private final JViewport SPRITE_VIEW = new JViewport();
     private JLabel actualLayerLabel;
     private JPanel layerSelector;
-    private JScrollPane spriteListScroller;
-    private final JTextArea TA = new JTextArea();
-    private final JViewport MAP_VIEW = new JViewport();
-    private final JViewport SPRITE_VIEW = new JViewport();
     private JButton newLayerB;
     private JButton biggerMap;
     private JButton smallerMap;
     private JButton biggerSprite;
     private JButton smallerSprite;
+    private final JTextArea TA = new JTextArea();
+    private JLabel picLabel;
+    private final JViewport MAP_VIEW = new JViewport();
     private JMenu layerManagement;
     private JMenuItem loadSpriteSheet;
     private JMenuItem exportCode;
     private JMenuItem exportCanvas;
-    private BufferedImage previousSprite;
+    //User interface
+    private final SpriteSheet SPRITESHEET = new SpriteSheet();
+    private String actualCanvas = Strings.NO_LAYER;
 
 
     private Map<String, int[]> getImportedData(String loadedData) {
@@ -288,6 +267,7 @@ class UserInterface implements KeyListener, MouseListener {
         TA.setText("");
     }
 
+    //UserInterface_notes
     private void buildJLabelList(JPanel spritesPanel, int spriteListScaleRatio) {
         int spriteSide = SPRITESHEET.getSpriteSide();
         int targetSide = spriteSide * spriteListScaleRatio;
@@ -318,24 +298,10 @@ class UserInterface implements KeyListener, MouseListener {
                 }
                 button.setPreferredSize(dimension);
                 button.setMaximumSize(dimension);
-                //Se tiene que crear una variable local id, aunque ya exista una global, porque para poder
-                //usar el valor de j dentro de la declaración del actionListener del botón, dicha variable debe
-                //ser final o effectively final. No podemos hacer id = j; y asignarle id al método get
-                //spriteSheet.getSPRITES_HASMAP().get(id - 1).getId()); porque para cuando se pulse el botón, y
-                //se llame a la acción del botón, el valor de id será el último valor que se le asignase, es
-                //decir, el valor del último botón que se crease, la última iteración de este bucle for, donde
-                //se estableción id = j. Si el último botón que se creó fue el 540, el valor de id será id = 540
-                //y será siempre así. No obstante, id ha de  ser actualizada al valor de innerId dentro de la acción
-                //del botón para que cuando se active la función de dibujar de forma constante, el programa sepa
-                //cuál es la id que ha de utilizar a la hora de pintar. La función de pintar usa la última id
-                //conocida, y esa id se actualiza cada vez que se presiona un botón.
                 int innerId = j;
                 int finalI = i;
                 button.addActionListener(e -> {
-//                        https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
                     System.out.println("Sprite pressed = " + innerId);
-                    //Used to set the kind of Composite to be used in the BufferedImage in use. Check the above
-                    //link.
                     if (!actualCanvas.equals(Strings.NO_LAYER)) {
                         Graphics2D pictureGraphics = CANVAS.getLayer(actualCanvas).createGraphics();
                         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC);
@@ -982,8 +948,7 @@ class UserInterface implements KeyListener, MouseListener {
         picScroller.addKeyListener(this);
         picScroller.setFocusable(true);
         picScroller.setWheelScrollingEnabled(true);
-        picScroller.setEnabled(false); //Enabled false allows the JScrollPane movement through arrow keys.
-
+        picScroller.setEnabled(false); //UserInterface_notes
         //>>> Inside panel1
         int panel2Width = (int) (SCREEN_WIDTH * 0.40);
         int panel2Height = (int) (SCREEN_HEIGHT * 0.90);
@@ -1175,11 +1140,7 @@ class UserInterface implements KeyListener, MouseListener {
         });
         smallerSprite.setMaximumSize(buttonsDimension);
 
-        //>>> Inside panel1 > Inside panel3 > Inside panel5 > Inside panel6
-        //The string used for the name of map buttons must include extra empty spaces in order
-        //to match the length of the strings used for the sprite buttons. both groups of strings
-        //must be equally long in order to be resized in the same way when the screen resolution
-        //changes.
+        //UserInterface_notes
         biggerMap = new JButton(Strings.BIGGER_MAP_BUTTON);
         biggerMap.setFocusable(true);
         biggerMap.setEnabled(false);
@@ -1366,9 +1327,7 @@ class UserInterface implements KeyListener, MouseListener {
     public void keyPressed(KeyEvent e) {
         if (TA.isEditable()) {
             int key = e.getKeyCode();
-            //Next line is set in order to not allow X or Y to reach the end of the pointer BufferedImage.
-            //If any coordinate reaches the end of the axis, it would generate the square to be drawn outside
-            //of the buffered, since it is the top left coordinate the one which is taken9 in consideration.
+            //UserInterface_notes To be checked.
             System.out.println("Key = " + key);
             if (TA.hasFocus()) {
                 if (key == KeyEvent.VK_ESCAPE) {

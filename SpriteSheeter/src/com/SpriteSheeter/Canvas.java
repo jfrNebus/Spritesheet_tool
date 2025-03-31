@@ -6,13 +6,13 @@ import java.util.*;
 import java.util.List;
 
 public class Canvas {
-    private final Map<String, int[][]> ID_ARRAY_MAP = new LinkedHashMap<>();
-    private final Map<String, BufferedImage> LAYERS = new LinkedHashMap<>();
-    private final List<String> HIDDEN_LAYERS = new ArrayList<>();
     private BufferedImage POINTER_LAYER;
     private int arraySize;
     private int canvasSize = 0;
     private int spriteSide = 0;
+    private final List<String> HIDDEN_LAYERS = new ArrayList<>();
+    private final Map<String, int[][]> ID_ARRAY_MAP = new LinkedHashMap<>();
+    private final Map<String, BufferedImage> LAYERS = new LinkedHashMap<>();
 
 
     /**
