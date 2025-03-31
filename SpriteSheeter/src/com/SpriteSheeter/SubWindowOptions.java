@@ -12,5 +12,6 @@ public enum SubWindowOptions {
     SHEET_AND_SPRITE,
     SPRITESHEET_FAIL,
     SPRITE_SIDE_FAIL,
+    SQUARE_ERROR,
     UNSUPPORTED_IMAGE
 }

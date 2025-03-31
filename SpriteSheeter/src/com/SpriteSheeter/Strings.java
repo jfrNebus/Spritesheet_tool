@@ -32,7 +32,7 @@ public class Strings {
     public static final String IMPORTED_FOURTH_REGEX = "(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])";
     public static final String IMPORTED_FIFTH_REGEX_1 = "(?<=};\\n//";
     public static final String IMPORTED_FIFTH_REGEX_2 = ":)((\\d)+\\s)+(?=\\n)";
-    public static final String LOADED_REGEX = "(?<=\\n##)(\\w:(.*))(?=##)";
+    public static final String LOADED_PATH_REGEX = "(?<=\\n##)(\\w:(.*))(?=##)";
     public static final String NEW_LAYER_REQUIRED = "You have to create a new canvas. Create a new" +
             " canvas throught the \"Options\" menu.";
 
@@ -57,5 +57,6 @@ public class Strings {
     public static final String SHEET_AND_SPRITE = "\nThe sprite side and the spritesheet side values are invalid. Both values must be an integer type.";
     public static final String SPRITE_SHEET_FAIL = "The spritesheet side value must ba an integer value.";
     public static final String SPRITE_SIDE_FAIL = "The sprite side value must be an integer value.";
+    public static final String SQUARE_ERROR = "\nThe number of IDs per layer must be \"Sprites in side\" squared.";
     public static final String UNSUPPORTED_IMAGE = "Unsupported image format.";
 }

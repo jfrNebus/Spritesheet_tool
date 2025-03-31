@@ -6,6 +6,7 @@ import java.awt.*;
 
 public class SubWindow {
     public static void runInfoWindow(SubWindowOptions value) {
+        boolean textArea = false;
         String messageS = "";
         int frameHeight = 150;
         int fontSize = 15;
@@ -22,6 +23,7 @@ public class SubWindow {
                 frameHeight = 400;
                 frameName = "Info";
                 messageS = Strings.HELP;
+                textArea = true;
                 break;
             case INVALID_IMAGE:
                 messageS = Strings.INVALID_IMAGE;
@@ -31,6 +33,7 @@ public class SubWindow {
                 break;
             case INVALID_LAYER_HELP:
                 messageS = Strings.INVALID_LAYER_HELP;
+                textArea = true;
                 break;
             case INVALID_PATH:
                 messageS = Strings.INVALID_PATH;
@@ -43,12 +46,17 @@ public class SubWindow {
                 break;
             case SHEET_AND_SPRITE:
                 messageS = Strings.SHEET_AND_SPRITE;
+                textArea = true;
                 break;
             case SPRITESHEET_FAIL:
                 messageS = Strings.SPRITE_SHEET_FAIL;
                 break;
             case SPRITE_SIDE_FAIL:
                 messageS = Strings.SPRITE_SIDE_FAIL;
+                break;
+            case SQUARE_ERROR:
+                messageS = Strings.SQUARE_ERROR;
+                textArea = true;
                 break;
             case UNSUPPORTED_IMAGE:
                 messageS = Strings.UNSUPPORTED_IMAGE;
@@ -67,8 +75,7 @@ public class SubWindow {
 
         Component messageObject;
         Color translucentColor = new Color(255, 0, 0, 0);
-        if (value.equals(SubWindowOptions.HELP) || value.equals(SubWindowOptions.INVALID_LAYER_HELP)
-                || value.equals(SubWindowOptions.SHEET_AND_SPRITE)) {
+        if (textArea) {
             JTextArea message = new JTextArea();
             message.setText(messageS);
             message.setEditable(false);

@@ -60,12 +60,83 @@ class UserInterface implements KeyListener, MouseListener {
     private String actualCanvas = Strings.NO_LAYER;
 
 
+//    private Map<String, int[]> getImportedData(String loadedData) {
+//        //Update the existing documentation
+//        boolean keep = true;
+//        Map<String, int[]> layers = new LinkedHashMap<>();
+//
+//        Function<String, String> matcherFunction = string -> {
+//            String output = "";
+//            Matcher matcher = Pattern.compile(string).matcher(loadedData);
+//            while (matcher.find()) {
+//                output = matcher.group();
+//            }
+//            return output;
+//        };
+//
+//        String matchedString = matcherFunction.apply(Strings.IMPORTED_FIRST_REGEX);
+//        int amountOfSprites = matchedString.matches("\\d+") ?
+//                (int) Math.pow(Integer.parseInt(matchedString), 2) : 0;
+//
+//        if (amountOfSprites == 0) {
+//            keep = false;
+//        }
+//
+//        if (keep) {
+//            if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
+//                    (SPRITESHEET.getSpriteSide() == 0)) {
+//                matchedString = matcherFunction.apply(Strings.IMPORTED_SECOND_REGEX);
+//                int side = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
+//
+//                matchedString = matcherFunction.apply(Strings.IMPORTED_THIRD_REGEX);
+//                int newCanvasSize = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
+//
+//                if (side != 0 && newCanvasSize != 0) {
+//                    CANVAS.initializeCanvas(side, newCanvasSize);
+//                    SPRITESHEET.setSpriteSide(side);
+//                    movementIncrement = side;
+//                } else {
+//                    keep = false;
+//                }
+//            }
+//        } else {
+//            return null;
+//        }
+//
+//        if (keep) {
+//            Matcher matcher = Pattern.compile(Strings.IMPORTED_FOURTH_REGEX)
+//                    .matcher(loadedData);
+//            while (matcher.find()) {
+//                layers.put(matcher.group(), null);
+//            }
+//            for (Map.Entry<String, int[]> numbersMap : layers.entrySet()) {
+//                String numbersRegex = Strings.IMPORTED_FIFTH_REGEX_1 + numbersMap.getKey() +
+//                        Strings.IMPORTED_FIFTH_REGEX_2;
+//                String[] justNumbers = matcherFunction.apply(numbersRegex).split("\\s");
+//                if (amountOfSprites == justNumbers.length) {
+//                    int[] numbers = new int[justNumbers.length];
+//                    for (int i = 0; i < justNumbers.length; i++) {
+//                        numbers[i] = Integer.parseInt(justNumbers[i]);
+//                    }
+//                    numbersMap.setValue(numbers);
+//                } else {
+//                    System.out.println("Way to break the whole operation");
+//                    layers = null;
+//                    break;
+//                }
+//            }
+//        } else {
+//            return null;
+//        }
+//        return layers;
+//    }
+
     private Map<String, int[]> getImportedData(String loadedData) {
         //Update the existing documentation
         boolean keep = true;
         Map<String, int[]> layers = new LinkedHashMap<>();
 
-        Function<String, String> matcherFunc = string -> {
+        Function<String, String> matcherFunction = string -> {
             String output = "";
             Matcher matcher = Pattern.compile(string).matcher(loadedData);
             while (matcher.find()) {
@@ -74,8 +145,9 @@ class UserInterface implements KeyListener, MouseListener {
             return output;
         };
 
-        String matchedString = matcherFunc.apply(Strings.IMPORTED_FIRST_REGEX);
-        int amountOfSprites = matchedString.matches("\\d+") ? (int) Math.pow(Integer.parseInt(matchedString), 2) : 0;
+        String matchedString = matcherFunction.apply(Strings.IMPORTED_FIRST_REGEX);
+        int amountOfSprites = matchedString.matches("\\d+") ?
+                (int) Math.pow(Integer.parseInt(matchedString), 2) : 0;
 
         if (amountOfSprites == 0) {
             keep = false;
@@ -84,10 +156,10 @@ class UserInterface implements KeyListener, MouseListener {
         if (keep) {
             if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
                     (SPRITESHEET.getSpriteSide() == 0)) {
-                matchedString = matcherFunc.apply(Strings.IMPORTED_SECOND_REGEX);
+                matchedString = matcherFunction.apply(Strings.IMPORTED_SECOND_REGEX);
                 int side = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
 
-                matchedString = matcherFunc.apply(Strings.IMPORTED_THIRD_REGEX);
+                matchedString = matcherFunction.apply(Strings.IMPORTED_THIRD_REGEX);
                 int newCanvasSize = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
 
                 if (side != 0 && newCanvasSize != 0) {
@@ -111,7 +183,7 @@ class UserInterface implements KeyListener, MouseListener {
             for (Map.Entry<String, int[]> numbersMap : layers.entrySet()) {
                 String numbersRegex = Strings.IMPORTED_FIFTH_REGEX_1 + numbersMap.getKey() +
                         Strings.IMPORTED_FIFTH_REGEX_2;
-                String[] justNumbers = matcherFunc.apply(numbersRegex).split("\\s");
+                String[] justNumbers = matcherFunction.apply(numbersRegex).split("\\s");
                 if (amountOfSprites == justNumbers.length) {
                     int[] numbers = new int[justNumbers.length];
                     for (int i = 0; i < justNumbers.length; i++) {
@@ -119,7 +191,8 @@ class UserInterface implements KeyListener, MouseListener {
                     }
                     numbersMap.setValue(numbers);
                 } else {
-                    System.out.println("Way to break the whole operation");
+                    SubWindow.runInfoWindow(SubWindowOptions.SQUARE_ERROR);
+                    Revisa por qué después de lanzar este error ^ y cerrar la ventana con la X, se lanza el error de file corrupted.
                     layers = null;
                     break;
                 }
@@ -212,7 +285,7 @@ class UserInterface implements KeyListener, MouseListener {
 
     private String getLoadedPath(String loadedData) {
         String path = "";
-        Matcher matcher = Pattern.compile(Strings.LOADED_REGEX).matcher(loadedData);
+        Matcher matcher = Pattern.compile(Strings.LOADED_PATH_REGEX).matcher(loadedData);
         while (matcher.find()) {
             path = matcher.group();
         }
@@ -419,7 +492,7 @@ class UserInterface implements KeyListener, MouseListener {
             int returnVal = fc.showOpenDialog(importCode);
             if (!(returnVal == JFileChooser.CANCEL_OPTION)) {
                 boolean validPictureFile;
-                BufferedImage newPicture;
+                BufferedImage newSpriteSheet;
                 try {
                     validPictureFile = Files.probeContentType(fc.getSelectedFile().toPath()).startsWith("text");
                     if (validPictureFile) {
@@ -431,8 +504,8 @@ class UserInterface implements KeyListener, MouseListener {
                             stringBuilder.append("\n");
                         }
                         String newPicturePath = getLoadedPath(stringBuilder.toString());
-                        newPicture = ImageIO.read(new File(newPicturePath));
-                        validPictureFile = newPicture != null;
+                        newSpriteSheet = ImageIO.read(new File(newPicturePath));
+                        validPictureFile = newSpriteSheet != null;
                         Map<String, int[]> loadedMap = getImportedData(stringBuilder.toString());
                         if (loadedMap != null && validPictureFile) {
                             enableUI();
@@ -441,7 +514,7 @@ class UserInterface implements KeyListener, MouseListener {
                             resetLayerSelector(loadedMap);
                             spritesPanel.removeAll();
                             SPRITESHEET.setPicturePath(newPicturePath);
-                            SPRITESHEET.loadSpriteSheet(newPicture);
+                            SPRITESHEET.loadSpriteSheet(newSpriteSheet);
                             buildJLabelList(spritesPanel, spriteListScale);
                             CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASHMAP());
                             updateMainCanvas(mapScale);
