@@ -36,12 +36,13 @@ public class Canvas {
      * Returns a string with all the data related to the current canvas. This data includes:
      * <ul>
      *    <li>The amount of sprites on each side of the canvas.</li>
-     *    <li>The size of canvas side and the side of sprite side.</li>
+     *    <li>The size of canvas' side and the side of sprite side.</li>
      *    <li>The absolute path where the spritesheet is located.</li>
-     *    <li>The name of each layer in the canvas and the array of IDs for each layer.</li>
+     *    <li>The name of each layer in the canvas and their corresponding ID arrays.</li>
      * </ul>
      *
-     * @return {@code String}
+     * @return {@code String} The string to be written in a txt file during the exportCode
+     * operation.
      */
     public String getExportString(String picturePath) {
         int x = 0;

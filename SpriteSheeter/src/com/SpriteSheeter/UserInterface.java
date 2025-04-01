@@ -59,78 +59,24 @@ class UserInterface implements KeyListener, MouseListener {
     private final SpriteSheet SPRITESHEET = new SpriteSheet();
     private String actualCanvas = Strings.NO_LAYER;
 
-
-//    private Map<String, int[]> getImportedData(String loadedData) {
-//        //Update the existing documentation
-//        boolean keep = true;
-//        Map<String, int[]> layers = new LinkedHashMap<>();
-//
-//        Function<String, String> matcherFunction = string -> {
-//            String output = "";
-//            Matcher matcher = Pattern.compile(string).matcher(loadedData);
-//            while (matcher.find()) {
-//                output = matcher.group();
-//            }
-//            return output;
-//        };
-//
-//        String matchedString = matcherFunction.apply(Strings.IMPORTED_FIRST_REGEX);
-//        int amountOfSprites = matchedString.matches("\\d+") ?
-//                (int) Math.pow(Integer.parseInt(matchedString), 2) : 0;
-//
-//        if (amountOfSprites == 0) {
-//            keep = false;
-//        }
-//
-//        if (keep) {
-//            if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
-//                    (SPRITESHEET.getSpriteSide() == 0)) {
-//                matchedString = matcherFunction.apply(Strings.IMPORTED_SECOND_REGEX);
-//                int side = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
-//
-//                matchedString = matcherFunction.apply(Strings.IMPORTED_THIRD_REGEX);
-//                int newCanvasSize = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
-//
-//                if (side != 0 && newCanvasSize != 0) {
-//                    CANVAS.initializeCanvas(side, newCanvasSize);
-//                    SPRITESHEET.setSpriteSide(side);
-//                    movementIncrement = side;
-//                } else {
-//                    keep = false;
-//                }
-//            }
-//        } else {
-//            return null;
-//        }
-//
-//        if (keep) {
-//            Matcher matcher = Pattern.compile(Strings.IMPORTED_FOURTH_REGEX)
-//                    .matcher(loadedData);
-//            while (matcher.find()) {
-//                layers.put(matcher.group(), null);
-//            }
-//            for (Map.Entry<String, int[]> numbersMap : layers.entrySet()) {
-//                String numbersRegex = Strings.IMPORTED_FIFTH_REGEX_1 + numbersMap.getKey() +
-//                        Strings.IMPORTED_FIFTH_REGEX_2;
-//                String[] justNumbers = matcherFunction.apply(numbersRegex).split("\\s");
-//                if (amountOfSprites == justNumbers.length) {
-//                    int[] numbers = new int[justNumbers.length];
-//                    for (int i = 0; i < justNumbers.length; i++) {
-//                        numbers[i] = Integer.parseInt(justNumbers[i]);
-//                    }
-//                    numbersMap.setValue(numbers);
-//                } else {
-//                    System.out.println("Way to break the whole operation");
-//                    layers = null;
-//                    break;
-//                }
-//            }
-//        } else {
-//            return null;
-//        }
-//        return layers;
-//    }
-
+    /**
+     * Looks for specific data in the provided string. Once extracted,
+     * the data is assigned to different variables and used to build
+     * a Map<String, int[]>. This map contains the mapping of all layer
+     * names found in the input string to their corresponding ID arrays.
+     * The data extracted is listed below:
+     *
+     * <ul>
+     *    <li>The amount of sprites on each side of the canvas.</li>
+     *    <li>The size of canvas' side and the side of sprite's side.</li>
+     *    <li>The absolute path where the spritesheet is located.</li>
+     *    <li>The name of each layer in the canvas and their corresponding ID arrays.</li>
+     * </ul>
+     *
+     * @param loadedData The string read from the txt file during the importCode operation.
+     *
+     * @return {@code Map<String, int[]>} The mapping between the name of layers and their IDs arrays.
+     * */
     private Map<String, int[]> getImportedData(String loadedData) {
         //Update the existing documentation
         boolean keep = true;
@@ -192,7 +138,6 @@ class UserInterface implements KeyListener, MouseListener {
                     numbersMap.setValue(numbers);
                 } else {
                     SubWindow.runInfoWindow(SubWindowOptions.SQUARE_ERROR);
-                    Revisa por qué después de lanzar este error ^ y cerrar la ventana con la X, se lanza el error de file corrupted.
                     layers = null;
                     break;
                 }
@@ -203,6 +148,40 @@ class UserInterface implements KeyListener, MouseListener {
         return layers;
     }
 
+    /**
+     * Returns a preconfigured dropdown options menu.
+     * This menu contains {@link JMenu} and {@link JMenuItem} items. The
+     * options menu is structured as listed below.
+     *
+     * <ul>
+     *    <li>Options</li>
+     *    <ul>
+     *        <li>Create a new canvas</li>
+     *        <li>Layer management</li>
+     *        <ul>
+     *            <li>Clear layer</li>
+     *            <ul>
+     *                <li>Clear actual layer</li>
+     *                <li>Clear all layers</li>
+     *            </ul>
+     *            <li>Delete layer</li>
+     *            <ul>
+     *                <li>Delete actual layer</li>
+     *                <li>Delete all layers</li>
+     *            </ul>
+     *        </ul>
+     *        <li>Import / export code</li>
+     *        <ul>
+     *            <li>Import</li>
+     *            <li>Export</li>
+     *        </ul>
+     *        <li>Export canvas</li>
+     *        <li>Help</li>
+     *     </ul>
+     * </ul>
+     *
+     * @return The preconfigured dropdown options menu.
+     */
     private JMenuBar getJMenuBar() {
         JMenuBar jMenuBar = new JMenuBar();
         JMenu options = new JMenu("Options");
@@ -244,9 +223,6 @@ class UserInterface implements KeyListener, MouseListener {
             actualLayerLabel.setText("Actual layer: " + Strings.NO_LAYER);
             actualCanvas = Strings.NO_LAYER;
         });
-
-
-
 
         //4
         JMenu importExport = new JMenu(Strings.IMPORT_EXPORT_MENU);
