@@ -18,7 +18,7 @@ public class Canvas {
     /**
      * Builds a new BufferedImage out of the unhidden layers.
      *
-     * @return a {@code BufferedImage}
+     * @return The buffered image that will be used as main canvas.
      */
     public BufferedImage getCanvas() {
         //Mixing of all bufferedImages in layers in one single image.
@@ -41,8 +41,7 @@ public class Canvas {
      *    <li>The name of each layer in the canvas and their corresponding ID arrays.</li>
      * </ul>
      *
-     * @return {@code String} The string to be written in a txt file during the exportCode
-     * operation.
+     * @return The string to be written in a txt file during the exportCode operation.
      */
     public String getExportString(String picturePath) {
         int x = 0;
@@ -80,7 +79,7 @@ public class Canvas {
      * Returns the BufferedImage resulted by mixing the value returned by {@link #getCanvas()} with
      * {@code POINTER_LAYER}.
      *
-     * @return {@code BufferedImage}
+     * @return A the BufferedImage used as canvas with an extra layer used as frame.
      */
     public BufferedImage getFramedCanvas() {
         /*
@@ -185,6 +184,8 @@ public class Canvas {
         getSpriteSide son necesarios tanto en Canvas como en SpriteSheet porque se debe evaluar que cada uno tiene
         este método de consulta.
          */
+
+        Revisa este comentario y sigue modificando el texto de todos los bloques return de los comentarios. Actualmente hechos UserInterface, en proceso Canvas.
         return spriteSide;
     }
 

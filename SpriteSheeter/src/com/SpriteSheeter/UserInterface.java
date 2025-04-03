@@ -75,7 +75,7 @@ class UserInterface implements KeyListener, MouseListener {
      *
      * @param loadedData The string read from the txt file during the importCode operation.
      *
-     * @return {@code Map<String, int[]>} The mapping between the name of layers and their IDs arrays.
+     * @return The mapping between the name of layers and their IDs arrays.
      * */
     private Map<String, int[]> getImportedData(String loadedData) {
         //Update the existing documentation
@@ -258,7 +258,16 @@ class UserInterface implements KeyListener, MouseListener {
         return jMenuBar;
     }
 
-
+    /**
+     * <p>
+     * Extracts a path string, given in a specific format, from a string. The string must be
+     * wrapped by double # on each side, and it must start with a drive unit letter.
+     * </p>
+     * ## + X:path + ##<br>
+     * Example: ##C:\Project\TestA##
+     *
+     * @return The extracted path string.
+     * */
     private String getLoadedPath(String loadedData) {
         String path = "";
         Matcher matcher = Pattern.compile(Strings.LOADED_PATH_REGEX).matcher(loadedData);
@@ -269,6 +278,12 @@ class UserInterface implements KeyListener, MouseListener {
         return path;
     }
 
+    /**
+     * Changes the value of {@code mapScale} by adding the specified value. The parameter of
+     * this method can be either a positive or negative value.
+     *
+     * @param movementIncrement The value to be added to mapScale.
+     * */
     private void setMapScale(int movementIncrement) {
         this.mapScale += movementIncrement;
     }
