@@ -79,7 +79,7 @@ public class Canvas {
      * Returns the BufferedImage resulted by mixing the value returned by {@link #getCanvas()} with
      * {@code POINTER_LAYER}.
      *
-     * @return A the BufferedImage used as canvas with an extra layer used as frame.
+     * @return The BufferedImage used as canvas with an extra layer used as frame.
      */
     public BufferedImage getFramedCanvas() {
         /*
@@ -106,7 +106,7 @@ public class Canvas {
      * this map contains no mapping for the key,
      *
      * @param idArrayName The key for the desired mapped value.
-     * @return A {@code int[][]} as result of {@code ID_ARRAY_MAP.get(idArrayName);}
+     * @return A two-dimensional array of integers or null.
      */
     public int[][] getID_ARRAY_MAP(String idArrayName) {
         return ID_ARRAY_MAP.get(idArrayName);
@@ -115,18 +115,18 @@ public class Canvas {
     /**
      * Returns the size of canvas side.
      *
-     * @return {@code canvasSize}
+     * @return The size of canvas as an integer value.
      */
     public int getCanvasSize() {
         return canvasSize;
     }
 
     /**
-     * Returns the value to which the specified key is mapped in the {@code LAYERS}, or null if
+     * Returns the value to which the specified key is mapped in {@code LAYERS}, or null if
      * this map contains no mapping for the key,
      *
      * @param layerName The key for the desired mapped value.
-     * @return A {@code BufferedImage} as result of {@code LAYERS.get(layerName);}
+     * @return A BufferedImage for the specified layer name.
      */
     public BufferedImage getLayer(String layerName) {
         return LAYERS.get(layerName);
@@ -135,7 +135,7 @@ public class Canvas {
     /**
      * Returns the map {@code LAYERS}.
      *
-     * @return {@code Map<String, BufferedImage>}
+     * @return A Map<String, BufferedImage> object.
      */
     public Map<String, BufferedImage> getLAYERS() {
         return LAYERS;
@@ -151,7 +151,7 @@ public class Canvas {
     }
 
     /**
-     * Returns a scaled copy of the provided BufferedImage, using the specified sacale ratio.
+     * Returns a scaled copy of the provided BufferedImage, using the specified scale ratio.
      *
      * @param canvasToScale The BufferedImage to scale.
      * @param scaleRatio    The ratio to be used to scale {@code canvasToScale}.
@@ -167,7 +167,7 @@ public class Canvas {
     /**
      * Returns an int value showing the current sprite side size.
      *
-     * @return {@code int}
+     * @return The int sprite side size.
      */
     public int getSpriteSide() {
         /*Necesario para los sistemas de chequeo de datos antes de empezar. Es decir, cuando inicias la aplicación y
@@ -202,12 +202,12 @@ public class Canvas {
     }
 
     /**
-     * Builds layers out of imported ID arrays.
+     * Builds {@code LAYERS} out of previously imported ID arrays.
      *
      * @param IDArray The map which stores each array of IDs for each layer.
-     * @param spritesHasmap The map of sprites and their IDs.
+     * @param spritesHashmap The map of sprites and their IDs.
      */
-    public void buildLayers(Map<String, int[]> IDArray, HashMap<Integer, Sprite> spritesHasmap) {
+    public void buildLayers(Map<String, int[]> IDArray, HashMap<Integer, Sprite> spritesHashmap) {
         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC);
         for (Map.Entry<String, int[]> newLayers : IDArray.entrySet()) {
             int sideSprites = (int) Math.sqrt(newLayers.getValue().length);
@@ -222,7 +222,7 @@ public class Canvas {
                 for (int x = 0; x < sideSprites; x++) {
                     int newId = currentLayerIds[idCount];
                     if (newId > 0) {
-                        pictureGraphics.drawImage(spritesHasmap.get(newId).getSprite(), xSprite, ySprite, null);
+                        pictureGraphics.drawImage(spritesHashmap.get(newId).getSprite(), xSprite, ySprite, null);
                         loadedIdArray[y][x] = newId;
                     }
                     idCount++;
@@ -256,7 +256,7 @@ public class Canvas {
     }
 
     /**
-     * Removes the mapping for a key from {@code LAYERS}.
+     * Removes the mapping for the specified key in {@code LAYERS}.
      *
      * @param layerToDelete Name of the layer to be deleted.
      */
