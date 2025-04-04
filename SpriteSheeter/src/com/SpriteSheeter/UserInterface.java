@@ -279,7 +279,7 @@ class UserInterface implements KeyListener, MouseListener {
     }
 
     /**
-     * Changes the value of {@code mapScale} by adding the specified value. The parameter of
+     * Sets the value of {@code mapScale} by adding the specified value. The parameter of
      * this method can be either a positive or negative value.
      *
      * @param movementIncrement The value to be added to mapScale.
@@ -288,10 +288,19 @@ class UserInterface implements KeyListener, MouseListener {
         this.mapScale += movementIncrement;
     }
 
+    /**
+     * Sets a new value for spriteListScale.
+     * */
     private void setSpriteListScale(int spriteListScale) {
         this.spriteListScale = spriteListScale;
     }
 
+    /**
+     * Builds up the whole layout to hold the layer selector button and the hide layer checkbox. This layour is
+     * then added to the parent JPanel.
+     *
+     * @param layerName The name of the new layer.
+     * */
     private void addNewLayerButtons(String layerName) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -332,7 +341,15 @@ class UserInterface implements KeyListener, MouseListener {
     }
 
     //UserInterface_notes
-    private void buildJLabelList(JPanel spritesPanel, int spriteListScaleRatio) {
+    /**
+     * Turns into individual buttons each sprite in a spritesheet. Splits {@code SPRITESHEET} into smaller objects
+     * BufferedImage, the sprites. These sprites are then assigned to a button, which is added to JPanel. The JPanel
+     * is added to {@code spritesPanel}. Each JPanel holds all the sprites in a row.
+     *
+     * @param spriteListScaleRatio Each sprite dimension is multiplied by this value in order to display the sprite
+     *                            at the desired size.
+     * */
+    private void buildJLabelList(int spriteListScaleRatio) {
         int spriteSide = SPRITESHEET.getSpriteSide();
         int targetSide = spriteSide * spriteListScaleRatio;
         int j = 0;
@@ -393,6 +410,12 @@ class UserInterface implements KeyListener, MouseListener {
         }
     }
 
+    /**
+     * This method is called in order to delete all the layers. The actual layer label is reset. The maps
+     * {@code LAYERS} and {@code ID_ARRAY_MAP} in the class {@code Canvas} are cleared. The buttons and
+     * checkboxes to control the layers are removed. {@code actualCanvas} is set as NO_LAYER. Finally, the main
+     * canvas is updated.
+     * */
     private void deleteAllLayer() {
         actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " ");
         CANVAS.deleteAllLayers();
@@ -401,6 +424,10 @@ class UserInterface implements KeyListener, MouseListener {
         updateMainCanvas(mapScale);
     }
 
+    /**
+     * Enables all the inactive elements of the user interface. It removes the mouse listener associated to this
+     * elements, and changes the JTextArea options.
+     * */
     private void enableUI() {
         loadSpriteSheet.setEnabled(true);
         layerManagement.setEnabled(true);
@@ -426,6 +453,7 @@ class UserInterface implements KeyListener, MouseListener {
         TA.setText("");
         picScroller.requestFocus();
     }
+
 
     private JMenuItem handleDeleteLayer() {
         JMenuItem deleteLayer = new JMenuItem(Strings.DELETE_LAYER_ITEM);
@@ -506,7 +534,7 @@ class UserInterface implements KeyListener, MouseListener {
                             spritesPanel.removeAll();
                             SPRITESHEET.setPicturePath(newPicturePath);
                             SPRITESHEET.loadSpriteSheet(newSpriteSheet);
-                            buildJLabelList(spritesPanel, spriteListScale);
+                            buildJLabelList(spriteListScale);
                             CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASHMAP());
                             updateMainCanvas(mapScale);
                         } else {
@@ -556,7 +584,7 @@ class UserInterface implements KeyListener, MouseListener {
                     }
                     SPRITESHEET.setPicturePath(newPicturePath);
                     SPRITESHEET.loadSpriteSheet(newPicture);
-                    buildJLabelList(spritesPanel, spriteListScale);
+                    buildJLabelList(spriteListScale);
                     spritesPanel.updateUI();
                 } else {
                     showInfoMessage(SubWindowOptions.INVALID_IMAGE);
@@ -1181,7 +1209,7 @@ class UserInterface implements KeyListener, MouseListener {
             int size = CANVAS.getCanvasSize() * spriteListScale;
             spritesPanel.setSize(new Dimension(size, size));
             spritesPanel.removeAll();
-            buildJLabelList(spritesPanel, spriteListScale);
+            buildJLabelList(spriteListScale);
             spritesPanel.updateUI();
         });
         biggerSprite.setMaximumSize(buttonsDimension);
@@ -1199,7 +1227,7 @@ class UserInterface implements KeyListener, MouseListener {
             int size = CANVAS.getCanvasSize() * spriteListScale;
             spritesPanel.setSize(new Dimension(size, size));
             spritesPanel.removeAll();
-            buildJLabelList(spritesPanel, spriteListScale);
+            buildJLabelList(spriteListScale);
             spritesPanel.updateUI();
         });
         smallerSprite.setMaximumSize(buttonsDimension);
