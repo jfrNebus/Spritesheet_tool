@@ -185,7 +185,7 @@ public class Canvas {
         este método de consulta.
          */
 
-        Revisa este comentario y sigue modificando el texto de todos los bloques return de los comentarios. Actualmente hechos UserInterface, en proceso Canvas.
+//        Revisa este comentario y sigue modificando el texto de todos los bloques return de los comentarios. Actualmente hechos UserInterface, en proceso Canvas.
         return spriteSide;
     }
 

@@ -448,10 +448,10 @@ class UserInterface implements KeyListener, MouseListener {
     }
 
     /**
-     * Retruns a new JMenuItem to be used as "Delete layer" option in the dropdown options menu.
+     * Returns a new JMenuItem to be used as "Delete actual layer" option in the dropdown options menu.
      * The action listener for this JMenuItem is configured before it is returned.
      *
-     * @return The configured "Delete layer" JMenuItem.
+     * @return The configured "Delete actual layer" JMenuItem.
      */
     private JMenuItem handleDeleteLayer() {
         JMenuItem deleteLayer = new JMenuItem(Strings.DELETE_LAYER_ITEM);
@@ -468,6 +468,13 @@ class UserInterface implements KeyListener, MouseListener {
         return deleteLayer;
     }
 
+    /**
+     * Returns a new JMenuItem to be used as "Export canvas" option in the dropdown options menu.
+     * The action listener for this JMenuItem, together with other attributes, are configured before
+     * it is returned.
+     *
+     * @return The configured "Export canvas" JMenuItem.
+     */
     private JMenuItem handleExportCanvas() {
         JMenuItem exportCanvas = new JMenuItem(Strings.EXPORT_CANVAS_ITEM);
         exportCanvas.addActionListener(e -> runSubMenu("exportCanvas"));
@@ -476,6 +483,13 @@ class UserInterface implements KeyListener, MouseListener {
         return exportCanvas;
     }
 
+    /**
+     * Returns a new JMenuItem to be used as "Export" option in the dropdown options menu.
+     * The action listener for this JMenuItem, together with other attributes, are configured before
+     * it is returned.
+     *
+     * @return The configured "Export" JMenuItem.
+     */
     private JMenuItem handleExportCode() {
         JMenuItem exportCode = new JMenuItem("Export");
         exportCode.addActionListener(e -> {
@@ -502,6 +516,12 @@ class UserInterface implements KeyListener, MouseListener {
         return exportCode;
     }
 
+    /**
+     * Returns a new JMenuItem to be used as "Import" option in the dropdown options menu.
+     * The action listener for this JMenuItem is configured before it is returned.
+     *
+     * @return The configured "Import" JMenuItem.
+     */
     private JMenuItem handleImportCode() {
         JMenuItem importCode = new JMenuItem("Import");
         importCode.addActionListener(e -> {
@@ -560,6 +580,13 @@ class UserInterface implements KeyListener, MouseListener {
         return importCode;
     }
 
+    /**
+     * Returns a new JMenuItem to be used as "Load spritesheet" option in the dropdown options menu.
+     * The action listener for this JMenuItem, together with other attributes, are configured before
+     * it is returned.
+     *
+     * @return The configured "Load spritesheet" JMenuItem.
+     */
     private JMenuItem handleLoadSpriteSheet() {
         JMenuItem loadSpriteSheet = new JMenuItem(Strings.LOAD_SPRITESHEET_ITEM);
         loadSpriteSheet.addActionListener(e -> {
@@ -596,6 +623,9 @@ class UserInterface implements KeyListener, MouseListener {
         return loadSpriteSheet;
     }
 
+    /**
+     * Initializes and configures the JLabel to be shown in the JScrollPane that holds the main canvas.
+     * */
     private void initializePicLabel() {
         picLabel = new JLabel(new ImageIcon(CANVAS.getFramedCanvas()));
         picLabel.addKeyListener(this);
@@ -605,6 +635,11 @@ class UserInterface implements KeyListener, MouseListener {
         picScroller.setViewportView(MAP_VIEW);
     }
 
+    /**
+     * This method is called when there is a keyPressed event, specifically when a directional key or any of "A",
+     * "D", "W", "S", are pressed. It first evaluates if any of the movement modifiers are true, so it calls the function
+     * {@link #moveViewPort()}. If no movement modifier is true, then it will call {@link #movePointer()}.
+     */
     private void movementSelector() {
         if (toggleMapMovement || toggleSpriteMovement) {
             moveViewPort();
@@ -635,12 +670,16 @@ class UserInterface implements KeyListener, MouseListener {
         }
     }
 
+    /**
+     *
+     * */
     private void movePointer() {
         int spriteSide = SPRITESHEET.getSpriteSide();
         Color pointer = Color.RED;
         Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
         pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-        pointerGraphics.drawImage(new BufferedImage(spriteSide, spriteSide, BufferedImage.TYPE_INT_ARGB), x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide, null);
+        pointerGraphics.drawImage(new BufferedImage(spriteSide, spriteSide, BufferedImage.TYPE_INT_ARGB),
+                x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide, null);
 
         switch (direction) {
             case 1:
@@ -990,7 +1029,6 @@ class UserInterface implements KeyListener, MouseListener {
     }
 
     public void windowSetup() {
-
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         final int SCREEN_HEIGHT = (int) screenSize.getHeight();
         final int SCREEN_WIDTH = (int) screenSize.getWidth();
