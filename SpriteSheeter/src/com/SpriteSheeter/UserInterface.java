@@ -74,9 +74,8 @@ class UserInterface implements KeyListener, MouseListener {
      * </ul>
      *
      * @param loadedData The string read from the txt file during the importCode operation.
-     *
      * @return The mapping between the name of layers and their IDs arrays.
-     * */
+     */
     private Map<String, int[]> getImportedData(String loadedData) {
         //Update the existing documentation
         boolean keep = true;
@@ -92,16 +91,14 @@ class UserInterface implements KeyListener, MouseListener {
         };
 
         String matchedString = matcherFunction.apply(Strings.IMPORTED_FIRST_REGEX);
-        int amountOfSprites = matchedString.matches("\\d+") ?
-                (int) Math.pow(Integer.parseInt(matchedString), 2) : 0;
+        int amountOfSprites = matchedString.matches("\\d+") ? (int) Math.pow(Integer.parseInt(matchedString), 2) : 0;
 
         if (amountOfSprites == 0) {
             keep = false;
         }
 
         if (keep) {
-            if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
-                    (SPRITESHEET.getSpriteSide() == 0)) {
+            if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) && (SPRITESHEET.getSpriteSide() == 0)) {
                 matchedString = matcherFunction.apply(Strings.IMPORTED_SECOND_REGEX);
                 int side = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
 
@@ -121,14 +118,12 @@ class UserInterface implements KeyListener, MouseListener {
         }
 
         if (keep) {
-            Matcher matcher = Pattern.compile(Strings.IMPORTED_FOURTH_REGEX)
-                    .matcher(loadedData);
+            Matcher matcher = Pattern.compile(Strings.IMPORTED_FOURTH_REGEX).matcher(loadedData);
             while (matcher.find()) {
                 layers.put(matcher.group(), null);
             }
             for (Map.Entry<String, int[]> numbersMap : layers.entrySet()) {
-                String numbersRegex = Strings.IMPORTED_FIFTH_REGEX_1 + numbersMap.getKey() +
-                        Strings.IMPORTED_FIFTH_REGEX_2;
+                String numbersRegex = Strings.IMPORTED_FIFTH_REGEX_1 + numbersMap.getKey() + Strings.IMPORTED_FIFTH_REGEX_2;
                 String[] justNumbers = matcherFunction.apply(numbersRegex).split("\\s");
                 if (amountOfSprites == justNumbers.length) {
                     int[] numbers = new int[justNumbers.length];
@@ -267,7 +262,7 @@ class UserInterface implements KeyListener, MouseListener {
      * Example: ##C:\Project\TestA##
      *
      * @return The extracted path string.
-     * */
+     */
     private String getLoadedPath(String loadedData) {
         String path = "";
         Matcher matcher = Pattern.compile(Strings.LOADED_PATH_REGEX).matcher(loadedData);
@@ -283,14 +278,14 @@ class UserInterface implements KeyListener, MouseListener {
      * this method can be either a positive or negative value.
      *
      * @param movementIncrement The value to be added to mapScale.
-     * */
+     */
     private void setMapScale(int movementIncrement) {
         this.mapScale += movementIncrement;
     }
 
     /**
      * Sets a new value for spriteListScale.
-     * */
+     */
     private void setSpriteListScale(int spriteListScale) {
         this.spriteListScale = spriteListScale;
     }
@@ -300,7 +295,7 @@ class UserInterface implements KeyListener, MouseListener {
      * then added to the parent JPanel.
      *
      * @param layerName The name of the new layer.
-     * */
+     */
     private void addNewLayerButtons(String layerName) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -310,9 +305,7 @@ class UserInterface implements KeyListener, MouseListener {
         layerButton.setFocusable(false);
         layerButton.addActionListener(e -> {
             actualCanvas = layerName;
-            actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " +
-                    (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
-                            actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+            actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
         });
 
         JRadioButton radioButton = new JRadioButton();
@@ -341,14 +334,15 @@ class UserInterface implements KeyListener, MouseListener {
     }
 
     //UserInterface_notes
+
     /**
      * Turns into individual buttons each sprite in a spritesheet. Splits {@code SPRITESHEET} into smaller objects
      * BufferedImage, the sprites. These sprites are then assigned to a button, which is added to JPanel. The JPanel
      * is added to {@code spritesPanel}. Each JPanel holds all the sprites in a row.
      *
      * @param spriteListScaleRatio Each sprite dimension is multiplied by this value in order to display the sprite
-     *                            at the desired size.
-     * */
+     *                             at the desired size.
+     */
     private void buildJLabelList(int spriteListScaleRatio) {
         int spriteSide = SPRITESHEET.getSpriteSide();
         int targetSide = spriteSide * spriteListScaleRatio;
@@ -392,8 +386,7 @@ class UserInterface implements KeyListener, MouseListener {
                         int arrayIndexY = y / spriteSide;
                         int arrayIndexX = x / spriteSide;
                         int[][] returnedArray = CANVAS.getID_ARRAY_MAP(actualCanvas);
-                        returnedArray[arrayIndexY][arrayIndexX] =
-                                (finalI == -1) ? innerId : SPRITESHEET.getSPRITES_HASHMAP().get(innerId).getId();
+                        returnedArray[arrayIndexY][arrayIndexX] = (finalI == -1) ? innerId : SPRITESHEET.getSPRITES_HASHMAP().get(innerId).getId();
                         id = innerId;
                         updateMainCanvas(mapScale);
                         previousSprite = spriteToPrint;
@@ -415,7 +408,7 @@ class UserInterface implements KeyListener, MouseListener {
      * {@code LAYERS} and {@code ID_ARRAY_MAP} in the class {@code Canvas} are cleared. The buttons and
      * checkboxes to control the layers are removed. {@code actualCanvas} is set as NO_LAYER. Finally, the main
      * canvas is updated.
-     * */
+     */
     private void deleteAllLayer() {
         actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " ");
         CANVAS.deleteAllLayers();
@@ -425,9 +418,9 @@ class UserInterface implements KeyListener, MouseListener {
     }
 
     /**
-     * Enables all the inactive elements of the user interface. It removes the mouse listener associated to this
+     * Enables all the inactive elements of the user interface. It removes the mouse listener associated to these
      * elements, and changes the JTextArea options.
-     * */
+     */
     private void enableUI() {
         loadSpriteSheet.setEnabled(true);
         layerManagement.setEnabled(true);
@@ -454,7 +447,12 @@ class UserInterface implements KeyListener, MouseListener {
         picScroller.requestFocus();
     }
 
-
+    /**
+     * Retruns a new JMenuItem to be used as "Delete layer" option in the dropdown options menu.
+     * The action listener for this JMenuItem is configured before it is returned.
+     *
+     * @return The configured "Delete layer" JMenuItem.
+     */
     private JMenuItem handleDeleteLayer() {
         JMenuItem deleteLayer = new JMenuItem(Strings.DELETE_LAYER_ITEM);
         deleteLayer.addActionListener(e -> {
@@ -642,8 +640,7 @@ class UserInterface implements KeyListener, MouseListener {
         Color pointer = Color.RED;
         Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
         pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-        pointerGraphics.drawImage(new BufferedImage(spriteSide, spriteSide, BufferedImage.TYPE_INT_ARGB),
-                x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide, null);
+        pointerGraphics.drawImage(new BufferedImage(spriteSide, spriteSide, BufferedImage.TYPE_INT_ARGB), x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide, null);
 
         switch (direction) {
             case 1:
@@ -673,8 +670,7 @@ class UserInterface implements KeyListener, MouseListener {
             System.out.println("returnedArray[arrayIndexY][arrayIndexX] = " + returnedArray[arrayIndexY][arrayIndexX]);
         }
         pointerGraphics.setColor(pointer);
-        pointerGraphics.drawRect(x + FRAME_GAP, y + FRAME_GAP, spriteSide - FRAME_GAP,
-                spriteSide - FRAME_GAP);
+        pointerGraphics.drawRect(x + FRAME_GAP, y + FRAME_GAP, spriteSide - FRAME_GAP, spriteSide - FRAME_GAP);
         pointerGraphics.dispose();
 
         updateMainCanvas(mapScale);
@@ -726,9 +722,7 @@ class UserInterface implements KeyListener, MouseListener {
             CANVAS.addNewCanvas(newLayers.getKey());
             if (firstLayerName) {
                 actualCanvas = newLayers.getKey();
-                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " +
-                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
-                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
                 firstLayerName = false;
             }
         }
@@ -868,8 +862,7 @@ class UserInterface implements KeyListener, MouseListener {
                     boolean secondNumber = secondTFS.matches("\\d+");
                     if (secondNumber) {
                         try {
-                            ImageIO.write(CANVAS.getScaledCanvas(CANVAS.getCanvas(), Integer.parseInt(secondTFS)),
-                                    "png", new File(firstTFS + ".png"));
+                            ImageIO.write(CANVAS.getScaledCanvas(CANVAS.getCanvas(), Integer.parseInt(secondTFS)), "png", new File(firstTFS + ".png"));
                             subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
                         } catch (IOException ex) {
                             showInfoMessage(SubWindowOptions.INVALID_PATH);
@@ -1112,9 +1105,7 @@ class UserInterface implements KeyListener, MouseListener {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                String layerLabel = Strings.ACTUAL_LAYER_LABEL + " " +
-                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
-                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas);
+                String layerLabel = Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas);
                 actualLayerLabel.setText(layerLabel);
             }
         });
@@ -1142,20 +1133,15 @@ class UserInterface implements KeyListener, MouseListener {
         newLayerB.addMouseListener(this);
         newLayerB.addActionListener(e -> {
             String newLayerName = TA.getText().trim();
-            if (!newLayerName.isEmpty() &&
-                    newLayerName.matches("(\\w+(\\s+\\w+)*)") &&
-                    !CANVAS.hasLayer(newLayerName)) {
+            if (!newLayerName.isEmpty() && newLayerName.matches("(\\w+(\\s+\\w+)*)") && !CANVAS.hasLayer(newLayerName)) {
                 newLayerName = newLayerName.replaceAll("\\s+", "_").toLowerCase();
                 addNewLayerButtons(newLayerName);
-                if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getCanvasSize() == 0)
-                        && (SPRITESHEET.getSpriteSide() == 0)) {
+                if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getCanvasSize() == 0) && (SPRITESHEET.getSpriteSide() == 0)) {
                     runSubMenu("requestNewCanvasValues");
                 }
                 CANVAS.addNewCanvas(newLayerName);
                 actualCanvas = newLayerName;
-                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " +
-                        (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." +
-                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
             } else {
                 showInfoMessage(SubWindowOptions.INVALID_LAYER_HELP);
             }
