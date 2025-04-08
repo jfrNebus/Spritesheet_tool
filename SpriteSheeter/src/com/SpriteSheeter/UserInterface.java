@@ -334,7 +334,6 @@ class UserInterface implements KeyListener, MouseListener {
     }
 
     //UserInterface_notes
-
     /**
      * Turns into individual buttons each sprite in a spritesheet. Splits {@code SPRITESHEET} into smaller objects
      * BufferedImage, the sprites. These sprites are then assigned to a button, which is added to JPanel. The JPanel
@@ -671,7 +670,14 @@ class UserInterface implements KeyListener, MouseListener {
     }
 
     /**
-     *
+     * This method moves the square used as pointer to a new location. A square BufferedImage is created.
+     * The image uses the TYPE_INT_ARGB pixel format, which supports alpha transparency. Upon creation,
+     * all pixels are initialized to fully transparent black (ARGB = 0x00000000), meaning the image starts
+     * as entirely transparent. The current location of the pointer is painted with this new BufferedImage,
+     * in the {@code POINTER_LAYER}. After getting the new coordinates, the pointer will be printed in the
+     * new location.
+     * <br>If the value of {@code fillingBrush} is true, the {@code previousSprite} will  be
+     * printed in the {@code actualCanvas} layer.
      * */
     private void movePointer() {
         int spriteSide = SPRITESHEET.getSpriteSide();
