@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -334,6 +335,7 @@ class UserInterface implements KeyListener, MouseListener {
     }
 
     //UserInterface_notes
+
     /**
      * Turns into individual buttons each sprite in a spritesheet. Splits {@code SPRITESHEET} into smaller objects
      * BufferedImage, the sprites. These sprites are then assigned to a button, which is added to JPanel. The JPanel
@@ -399,6 +401,25 @@ class UserInterface implements KeyListener, MouseListener {
                 }
             }
             j++;
+        }
+    }
+
+    /**
+     * Adds new options buttons to layerSelector, and new layers to canvas, for each  for each layer
+     * name in the set provided as parameter.
+     *
+     * @param newlayers The set containing all the layer names.
+     */
+    private void buildNewLayers(Set<String> newlayers) {
+        boolean firstLayerName = true;
+        for (String newLayer : newlayers) {
+            addNewLayerButtons(newLayer);
+            CANVAS.addNewCanvas(newLayer);
+            if (firstLayerName) {
+                actualCanvas = newLayer;
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+                firstLayerName = false;
+            }
         }
     }
 
@@ -547,7 +568,7 @@ class UserInterface implements KeyListener, MouseListener {
                             enableUI();
                             initializePicLabel();
                             deleteAllLayer();//todo mira si puedes hacer que esto sea condicional en función de si hay capas o no
-                            resetLayerSelector(loadedMap);
+                            buildNewLayers(loadedMap.keySet());
                             spritesPanel.removeAll();
                             SPRITESHEET.setPicturePath(newPicturePath);
                             SPRITESHEET.loadSpriteSheet(newSpriteSheet);
@@ -624,7 +645,7 @@ class UserInterface implements KeyListener, MouseListener {
 
     /**
      * Initializes and configures the JLabel to be shown in the JScrollPane that holds the main canvas.
-     * */
+     */
     private void initializePicLabel() {
         picLabel = new JLabel(new ImageIcon(CANVAS.getFramedCanvas()));
         picLabel.addKeyListener(this);
@@ -678,14 +699,13 @@ class UserInterface implements KeyListener, MouseListener {
      * new location.
      * <br>If {@code fillingBrush} is true, the {@code previousSprite} will  be printed in the
      * {@code actualCanvas} layer.
-     * */
+     */
     private void movePointer() {
         int spriteSide = SPRITESHEET.getSpriteSide();
         Color pointer = Color.RED;
         Graphics2D pointerGraphics = CANVAS.getPOINTER_LAYER().createGraphics();
         pointerGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-        pointerGraphics.drawImage(new BufferedImage(spriteSide, spriteSide, BufferedImage.TYPE_INT_ARGB),
-                x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide, null);
+        pointerGraphics.drawImage(new BufferedImage(spriteSide, spriteSide, BufferedImage.TYPE_INT_ARGB), x + FRAME_GAP, y + FRAME_GAP, spriteSide, spriteSide, null);
 
         switch (direction) {
             case 1:
@@ -726,7 +746,7 @@ class UserInterface implements KeyListener, MouseListener {
      * {@code spriteListScroller}.
      * <br>The method moves the specified JViewPort according to the value "true" of
      * {@code toggleMapMovement} or {@code toggleSpriteMovement}.
-     * */
+     */
     private void moveViewPort() {
         Point newPicViewPosition = new Point();
         int viewMovement = 0;
@@ -763,19 +783,6 @@ class UserInterface implements KeyListener, MouseListener {
         } else if (toggleSpriteMovement) {
             SPRITE_VIEW.setViewPosition(newPicViewPosition);
             spriteListScroller.setViewport(SPRITE_VIEW);
-        }
-    }
-
-    private void resetLayerSelector(Map<String, int[]> newlayerSelector) {
-        boolean firstLayerName = true;
-        for (Map.Entry<String, int[]> newLayers : newlayerSelector.entrySet()) {
-            addNewLayerButtons(newLayers.getKey());
-            CANVAS.addNewCanvas(newLayers.getKey());
-            if (firstLayerName) {
-                actualCanvas = newLayers.getKey();
-                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
-                firstLayerName = false;
-            }
         }
     }
 
