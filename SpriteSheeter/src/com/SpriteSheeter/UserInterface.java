@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 //        To explain layout for frame > https://stackoverflow.com/questions/24840860/boxlayout-for-a-jframe
 
-class UserInterface implements KeyListener, MouseListener {
+class UserInterface implements KeyListener/*, MouseListener*/ {
 
     private boolean fillingBrush = false;
     private boolean toggleMapMovement = false;
@@ -57,6 +57,11 @@ class UserInterface implements KeyListener, MouseListener {
     private JMenuItem exportCode;
     private JMenuItem exportCanvas;
     //User interface
+    MouseAdapter mouseAdapter = new MouseAdapter() {
+        public void mouseClicked(MouseEvent e) {
+            TA.setText(Strings.NEW_LAYER_REQUIRED);
+        }
+    };
     private final SpriteSheet SPRITESHEET = new SpriteSheet();
     private String actualCanvas = Strings.NO_LAYER;
 
@@ -193,7 +198,7 @@ class UserInterface implements KeyListener, MouseListener {
         //3
         layerManagement = new JMenu(Strings.LAYER_MANAGEMENT_MENU);
         layerManagement.setEnabled(false);
-        layerManagement.addMouseListener(this);
+        layerManagement.addMouseListener(mouseAdapter);
         //3.1
         JMenu clearLayerMenu = new JMenu(Strings.CLEAR_LAYER_MENU);
         //3.1.1
@@ -452,16 +457,16 @@ class UserInterface implements KeyListener, MouseListener {
         smallerMap.setEnabled(true);
         newLayerB.setEnabled(true);
         TA.setEditable(true);
-        loadSpriteSheet.removeMouseListener(this);
-        layerManagement.removeMouseListener(this);
-        exportCode.removeMouseListener(this);
-        exportCanvas.removeMouseListener(this);
-        biggerSprite.removeMouseListener(this);
-        biggerMap.removeMouseListener(this);
-        smallerSprite.removeMouseListener(this);
-        smallerMap.removeMouseListener(this);
-        newLayerB.removeMouseListener(this);
-        TA.removeMouseListener(this);
+        loadSpriteSheet.removeMouseListener(mouseAdapter);
+        layerManagement.removeMouseListener(mouseAdapter);
+        exportCode.removeMouseListener(mouseAdapter);
+        exportCanvas.removeMouseListener(mouseAdapter);
+        biggerSprite.removeMouseListener(mouseAdapter);
+        biggerMap.removeMouseListener(mouseAdapter);
+        smallerSprite.removeMouseListener(mouseAdapter);
+        smallerMap.removeMouseListener(mouseAdapter);
+        newLayerB.removeMouseListener(mouseAdapter);
+        TA.removeMouseListener(mouseAdapter);
         TA.setCaretColor(Color.BLACK);
         TA.setText("");
         picScroller.requestFocus();
@@ -499,7 +504,7 @@ class UserInterface implements KeyListener, MouseListener {
         JMenuItem exportCanvas = new JMenuItem(Strings.EXPORT_CANVAS_ITEM);
         exportCanvas.addActionListener(e -> runSubMenu("exportCanvas"));
         exportCanvas.setEnabled(false);
-        exportCanvas.addMouseListener(this);
+        exportCanvas.addMouseListener(mouseAdapter);
         return exportCanvas;
     }
 
@@ -532,7 +537,7 @@ class UserInterface implements KeyListener, MouseListener {
             }
         });
         exportCode.setEnabled(false);
-        exportCode.addMouseListener(this);
+        exportCode.addMouseListener(mouseAdapter);
         return exportCode;
     }
 
@@ -638,7 +643,7 @@ class UserInterface implements KeyListener, MouseListener {
             }
         });
         loadSpriteSheet.setEnabled(false);
-        loadSpriteSheet.addMouseListener(this);
+        loadSpriteSheet.addMouseListener(mouseAdapter);
 
         return loadSpriteSheet;
     }
@@ -786,9 +791,9 @@ class UserInterface implements KeyListener, MouseListener {
         }
     }
 
-
-    Next one
-
+    /**
+     *
+     */
     private void runSubMenu(String menuName) {
         int fontSize = 15;
         Font font = new Font("", Font.PLAIN, fontSize);
@@ -867,8 +872,7 @@ class UserInterface implements KeyListener, MouseListener {
         firstTF.setMaximumSize(new Dimension(textPWidth, itemHeight));
         firstTF.setMinimumSize(firstTF.getMaximumSize());
         if (menuName.equals("exportCanvas")) {
-            firstTF.addMouseListener(new MouseListener() {
-                @Override
+            firstTF.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
                     final JFileChooser fc = new JFileChooser();
                     fc.setApproveButtonText("OK");
@@ -879,26 +883,6 @@ class UserInterface implements KeyListener, MouseListener {
                     } else {
                         System.out.println("Open command cancelled by user.");
                     }
-                }
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-
                 }
             });
         }
@@ -1035,15 +1019,6 @@ class UserInterface implements KeyListener, MouseListener {
 
         //Component visibility
         subFrame.setVisible(true);
-        mainPanel.setVisible(true);
-        labelsP.setVisible(true);
-        firstP.setVisible(true);
-        firstLabel.setVisible(true);
-        textP.setVisible(true);
-        firstTF.setVisible(true);
-        buttonsP.setVisible(true);
-        ok.setVisible(true);
-        cancel.setVisible(true);
     }
 
     private void showInfoMessage(SubWindowOptions value) {
@@ -1190,7 +1165,7 @@ class UserInterface implements KeyListener, MouseListener {
         newLayerB.setFocusable(true);
         newLayerB.setEnabled(false);
         newLayerB.addKeyListener(this);
-        newLayerB.addMouseListener(this);
+        newLayerB.addMouseListener(mouseAdapter);
         newLayerB.addActionListener(e -> {
             String newLayerName = TA.getText().trim();
             if (!newLayerName.isEmpty() && newLayerName.matches("(\\w+(\\s+\\w+)*)") && !CANVAS.hasLayer(newLayerName)) {
@@ -1249,7 +1224,7 @@ class UserInterface implements KeyListener, MouseListener {
         biggerSprite.setEnabled(false);
         biggerSprite.setActionCommand("+");
         biggerSprite.addKeyListener(this);
-        biggerSprite.addMouseListener(this);
+        biggerSprite.addMouseListener(mouseAdapter);
         biggerSprite.addActionListener(e -> {
             setSpriteListScale(++spriteListScale);
             int size = CANVAS.getCanvasSize() * spriteListScale;
@@ -1265,7 +1240,7 @@ class UserInterface implements KeyListener, MouseListener {
         smallerSprite.setEnabled(false);
         smallerSprite.setActionCommand("-");
         smallerSprite.addKeyListener(this);
-        smallerSprite.addMouseListener(this);
+        smallerSprite.addMouseListener(mouseAdapter);
         smallerSprite.addActionListener(e -> {
             if (spriteListScale > 1) {
                 setSpriteListScale(--spriteListScale);
@@ -1283,7 +1258,7 @@ class UserInterface implements KeyListener, MouseListener {
         biggerMap.setFocusable(true);
         biggerMap.setEnabled(false);
         biggerMap.addKeyListener(this);
-        biggerMap.addMouseListener(this);
+        biggerMap.addMouseListener(mouseAdapter);
         biggerMap.addActionListener(e -> {
             setMapScale(MAP_SCALE_RATIO);
             updateMainCanvas(mapScale);
@@ -1294,7 +1269,7 @@ class UserInterface implements KeyListener, MouseListener {
         smallerMap.setFocusable(true);
         smallerMap.setEnabled(false);
         smallerMap.addKeyListener(this);
-        smallerMap.addMouseListener(this);
+        smallerMap.addMouseListener(mouseAdapter);
         smallerMap.addActionListener(e -> {
             if ((mapScale - MAP_SCALE_RATIO) > 0) {
                 setMapScale(-MAP_SCALE_RATIO);
@@ -1320,7 +1295,7 @@ class UserInterface implements KeyListener, MouseListener {
 
         //>>> Inside panel1 > Inside panel3 > panel7 > Inside taScroller
         TA.addKeyListener(this);
-        TA.addMouseListener(this);
+        TA.addMouseListener(mouseAdapter);
         TA.setEditable(false);
         TA.setFont(new Font("", Font.BOLD, 15));
         TA.setLineWrap(true);
@@ -1431,24 +1406,6 @@ class UserInterface implements KeyListener, MouseListener {
 
         //Setting everything visible
         frame.setVisible(true);
-        panel1.setVisible(true);
-        picScrollerHolder.setVisible(true);
-        picScroller.setVisible(true);
-        panel2.setVisible(true);
-        spritesFather.setVisible(true);
-        spriteLabel.setVisible(true);
-        spriteListScroller.setVisible(true);
-        spritesPanel.setVisible(true);
-        layerPanel.setVisible(true);
-        layerScroller.setVisible(true);
-        layerSelector.setVisible(true);
-        newLayerB.setVisible(true);
-        panel3.setVisible(true);
-        biggerSprite.setVisible(true);
-        smallerSprite.setVisible(true);
-        biggerMap.setVisible(true);
-        smallerMap.setVisible(true);
-        TA.setVisible(true);
     }
 
 
@@ -1527,6 +1484,7 @@ class UserInterface implements KeyListener, MouseListener {
         }
     }
 
+//    Removed unnecesary setVisible
     @Override
 
     public void keyReleased(KeyEvent e) {
@@ -1540,30 +1498,5 @@ class UserInterface implements KeyListener, MouseListener {
                 toggleSpriteMovement = false;
             }
         }
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        TA.setText(Strings.NEW_LAYER_REQUIRED);
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
     }
 }
