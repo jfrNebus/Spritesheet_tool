@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 //        To explain layout for frame > https://stackoverflow.com/questions/24840860/boxlayout-for-a-jframe
 
-class UserInterface implements KeyListener/*, MouseListener*/ {
+class UserInterface implements KeyListener {
 
     private boolean fillingBrush = false;
     private boolean toggleMapMovement = false;
@@ -644,7 +644,6 @@ class UserInterface implements KeyListener/*, MouseListener*/ {
         });
         loadSpriteSheet.setEnabled(false);
         loadSpriteSheet.addMouseListener(mouseAdapter);
-
         return loadSpriteSheet;
     }
 
