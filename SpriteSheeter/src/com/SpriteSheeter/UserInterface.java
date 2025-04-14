@@ -654,6 +654,14 @@ class UserInterface implements KeyListener {
         return loadSpriteSheet;
     }
 
+    private JPanel handleNewPanel(int width, int height, LayoutAxisEnum boxLayoutAxis){
+        JPanel panel = new JPanel();
+        panel.setMaximumSize(new Dimension(width, height));
+        panel.setMaximumSize(panel.getMaximumSize());
+        panel.setLayout(new BoxLayout(panel, boxLayoutAxis.getAxis()));
+        return panel;
+    }
+
     private JButton handleOkButton(int width, int height, String menuName){
         JButton ok = new JButton("OK");
         ok.setMaximumSize(new Dimension(width, height));
@@ -710,6 +718,15 @@ class UserInterface implements KeyListener {
 
         return ok;
     }
+
+    private JTextField handleTextField(int width, int height, String tooltip){
+        JTextField textField = new JTextField();
+        textField.setToolTipText(tooltip);
+        textField.setMaximumSize(new Dimension(width, height));
+        textField.setMinimumSize(textField.getMaximumSize());
+        return textField;
+    }
+
 
     /**
      * Initializes and configures the JLabel to be shown in the JScrollPane that holds the main canvas.
@@ -854,13 +871,6 @@ class UserInterface implements KeyListener {
         }
     }
 
-    private JPanel newPanel(int width, int height, LayoutAxisEnum boxLayoutAxis){
-        JPanel panel = new JPanel();
-        panel.setMaximumSize(new Dimension(width, height));
-        panel.setMaximumSize(panel.getMaximumSize());
-        panel.setLayout(new BoxLayout(panel, boxLayoutAxis.getAxis()));
-        return panel;
-    }
 
     /**
      *
@@ -904,30 +914,28 @@ class UserInterface implements KeyListener {
         int buttonPWidth = subFrame.getWidth();
         int buttonPHeight = 30;
 
-        JPanel mainPanel = newPanel(subFrame.getWidth(), panelHeight, LayoutAxisEnum.X_AXIS);
+        JPanel mainPanel = handleNewPanel(subFrame.getWidth(), panelHeight, LayoutAxisEnum.X_AXIS);
 
         int labelPWidth = (int) (subFrame.getWidth() * 0.3);
 
         //Labels management
-        JPanel labelsP = newPanel(labelPWidth, panelHeight, LayoutAxisEnum.Y_AXIS);
+        JPanel labelsP = handleNewPanel(labelPWidth, panelHeight, LayoutAxisEnum.Y_AXIS);
 
         //Text fields Management
         int textPWidth = subFrame.getWidth() - labelPWidth;
 
-        JPanel textP = newPanel(textPWidth, panelHeight, LayoutAxisEnum.Y_AXIS);
+        JPanel textP = handleNewPanel(textPWidth, panelHeight, LayoutAxisEnum.Y_AXIS);
 
         //First panel
-        JPanel firstP = newPanel(labelPWidth, itemHeight, LayoutAxisEnum.X_AXIS);
+        JPanel firstP = handleNewPanel(labelPWidth, itemHeight, LayoutAxisEnum.X_AXIS);
 
         //First Label
         JLabel firstLabel = new JLabel(firstLabelS);
         firstLabel.setFont(font);
 
         //First text
-        firstTF = new JTextField();
-        firstTF.setToolTipText(firstToolTip);
-        firstTF.setMaximumSize(new Dimension(textPWidth, itemHeight));
-        firstTF.setMinimumSize(firstTF.getMaximumSize());
+        firstTF = handleTextField(textPWidth, itemHeight, firstToolTip);
+
         if (menuName.equals("exportCanvas")) {
             firstTF.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
@@ -945,21 +953,18 @@ class UserInterface implements KeyListener {
         }
 
         //Second panel
-        JPanel secondP = newPanel(labelPWidth, itemHeight, LayoutAxisEnum.X_AXIS);
+        JPanel secondP = handleNewPanel(labelPWidth, itemHeight, LayoutAxisEnum.X_AXIS);
 
         //Second Label
         JLabel secondLabel = new JLabel(secondLabelS);
         secondLabel.setFont(font);
 
         //Second text
-        secondTF = new JTextField();
-        secondTF.setToolTipText(secondToolTip);
-        secondTF.setMaximumSize(new Dimension(textPWidth, itemHeight));
-        secondTF.setMinimumSize(secondTF.getMaximumSize());
+        secondTF = handleTextField(textPWidth, itemHeight, secondToolTip);
 
         //Buttons
         //Buttons panel
-        JPanel buttonsP = newPanel(buttonPWidth, buttonPHeight, LayoutAxisEnum.X_AXIS);
+        JPanel buttonsP = handleNewPanel(buttonPWidth, buttonPHeight, LayoutAxisEnum.X_AXIS);
 
         int buttonWidth = (int) (buttonPWidth * 0.3);
 
@@ -970,53 +975,71 @@ class UserInterface implements KeyListener {
         cancel.setMinimumSize(cancel.getMaximumSize());
         cancel.addActionListener(e -> subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING)));
 
+        implement documentation for both new handle methods.
+
         //Layout
 
         //Y_AXIS
         subFrame.add(Box.createRigidArea(new Dimension(0, 10)));
         subFrame.add(mainPanel);
-        //Inside mainPanel
+
+        //>>> Inside subFrame > mainPanel
         //X_AXIS
         mainPanel.add(Box.createRigidArea(new Dimension(15, 0)));
         mainPanel.add(labelsP);
-        //Inside mainPanel
+        //>>> Inside subFrame > mainPanel > labelsP
         //Y_AXIS
         labelsP.add(firstP);
+        //>>> Inside subFrame > mainPanel > labelsP > firstP
         firstP.add(firstLabel);
         firstP.add(Box.createHorizontalGlue());
+        //>>> Inside subFrame > mainPanel > labelsP
         labelsP.add(Box.createRigidArea(new Dimension(0, 5)));
         labelsP.add(secondP);
+        //>>> Inside subFrame > mainPanel > labelsP > secondP
         secondP.add(secondLabel);
         secondP.add(Box.createHorizontalGlue());
+        //>>> Inside subFrame > mainPanel > labelsP
         labelsP.add(Box.createRigidArea(new Dimension(0, 5)));
 
+        //>>> Inside subFrame > mainPanel
+        //X_AXIS
         mainPanel.add(Box.createRigidArea(new Dimension(5, 0)));
         mainPanel.add(textP);
+        //>>> Inside subFrame > mainPanel > textP
         //Y_AXIS
         textP.add(firstTF);
         textP.add(Box.createRigidArea(new Dimension(0, 5)));
         textP.add(secondTF);
         textP.add(Box.createRigidArea(new Dimension(0, 5)));
 
+        //>>> Inside subFrame > mainPanel
+        //X_AXIS
         mainPanel.add(Box.createRigidArea(new Dimension(15, 0)));
+
+        //>>> Inside subFrame
+        //Y_AXIS
         subFrame.add(Box.createRigidArea(new Dimension(0, 10)));
         subFrame.add(buttonsP);
+
+        //>>> Inside subFrame > buttonsP
         //X_AXIS
         buttonsP.add(Box.createHorizontalGlue());
         buttonsP.add(ok);
         buttonsP.add(Box.createRigidArea(new Dimension(5, 0)));
         buttonsP.add(cancel);
         buttonsP.add(Box.createHorizontalGlue());
+
+        //>>> Inside subFrame
         subFrame.add(Box.createRigidArea(new Dimension(0, 10)));
 
+        //Todo These sentences have to be removed. Developing purposes.
         firstTF.setText("16");
         secondTF.setText("80");
 
         //Component visibility
         subFrame.setVisible(true);
     }
-
-    Escribe los comentarios //>>> para organizar el layout ^
 
     private void showInfoMessage(SubWindowOptionsEnum value) {
         SubWindow.runInfoWindow(value);
