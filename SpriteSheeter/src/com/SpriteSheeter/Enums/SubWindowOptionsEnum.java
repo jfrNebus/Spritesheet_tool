@@ -1,6 +1,6 @@
-package com.SpriteSheeter;
+package com.SpriteSheeter.Enums;
 
-public enum SubWindowOptions {
+public enum SubWindowOptionsEnum {
     CORRUPTED_FILE,
     HELP,
     INVALID_IMAGE,

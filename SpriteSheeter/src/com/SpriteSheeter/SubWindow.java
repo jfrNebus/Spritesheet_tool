@@ -1,11 +1,13 @@
 package com.SpriteSheeter;
 
+import com.SpriteSheeter.Enums.SubWindowOptionsEnum;
+
 import javax.swing.*;
 import java.awt.*;
 
 
 public class SubWindow {
-    public static void runInfoWindow(SubWindowOptions value) {
+    public static void runInfoWindow(SubWindowOptionsEnum value) {
         boolean textArea = false;
         String messageS = "";
         int frameHeight = 150;

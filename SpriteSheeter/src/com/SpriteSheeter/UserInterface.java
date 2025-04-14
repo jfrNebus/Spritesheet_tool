@@ -1,5 +1,8 @@
 package com.SpriteSheeter;
 
+import com.SpriteSheeter.Enums.LayoutAxisEnum;
+import com.SpriteSheeter.Enums.SubWindowOptionsEnum;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +59,11 @@ class UserInterface implements KeyListener {
     private JMenuItem loadSpriteSheet;
     private JMenuItem exportCode;
     private JMenuItem exportCanvas;
-    //User interface
+    //User subMenu
+    private JDialog subFrame;
+    private JTextField firstTF;
+    private JTextField secondTF;
+    //
     MouseAdapter mouseAdapter = new MouseAdapter() {
         public void mouseClicked(MouseEvent e) {
             TA.setText(Strings.NEW_LAYER_REQUIRED);
@@ -138,7 +145,7 @@ class UserInterface implements KeyListener {
                     }
                     numbersMap.setValue(numbers);
                 } else {
-                    SubWindow.runInfoWindow(SubWindowOptions.SQUARE_ERROR);
+                    SubWindow.runInfoWindow(SubWindowOptionsEnum.SQUARE_ERROR);
                     layers = null;
                     break;
                 }
@@ -190,7 +197,7 @@ class UserInterface implements KeyListener {
         //1
         JMenuItem newCanvas = new JMenuItem(Strings.NEW_CANVAS_MENU);
         newCanvas.addActionListener(e -> {
-            runSubMenu("requestNewCanvasValues");
+            subMenu("requestNewCanvasValues");
             enableUI();
         });
         //2
@@ -235,7 +242,7 @@ class UserInterface implements KeyListener {
         exportCanvas = handleExportCanvas();
         //6
         JMenuItem help = new JMenuItem(Strings.HELP_ITEM);
-        help.addActionListener(e -> showInfoMessage(SubWindowOptions.HELP));
+        help.addActionListener(e -> showInfoMessage(SubWindowOptionsEnum.HELP));
 
         jMenuBar.add(options);
         options.add(newCanvas);
@@ -502,7 +509,7 @@ class UserInterface implements KeyListener {
      */
     private JMenuItem handleExportCanvas() {
         JMenuItem exportCanvas = new JMenuItem(Strings.EXPORT_CANVAS_ITEM);
-        exportCanvas.addActionListener(e -> runSubMenu("exportCanvas"));
+        exportCanvas.addActionListener(e -> subMenu("exportCanvas"));
         exportCanvas.setEnabled(false);
         exportCanvas.addMouseListener(mouseAdapter);
         return exportCanvas;
@@ -582,21 +589,21 @@ class UserInterface implements KeyListener {
                             updateMainCanvas(mapScale);
                         } else {
                             if (!validPictureFile) {
-                                showInfoMessage(SubWindowOptions.INVALID_IMAGE_PATH);
+                                showInfoMessage(SubWindowOptionsEnum.INVALID_IMAGE_PATH);
                             } else {
-                                showInfoMessage(SubWindowOptions.CORRUPTED_FILE);
+                                showInfoMessage(SubWindowOptionsEnum.CORRUPTED_FILE);
                             }
                             importCode.doClick();
                         }
                     } else {
-                        showInfoMessage(SubWindowOptions.INVALID_TEXT);
+                        showInfoMessage(SubWindowOptionsEnum.INVALID_TEXT);
                         importCode.doClick();
                     }
                 } catch (IOException | NullPointerException exception) {
                     if (exception instanceof IOException) {
-                        showInfoMessage(SubWindowOptions.CORRUPTED_FILE);
+                        showInfoMessage(SubWindowOptionsEnum.CORRUPTED_FILE);
                     } else {
-                        showInfoMessage(SubWindowOptions.INVALID_PATH);
+                        showInfoMessage(SubWindowOptionsEnum.INVALID_PATH);
                     }
                     importCode.doClick();
                 }
@@ -625,7 +632,7 @@ class UserInterface implements KeyListener {
                     newPicture = ImageIO.read(new File(newPicturePath));
                     validPictureFile = newPicture != null;
                 } catch (IOException | NullPointerException | SecurityException ex) {
-                    showInfoMessage(SubWindowOptions.INVALID_PATH);
+                    showInfoMessage(SubWindowOptionsEnum.INVALID_PATH);
                     loadSpriteSheet.doClick();
                 }
                 if (validPictureFile) {
@@ -637,7 +644,7 @@ class UserInterface implements KeyListener {
                     buildJLabelList(spriteListScale);
                     spritesPanel.updateUI();
                 } else {
-                    showInfoMessage(SubWindowOptions.INVALID_IMAGE);
+                    showInfoMessage(SubWindowOptionsEnum.INVALID_IMAGE);
                     loadSpriteSheet.doClick();
                 }
             }
@@ -645,6 +652,63 @@ class UserInterface implements KeyListener {
         loadSpriteSheet.setEnabled(false);
         loadSpriteSheet.addMouseListener(mouseAdapter);
         return loadSpriteSheet;
+    }
+
+    private JButton handleOkButton(int width, int height, String menuName){
+        JButton ok = new JButton("OK");
+        ok.setMaximumSize(new Dimension(width, height));
+        ok.setMinimumSize(ok.getMaximumSize());
+        ok.addActionListener(e -> {
+            String firstTFS = firstTF.getText().isEmpty() ? "" : firstTF.getText();
+            String secondTFS = secondTF.getText();
+            if (menuName.equals("exportCanvas")) {
+                if (!firstTFS.isEmpty() && !secondTFS.isEmpty()) {
+                    boolean secondNumber = secondTFS.matches("\\d+");
+                    if (secondNumber) {
+                        try {
+                            ImageIO.write(CANVAS.getScaledCanvas(CANVAS.getCanvas(), Integer.parseInt(secondTFS)), "png", new File(firstTFS + ".png"));
+                            subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
+                        } catch (IOException ex) {
+                            showInfoMessage(SubWindowOptionsEnum.INVALID_PATH);
+                        }
+                    } else {
+                        showInfoMessage(SubWindowOptionsEnum.INVALID_SCALE);
+                    }
+                }
+            } else if (menuName.equals("requestNewCanvasValues")) {
+                boolean notEmpty = (!firstTFS.isEmpty()) || (!secondTFS.isEmpty());
+                boolean condition = false;
+                int side = 0;
+                int newCanvasSize = 0;
+
+                if (notEmpty) {
+                    boolean firstNumber = firstTFS.matches("\\d+");
+                    boolean secondNumber = secondTFS.matches("\\d+");
+                    if (firstNumber && secondNumber) {
+                        condition = true;//todo revisa si puedes bajar esta línea debajo de side y newCanvasSize
+                        side = Integer.parseInt(firstTFS);
+                        newCanvasSize = Integer.parseInt(secondTFS);
+                    } else {
+                        if (!firstNumber & !secondNumber) {
+                            showInfoMessage(SubWindowOptionsEnum.SHEET_AND_SPRITE);
+                        } else if (!firstNumber) {
+                            showInfoMessage(SubWindowOptionsEnum.SPRITE_SIDE_FAIL);
+                        } else {
+                            showInfoMessage(SubWindowOptionsEnum.SPRITESHEET_FAIL);
+                        }
+                    }
+                }
+                if (condition) {
+                    subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
+                    CANVAS.initializeCanvas(side, newCanvasSize);
+                    SPRITESHEET.setSpriteSide(side);
+                    movementIncrement = side;
+                    initializePicLabel();
+                }
+            }
+        });
+
+        return ok;
     }
 
     /**
@@ -790,18 +854,18 @@ class UserInterface implements KeyListener {
         }
     }
 
-    private JPanel newPanel(int width, int height){
+    private JPanel newPanel(int width, int height, LayoutAxisEnum boxLayoutAxis){
         JPanel panel = new JPanel();
         panel.setMaximumSize(new Dimension(width, height));
         panel.setMaximumSize(panel.getMaximumSize());
-
+        panel.setLayout(new BoxLayout(panel, boxLayoutAxis.getAxis()));
         return panel;
     }
 
     /**
      *
      */
-    private void runSubMenu(String menuName) {
+    private void subMenu(String menuName) {
         int fontSize = 15;
         Font font = new Font("", Font.PLAIN, fontSize);
         String frameName = "";
@@ -810,8 +874,6 @@ class UserInterface implements KeyListener {
         String secondLabelS = "";
         String secondToolTip = "";
         int frameHeight = 170;
-        int amountOfLabels = 2;
-        JTextField secondTF = new JTextField();
 
         switch (menuName) {
             case "exportCanvas":
@@ -830,43 +892,39 @@ class UserInterface implements KeyListener {
                 break;
         }
 
-        final JDialog subFrame = new JDialog(frame, frameName, true);
+        subFrame = new JDialog(frame, frameName, true);
         subFrame.setLayout(new BoxLayout(subFrame.getContentPane(), BoxLayout.Y_AXIS));
         subFrame.setLocationRelativeTo(null);
         subFrame.setIconImage(null);
         subFrame.setSize(new Dimension(400, frameHeight));
         subFrame.setResizable(false);
 
-        int panelHeight = 35 * amountOfLabels;
+        int panelHeight = 70;
         int itemHeight = 30;
         int buttonPWidth = subFrame.getWidth();
         int buttonPHeight = 30;
 
-        JPanel mainPanel = newPanel(subFrame.getWidth(), panelHeight);
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+        JPanel mainPanel = newPanel(subFrame.getWidth(), panelHeight, LayoutAxisEnum.X_AXIS);
 
         int labelPWidth = (int) (subFrame.getWidth() * 0.3);
 
         //Labels management
-        JPanel labelsP = newPanel(labelPWidth, panelHeight);
-        labelsP.setLayout(new BoxLayout(labelsP, BoxLayout.Y_AXIS));
+        JPanel labelsP = newPanel(labelPWidth, panelHeight, LayoutAxisEnum.Y_AXIS);
 
         //Text fields Management
         int textPWidth = subFrame.getWidth() - labelPWidth;
 
-        JPanel textP = newPanel(textPWidth, panelHeight);
-        textP.setLayout(new BoxLayout(textP, BoxLayout.Y_AXIS));
+        JPanel textP = newPanel(textPWidth, panelHeight, LayoutAxisEnum.Y_AXIS);
 
         //First panel
-        JPanel firstP = newPanel(labelPWidth, itemHeight);
-        firstP.setLayout(new BoxLayout(firstP, BoxLayout.X_AXIS));
+        JPanel firstP = newPanel(labelPWidth, itemHeight, LayoutAxisEnum.X_AXIS);
+
         //First Label
         JLabel firstLabel = new JLabel(firstLabelS);
         firstLabel.setFont(font);
-        firstP.add(firstLabel);
-        firstP.add(Box.createHorizontalGlue());
+
         //First text
-        JTextField firstTF = new JTextField();
+        firstTF = new JTextField();
         firstTF.setToolTipText(firstToolTip);
         firstTF.setMaximumSize(new Dimension(textPWidth, itemHeight));
         firstTF.setMinimumSize(firstTF.getMaximumSize());
@@ -887,118 +945,68 @@ class UserInterface implements KeyListener {
         }
 
         //Second panel
-        JPanel secondP = new JPanel();
-        secondP.setLayout(new BoxLayout(secondP, BoxLayout.X_AXIS));
-        secondP.setMaximumSize(new Dimension(labelPWidth, itemHeight));
-        secondP.setMinimumSize(secondP.getMaximumSize());
+        JPanel secondP = newPanel(labelPWidth, itemHeight, LayoutAxisEnum.X_AXIS);
+
         //Second Label
         JLabel secondLabel = new JLabel(secondLabelS);
         secondLabel.setFont(font);
-        secondP.add(secondLabel);
-        secondP.add(Box.createHorizontalGlue());
+
         //Second text
+        secondTF = new JTextField();
         secondTF.setToolTipText(secondToolTip);
         secondTF.setMaximumSize(new Dimension(textPWidth, itemHeight));
         secondTF.setMinimumSize(secondTF.getMaximumSize());
 
         //Buttons
         //Buttons panel
-        JPanel buttonsP = newPanel(buttonPWidth, buttonPHeight);
-        buttonsP.setLayout(new BoxLayout(buttonsP, BoxLayout.X_AXIS));
+        JPanel buttonsP = newPanel(buttonPWidth, buttonPHeight, LayoutAxisEnum.X_AXIS);
 
         int buttonWidth = (int) (buttonPWidth * 0.3);
 
-        JButton ok = new JButton("OK");
-        ok.setMaximumSize(new Dimension(buttonWidth, buttonPHeight));
-        ok.setMinimumSize(ok.getMaximumSize());
-        ok.addActionListener(e -> {
-            String firstTFS = firstTF.getText().isEmpty() ? "" : firstTF.getText();
-            String secondTFS = secondTF.getText();
-            if (menuName.equals("exportCanvas")) {
-                if (!firstTFS.isEmpty() && !secondTFS.isEmpty()) {
-                    boolean secondNumber = secondTFS.matches("\\d+");
-                    if (secondNumber) {
-                        try {
-                            ImageIO.write(CANVAS.getScaledCanvas(CANVAS.getCanvas(), Integer.parseInt(secondTFS)), "png", new File(firstTFS + ".png"));
-                            subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
-                        } catch (IOException ex) {
-                            showInfoMessage(SubWindowOptions.INVALID_PATH);
-                        }
-                    } else {
-                        showInfoMessage(SubWindowOptions.INVALID_SCALE);
-                    }
-                }
-            } else if (menuName.equals("requestNewCanvasValues")) {
-                boolean notEmpty = (!firstTFS.isEmpty()) || (!secondTFS.isEmpty());
-                boolean condition = false;
-                int side = 0;
-                int newCanvasSize = 0;
-
-                if (notEmpty) {
-                    boolean firstNumber = firstTFS.matches("\\d+");
-                    boolean secondNumber = secondTFS.matches("\\d+");
-                    if (firstNumber && secondNumber) {
-                        condition = true;//todo revisa si puedes bajar esta línea debajo de side y newCanvasSize
-                        side = Integer.parseInt(firstTFS);
-                        newCanvasSize = Integer.parseInt(secondTFS);
-                    } else {
-                        if (!firstNumber & !secondNumber) {
-                            showInfoMessage(SubWindowOptions.SHEET_AND_SPRITE);
-                        } else if (!firstNumber) {
-                            showInfoMessage(SubWindowOptions.SPRITE_SIDE_FAIL);
-                        } else {
-                            showInfoMessage(SubWindowOptions.SPRITESHEET_FAIL);
-                        }
-                    }
-                }
-                if (condition) {
-                    subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING));
-                    CANVAS.initializeCanvas(side, newCanvasSize);
-                    SPRITESHEET.setSpriteSide(side);
-                    movementIncrement = side;
-                    initializePicLabel();
-                }
-            }
-        });
+        JButton ok = handleOkButton(buttonWidth, buttonPHeight, menuName);
 
         JButton cancel = new JButton("Cancel");
         cancel.setMaximumSize(new Dimension(buttonWidth, buttonPHeight));
         cancel.setMinimumSize(cancel.getMaximumSize());
         cancel.addActionListener(e -> subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING)));
 
-        //Layout adding
-
-        //X_AXIS
-        buttonsP.add(Box.createHorizontalGlue());
-        buttonsP.add(ok);
-        buttonsP.add(Box.createRigidArea(new Dimension(5, 0)));
-        buttonsP.add(cancel);
-        buttonsP.add(Box.createHorizontalGlue());
+        //Layout
 
         //Y_AXIS
+        subFrame.add(Box.createRigidArea(new Dimension(0, 10)));
+        subFrame.add(mainPanel);
+        //Inside mainPanel
+        //X_AXIS
+        mainPanel.add(Box.createRigidArea(new Dimension(15, 0)));
+        mainPanel.add(labelsP);
+        //Inside mainPanel
+        //Y_AXIS
         labelsP.add(firstP);
+        firstP.add(firstLabel);
+        firstP.add(Box.createHorizontalGlue());
         labelsP.add(Box.createRigidArea(new Dimension(0, 5)));
         labelsP.add(secondP);
+        secondP.add(secondLabel);
+        secondP.add(Box.createHorizontalGlue());
         labelsP.add(Box.createRigidArea(new Dimension(0, 5)));
 
+        mainPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        mainPanel.add(textP);
         //Y_AXIS
         textP.add(firstTF);
         textP.add(Box.createRigidArea(new Dimension(0, 5)));
         textP.add(secondTF);
         textP.add(Box.createRigidArea(new Dimension(0, 5)));
 
-        //X_AXIS
         mainPanel.add(Box.createRigidArea(new Dimension(15, 0)));
-        mainPanel.add(labelsP);
-        mainPanel.add(Box.createRigidArea(new Dimension(5, 0)));
-        mainPanel.add(textP);
-        mainPanel.add(Box.createRigidArea(new Dimension(15, 0)));
-
-        //Y_AXIS
-        subFrame.add(Box.createRigidArea(new Dimension(0, 10)));
-        subFrame.add(mainPanel);
         subFrame.add(Box.createRigidArea(new Dimension(0, 10)));
         subFrame.add(buttonsP);
+        //X_AXIS
+        buttonsP.add(Box.createHorizontalGlue());
+        buttonsP.add(ok);
+        buttonsP.add(Box.createRigidArea(new Dimension(5, 0)));
+        buttonsP.add(cancel);
+        buttonsP.add(Box.createHorizontalGlue());
         subFrame.add(Box.createRigidArea(new Dimension(0, 10)));
 
         firstTF.setText("16");
@@ -1008,7 +1016,9 @@ class UserInterface implements KeyListener {
         subFrame.setVisible(true);
     }
 
-    private void showInfoMessage(SubWindowOptions value) {
+    Escribe los comentarios //>>> para organizar el layout ^
+
+    private void showInfoMessage(SubWindowOptionsEnum value) {
         SubWindow.runInfoWindow(value);
     }
 
@@ -1159,13 +1169,13 @@ class UserInterface implements KeyListener {
                 newLayerName = newLayerName.replaceAll("\\s+", "_").toLowerCase();
                 addNewLayerButtons(newLayerName);
                 if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getCanvasSize() == 0) && (SPRITESHEET.getSpriteSide() == 0)) {
-                    runSubMenu("requestNewCanvasValues");
+                    subMenu("requestNewCanvasValues");
                 }
                 CANVAS.addNewCanvas(newLayerName);
                 actualCanvas = newLayerName;
                 actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
             } else {
-                showInfoMessage(SubWindowOptions.INVALID_LAYER_HELP);
+                showInfoMessage(SubWindowOptionsEnum.INVALID_LAYER_HELP);
             }
         });
         newLayerB.setMaximumSize(new Dimension(newLayerBPanel.getMaximumSize().width, (newLayerBPanel.getMaximumSize().height)));
