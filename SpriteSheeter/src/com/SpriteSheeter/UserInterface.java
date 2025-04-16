@@ -975,7 +975,7 @@ class UserInterface implements KeyListener {
         cancel.setMinimumSize(cancel.getMaximumSize());
         cancel.addActionListener(e -> subFrame.dispatchEvent(new WindowEvent(subFrame, WindowEvent.WINDOW_CLOSING)));
 
-        implement documentation for both new handle methods.
+//        implement documentation for both new handle methods.
 
         //Layout
 
@@ -1069,20 +1069,20 @@ class UserInterface implements KeyListener {
         //>>>Inside frame
         //Panel1
         int panel1Width = (int) (SCREEN_WIDTH * 0.40);
-        JPanel panel1 = new JPanel();
-        panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
+        JPanel panel1 = handleNewPanel(panel1Width, SCREEN_HEIGHT, LayoutAxisEnum.Y_AXIS);
+//        panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
         panel1.setFocusable(true);
         panel1.addKeyListener(this);
-        panel1.setMaximumSize(new Dimension(panel1Width, SCREEN_HEIGHT));
-        panel1.setPreferredSize(panel1.getMaximumSize());
+//        panel1.setMaximumSize(new Dimension(panel1Width, SCREEN_HEIGHT));
+//        panel1.setPreferredSize(panel1.getMaximumSize());
 
         //Map Management
-        JPanel picScrollerHolder = new JPanel();
-        picScrollerHolder.setLayout(new BoxLayout(picScrollerHolder, BoxLayout.Y_AXIS));
+        JPanel picScrollerHolder = handleNewPanel(SCREEN_WIDTH - panel1Width, SCREEN_HEIGHT, LayoutAxisEnum.Y_AXIS);
+//        picScrollerHolder.setLayout(new BoxLayout(picScrollerHolder, BoxLayout.Y_AXIS));
         picScrollerHolder.addKeyListener(this);
         picScrollerHolder.setFocusable(true);
-        picScrollerHolder.setMaximumSize(new Dimension(SCREEN_WIDTH - panel1Width, SCREEN_HEIGHT));
-        picScrollerHolder.setPreferredSize(picScrollerHolder.getMaximumSize());
+//        picScrollerHolder.setMaximumSize(new Dimension(SCREEN_WIDTH - panel1Width, SCREEN_HEIGHT));
+//        picScrollerHolder.setPreferredSize(picScrollerHolder.getMaximumSize());
 
         picScroller = new JScrollPane();
         picScroller.addKeyListener(this);
@@ -1092,20 +1092,21 @@ class UserInterface implements KeyListener {
         //>>> Inside panel1
         int panel2Width = (int) (SCREEN_WIDTH * 0.40);
         int panel2Height = (int) (SCREEN_HEIGHT * 0.90);
-        JPanel panel2 = new JPanel();
-        panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
+        JPanel panel2 = handleNewPanel(panel2Width, panel2Height, LayoutAxisEnum.X_AXIS);
+//        panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
         panel2.addKeyListener(this);
         panel2.setFocusable(true);
-        panel2.setMaximumSize(new Dimension(panel2Width, panel2Height));
-        panel2.setPreferredSize(panel2.getMaximumSize());
+//        panel2.setMaximumSize(new Dimension(panel2Width, panel2Height));
+//        panel2.setPreferredSize(panel2.getMaximumSize());
 
         //>>> Inside panel1 > Inside panel2
         //Sprites management
-        JPanel spritesFather = new JPanel();
-        spritesFather.setLayout(new BoxLayout(spritesFather, BoxLayout.Y_AXIS));
+        JPanel spritesFather = handleNewPanel((int) (panel2.getMaximumSize().getWidth() * 0.75)
+                , panel2Height, LayoutAxisEnum.Y_AXIS);
+//        spritesFather.setLayout(new BoxLayout(spritesFather, BoxLayout.Y_AXIS));
         spritesFather.addKeyListener(this);
-        spritesFather.setMaximumSize(new Dimension((int) (panel2.getMaximumSize().getWidth() * 0.75), panel2Height));
-        spritesFather.setPreferredSize(spritesFather.getMaximumSize());
+//        spritesFather.setMaximumSize(new Dimension((int) (panel2.getMaximumSize().getWidth() * 0.75), panel2Height));
+//        spritesFather.setPreferredSize(spritesFather.getMaximumSize());
 
         //>>> Inside panel1 > Inside panel2 > Inside spritesFather
         JPanel spriteLabelPanel = new JPanel();
@@ -1127,10 +1128,11 @@ class UserInterface implements KeyListener {
 
         //Layer Management
         //>>> Inside panel1 > Inside panel2
-        JPanel layerPanel = new JPanel();
-        layerPanel.setLayout(new BoxLayout(layerPanel, BoxLayout.Y_AXIS));
-        layerPanel.setMaximumSize(new Dimension((int) (panel2.getMaximumSize().getWidth() * 0.25), panel2Height));
-        layerPanel.setPreferredSize(layerPanel.getMaximumSize());
+        JPanel layerPanel = handleNewPanel((int) (panel2.getMaximumSize().getWidth() * 0.25)
+                , panel2Height, LayoutAxisEnum.Y_AXIS);
+//        layerPanel.setLayout(new BoxLayout(layerPanel, BoxLayout.Y_AXIS));
+//        layerPanel.setMaximumSize(new Dimension((int) (panel2.getMaximumSize().getWidth() * 0.25), panel2Height));
+//        layerPanel.setPreferredSize(layerPanel.getMaximumSize());
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel
         JPanel layerLabelPanel = new JPanel();
         layerLabelPanel.setLayout(new BoxLayout(layerLabelPanel, BoxLayout.X_AXIS));
@@ -1176,10 +1178,11 @@ class UserInterface implements KeyListener {
         layerSelector.setFocusable(false);
 
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller > layerSelector
-        JPanel newLayerBPanel = new JPanel();
-        newLayerBPanel.setLayout(new BoxLayout(newLayerBPanel, BoxLayout.X_AXIS));
-        newLayerBPanel.setMaximumSize(new Dimension(layerPanel.getMaximumSize().width, (int) (layerPanel.getMaximumSize().getHeight() * 0.03)));
-        newLayerBPanel.setPreferredSize(newLayerBPanel.getMaximumSize());
+        JPanel newLayerBPanel = handleNewPanel(layerPanel.getMaximumSize().width
+                , (int) (layerPanel.getMaximumSize().getHeight() * 0.03), LayoutAxisEnum.X_AXIS);
+//        newLayerBPanel.setLayout(new BoxLayout(newLayerBPanel, BoxLayout.X_AXIS));
+//        newLayerBPanel.setMaximumSize(new Dimension(layerPanel.getMaximumSize().width, (int) (layerPanel.getMaximumSize().getHeight() * 0.03)));
+//        newLayerBPanel.setPreferredSize(newLayerBPanel.getMaximumSize());
 
         newLayerB = new JButton(Strings.NEW_LAYER_BUTTON);
         newLayerB.setFocusable(true);
@@ -1208,33 +1211,36 @@ class UserInterface implements KeyListener {
         layerScroller.setViewportView(layerSelector);
 
         //>>> Inside panel1
-        JPanel panel3 = new JPanel();
-        panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
+        JPanel panel3 =  handleNewPanel(panel1Width, SCREEN_HEIGHT - panel2Height, LayoutAxisEnum.X_AXIS);
+//        panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
         panel3.addKeyListener(this);
         panel3.setFocusable(true);
-        panel3.setMaximumSize(new Dimension(panel1Width, SCREEN_HEIGHT - panel2Height));
-        panel3.setPreferredSize(panel3.getMaximumSize());
+//        panel3.setMaximumSize(new Dimension(panel1Width, SCREEN_HEIGHT - panel2Height));
+//        panel3.setPreferredSize(panel3.getMaximumSize());
 
 
         //>>> Inside panel1 > Inside panel3
-        JPanel panel4 = new JPanel();
-        panel4.setLayout(new BoxLayout(panel4, BoxLayout.Y_AXIS));
+        JPanel panel4 = handleNewPanel((int) (SCREEN_WIDTH * 0.15), panel3.getMaximumSize().height,
+                LayoutAxisEnum.Y_AXIS);
+//        panel4.setLayout(new BoxLayout(panel4, BoxLayout.Y_AXIS));
         panel4.addKeyListener(this);
         panel4.setFocusable(true);
-        panel4.setMaximumSize(new Dimension((int) (SCREEN_WIDTH * 0.15), panel3.getMaximumSize().height));
+//        panel4.setMaximumSize(new Dimension((int) (SCREEN_WIDTH * 0.15), panel3.getMaximumSize().height));
 
         //>>> Inside panel1 > Inside panel3 > Inside panel4
-        JPanel panel5 = new JPanel();
-        panel5.setLayout(new BoxLayout(panel5, BoxLayout.X_AXIS));
+        JPanel panel5 = handleNewPanel(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2,
+                LayoutAxisEnum.X_AXIS);
+//        panel5.setLayout(new BoxLayout(panel5, BoxLayout.X_AXIS));
         panel5.addKeyListener(this);
         panel5.setFocusable(true);
-        panel5.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
+//        panel5.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
 
-        JPanel panel6 = new JPanel();
-        panel6.setLayout(new BoxLayout(panel6, BoxLayout.X_AXIS));
+        JPanel panel6 = handleNewPanel(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2,
+                LayoutAxisEnum.X_AXIS);
+//        panel6.setLayout(new BoxLayout(panel6, BoxLayout.X_AXIS));
         panel6.addKeyListener(this);
         panel6.setFocusable(true);
-        panel6.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
+//        panel6.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
 
         //>>> Inside panel1 > Inside panel3 > Inside panel5
         Dimension buttonsDimension = new Dimension(panel4.getMaximumSize().width / 2, panel4.getMaximumSize().height / 2);
@@ -1301,11 +1307,11 @@ class UserInterface implements KeyListener {
         //>>> Inside panel1 > Inside panel3
         int panel7Width = panel3.getMaximumSize().width - panel4.getMaximumSize().width;
         int panel7Height = panel3.getMaximumSize().height;
-        JPanel panel7 = new JPanel();
-        panel7.setLayout(new BoxLayout(panel7, BoxLayout.Y_AXIS));
+        JPanel panel7 = handleNewPanel(panel7Width, panel7Height, LayoutAxisEnum.Y_AXIS);
+//        panel7.setLayout(new BoxLayout(panel7, BoxLayout.Y_AXIS));
         panel7.addKeyListener(this);
         panel7.setFocusable(true);
-        panel7.setMaximumSize(new Dimension(panel7Width, panel7Height));
+//        panel7.setMaximumSize(new Dimension(panel7Width, panel7Height));
 
         //>>> Inside panel1 > Inside panel3 > panel7
         JScrollPane taScroller = new JScrollPane();
@@ -1427,6 +1433,10 @@ class UserInterface implements KeyListener {
         //Setting everything visible
         frame.setVisible(true);
     }
+
+
+    Comprueba por qué el layout no aparece como debe cuando cargas un archivo guardado, tras la implementación de
+    handleNewPanel.
 
 
     private void updateMainCanvas(int scale) {
