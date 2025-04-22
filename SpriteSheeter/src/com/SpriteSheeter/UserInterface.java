@@ -654,15 +654,15 @@ class UserInterface implements KeyListener {
         return loadSpriteSheet;
     }
 
-    private JPanel handleNewPanel(int width, int height, LayoutAxisEnum boxLayoutAxis){
+    private JPanel handleNewPanel(int width, int height, LayoutAxisEnum boxLayoutAxis) {
         JPanel panel = new JPanel();
         panel.setMaximumSize(new Dimension(width, height));
-        panel.setMaximumSize(panel.getMaximumSize());
+        panel.setPreferredSize(panel.getMaximumSize());
         panel.setLayout(new BoxLayout(panel, boxLayoutAxis.getAxis()));
         return panel;
     }
 
-    private JButton handleOkButton(int width, int height, String menuName){
+    private JButton handleOkButton(int width, int height, String menuName) {
         JButton ok = new JButton("OK");
         ok.setMaximumSize(new Dimension(width, height));
         ok.setMinimumSize(ok.getMaximumSize());
@@ -719,7 +719,7 @@ class UserInterface implements KeyListener {
         return ok;
     }
 
-    private JTextField handleTextField(int width, int height, String tooltip){
+    private JTextField handleTextField(int width, int height, String tooltip) {
         JTextField textField = new JTextField();
         textField.setToolTipText(tooltip);
         textField.setMaximumSize(new Dimension(width, height));
@@ -1211,7 +1211,7 @@ class UserInterface implements KeyListener {
         layerScroller.setViewportView(layerSelector);
 
         //>>> Inside panel1
-        JPanel panel3 =  handleNewPanel(panel1Width, SCREEN_HEIGHT - panel2Height, LayoutAxisEnum.X_AXIS);
+        JPanel panel3 = handleNewPanel(panel1Width, SCREEN_HEIGHT - panel2Height, LayoutAxisEnum.X_AXIS);
 //        panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
         panel3.addKeyListener(this);
         panel3.setFocusable(true);
@@ -1434,11 +1434,6 @@ class UserInterface implements KeyListener {
         frame.setVisible(true);
     }
 
-
-    Comprueba por qué el layout no aparece como debe cuando cargas un archivo guardado, tras la implementación de
-    handleNewPanel.
-
-
     private void updateMainCanvas(int scale) {
         picLabel.setIcon(new ImageIcon(CANVAS.getScaledCanvas(CANVAS.getFramedCanvas(), scale)));
     }
@@ -1514,7 +1509,7 @@ class UserInterface implements KeyListener {
         }
     }
 
-//    Removed unnecesary setVisible
+    //    Removed unnecesary setVisible
     @Override
 
     public void keyReleased(KeyEvent e) {
