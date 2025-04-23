@@ -861,20 +861,23 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a new JButton. The size and the layout for this JButton are configured before
-     * it is returned.
+     * Returns a new JButton. The JButton is returned only after it is fully configured.
      *
      * @return The configured JButton.
      */
-    private JButton newButton(String name, int width, int height, LayoutAxisEnum boxLayoutAxis) {
+    private JButton newButton(String name, int width, int height) {
         JButton button = new JButton(name);
+        button.setFocusable(true);
+        button.setEnabled(false);
+        button.addKeyListener(this);
+        button.addMouseListener(mouseAdapter);
         button.setMaximumSize(new Dimension(width, height));
         button.setPreferredSize(button.getMaximumSize());
-        button.setLayout(new BoxLayout(button, boxLayoutAxis.getAxis()));
         return button;
-
-        Check where you can implement it
     }
+
+    Revisa porque la ventana de Create new canvas muestra los textfields con unas proporciones erroneas
+    y la ventana export canvas no
 
     /**
      * Returns a new JPanel. The size and the layout for this JPanel are configured before
@@ -1100,19 +1103,13 @@ class UserInterface implements KeyListener {
         //Panel1
         int panel1Width = (int) (SCREEN_WIDTH * 0.40);
         JPanel panel1 = newPanel(panel1Width, SCREEN_HEIGHT, LayoutAxisEnum.Y_AXIS);
-//        panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
         panel1.setFocusable(true);
         panel1.addKeyListener(this);
-//        panel1.setMaximumSize(new Dimension(panel1Width, SCREEN_HEIGHT));
-//        panel1.setPreferredSize(panel1.getMaximumSize());
 
         //Map Management
         JPanel picScrollerHolder = newPanel(SCREEN_WIDTH - panel1Width, SCREEN_HEIGHT, LayoutAxisEnum.Y_AXIS);
-//        picScrollerHolder.setLayout(new BoxLayout(picScrollerHolder, BoxLayout.Y_AXIS));
         picScrollerHolder.addKeyListener(this);
         picScrollerHolder.setFocusable(true);
-//        picScrollerHolder.setMaximumSize(new Dimension(SCREEN_WIDTH - panel1Width, SCREEN_HEIGHT));
-//        picScrollerHolder.setPreferredSize(picScrollerHolder.getMaximumSize());
 
         picScroller = new JScrollPane();
         picScroller.addKeyListener(this);
@@ -1123,20 +1120,16 @@ class UserInterface implements KeyListener {
         int panel2Width = (int) (SCREEN_WIDTH * 0.40);
         int panel2Height = (int) (SCREEN_HEIGHT * 0.90);
         JPanel panel2 = newPanel(panel2Width, panel2Height, LayoutAxisEnum.X_AXIS);
-//        panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
         panel2.addKeyListener(this);
         panel2.setFocusable(true);
-//        panel2.setMaximumSize(new Dimension(panel2Width, panel2Height));
-//        panel2.setPreferredSize(panel2.getMaximumSize());
+
 
         //>>> Inside panel1 > Inside panel2
         //Sprites management
         JPanel spritesFather = newPanel((int) (panel2.getMaximumSize().getWidth() * 0.75)
                 , panel2Height, LayoutAxisEnum.Y_AXIS);
-//        spritesFather.setLayout(new BoxLayout(spritesFather, BoxLayout.Y_AXIS));
         spritesFather.addKeyListener(this);
-//        spritesFather.setMaximumSize(new Dimension((int) (panel2.getMaximumSize().getWidth() * 0.75), panel2Height));
-//        spritesFather.setPreferredSize(spritesFather.getMaximumSize());
+
 
         //>>> Inside panel1 > Inside panel2 > Inside spritesFather
         JPanel spriteLabelPanel = new JPanel();
@@ -1160,9 +1153,6 @@ class UserInterface implements KeyListener {
         //>>> Inside panel1 > Inside panel2
         JPanel layerPanel = newPanel((int) (panel2.getMaximumSize().getWidth() * 0.25)
                 , panel2Height, LayoutAxisEnum.Y_AXIS);
-//        layerPanel.setLayout(new BoxLayout(layerPanel, BoxLayout.Y_AXIS));
-//        layerPanel.setMaximumSize(new Dimension((int) (panel2.getMaximumSize().getWidth() * 0.25), panel2Height));
-//        layerPanel.setPreferredSize(layerPanel.getMaximumSize());
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel
         JPanel layerLabelPanel = new JPanel();
         layerLabelPanel.setLayout(new BoxLayout(layerLabelPanel, BoxLayout.X_AXIS));
@@ -1210,15 +1200,9 @@ class UserInterface implements KeyListener {
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller > layerSelector
         JPanel newLayerBPanel = newPanel(layerPanel.getMaximumSize().width
                 , (int) (layerPanel.getMaximumSize().getHeight() * 0.03), LayoutAxisEnum.X_AXIS);
-//        newLayerBPanel.setLayout(new BoxLayout(newLayerBPanel, BoxLayout.X_AXIS));
-//        newLayerBPanel.setMaximumSize(new Dimension(layerPanel.getMaximumSize().width, (int) (layerPanel.getMaximumSize().getHeight() * 0.03)));
-//        newLayerBPanel.setPreferredSize(newLayerBPanel.getMaximumSize());
 
-        newLayerB = new JButton(Strings.NEW_LAYER_BUTTON);
-        newLayerB.setFocusable(true);
-        newLayerB.setEnabled(false);
-        newLayerB.addKeyListener(this);
-        newLayerB.addMouseListener(mouseAdapter);
+        newLayerB = newButton(Strings.NEW_LAYER_BUTTON, newLayerBPanel.getMaximumSize().width,
+                newLayerBPanel.getMaximumSize().height);
         newLayerB.addActionListener(e -> {
             String newLayerName = TA.getText().trim();
             if (!newLayerName.isEmpty() && newLayerName.matches("(\\w+(\\s+\\w+)*)") && !CANVAS.hasLayer(newLayerName)) {
@@ -1234,8 +1218,6 @@ class UserInterface implements KeyListener {
                 showInfoMessage(SubWindowOptionsEnum.INVALID_LAYER_HELP);
             }
         });
-        newLayerB.setMaximumSize(new Dimension(newLayerBPanel.getMaximumSize().width, (newLayerBPanel.getMaximumSize().height)));
-        newLayerB.setPreferredSize(newLayerB.getMaximumSize());
 
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller
         layerScroller.setViewportView(layerSelector);
@@ -1273,14 +1255,12 @@ class UserInterface implements KeyListener {
 //        panel6.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
 
         //>>> Inside panel1 > Inside panel3 > Inside panel5
-        Dimension buttonsDimension = new Dimension(panel4.getMaximumSize().width / 2, panel4.getMaximumSize().height / 2);
 
-        biggerSprite = new JButton(Strings.BIGGER_SPRITE_BUTTON);
-        biggerSprite.setFocusable(true);
-        biggerSprite.setEnabled(false);
+        final int buttonsWidth = panel4.getMaximumSize().width / 2;
+        final int buttonsHeight = panel4.getMaximumSize().height / 2;
+
+        biggerSprite = newButton(Strings.BIGGER_SPRITE_BUTTON, buttonsWidth, buttonsHeight);
         biggerSprite.setActionCommand("+");
-        biggerSprite.addKeyListener(this);
-        biggerSprite.addMouseListener(mouseAdapter);
         biggerSprite.addActionListener(e -> {
             setSpriteListScale(++spriteListScale);
             int size = CANVAS.getCanvasSize() * spriteListScale;
@@ -1289,14 +1269,9 @@ class UserInterface implements KeyListener {
             buildJLabelList(spriteListScale);
             spritesPanel.updateUI();
         });
-        biggerSprite.setMaximumSize(buttonsDimension);
 
-        smallerSprite = new JButton(Strings.SMALLER_SPRITE_BUTTON);
-        smallerSprite.setFocusable(true);
-        smallerSprite.setEnabled(false);
+        smallerSprite = newButton(Strings.SMALLER_SPRITE_BUTTON, buttonsWidth, buttonsHeight);
         smallerSprite.setActionCommand("-");
-        smallerSprite.addKeyListener(this);
-        smallerSprite.addMouseListener(mouseAdapter);
         smallerSprite.addActionListener(e -> {
             if (spriteListScale > 1) {
                 setSpriteListScale(--spriteListScale);
@@ -1307,32 +1282,21 @@ class UserInterface implements KeyListener {
             buildJLabelList(spriteListScale);
             spritesPanel.updateUI();
         });
-        smallerSprite.setMaximumSize(buttonsDimension);
 
-        //UserInterface_notes
-        biggerMap = new JButton(Strings.BIGGER_MAP_BUTTON);
-        biggerMap.setFocusable(true);
-        biggerMap.setEnabled(false);
-        biggerMap.addKeyListener(this);
-        biggerMap.addMouseListener(mouseAdapter);
+//        UserInterface_notes
+        biggerMap = newButton(Strings.BIGGER_MAP_BUTTON, buttonsWidth, buttonsHeight);
         biggerMap.addActionListener(e -> {
             setMapScale(MAP_SCALE_RATIO);
             updateMainCanvas(mapScale);
         });
-        biggerMap.setMaximumSize(buttonsDimension);
 
-        smallerMap = new JButton(Strings.SMALLER_MAP_BUTTTON);
-        smallerMap.setFocusable(true);
-        smallerMap.setEnabled(false);
-        smallerMap.addKeyListener(this);
-        smallerMap.addMouseListener(mouseAdapter);
+        smallerMap = newButton(Strings.SMALLER_MAP_BUTTTON, buttonsWidth, buttonsHeight);
         smallerMap.addActionListener(e -> {
             if ((mapScale - MAP_SCALE_RATIO) > 0) {
                 setMapScale(-MAP_SCALE_RATIO);
                 updateMainCanvas(mapScale);
             }
         });
-        smallerMap.setMaximumSize(buttonsDimension);
 
         //>>> Inside panel1 > Inside panel3
         int panel7Width = panel3.getMaximumSize().width - panel4.getMaximumSize().width;
@@ -1541,7 +1505,6 @@ class UserInterface implements KeyListener {
 
     //    Removed unnecesary setVisible
     @Override
-
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == 17) {
