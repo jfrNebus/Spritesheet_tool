@@ -613,6 +613,34 @@ class UserInterface implements KeyListener {
     }
 
     /**
+     * Returns a new JButton to be used as {@code newLayerB} inside windowSetup(). The action listener for this
+     * JButton is configured before it is returned.
+     *
+     * @return The configured JButton.
+     */
+    private JButton handleNewLayerButton (String name, int width, int height){
+        JButton button = newButton(name, width, height);
+        button.addActionListener(e -> {
+            String newLayerName = TA.getText().trim();
+            if (!newLayerName.isEmpty() && newLayerName.matches("(\\w+(\\s+\\w+)*)") && !CANVAS.hasLayer(newLayerName)) {
+                newLayerName = newLayerName.replaceAll("\\s+", "_").toLowerCase();
+                addNewLayerButtons(newLayerName);
+                if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getCanvasSize() == 0) && (SPRITESHEET.getSpriteSide() == 0)) {
+                    subMenu("requestNewCanvasValues");
+                }
+                CANVAS.addNewCanvas(newLayerName);
+                actualCanvas = newLayerName;
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ?
+                        actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5)
+                        : actualCanvas));
+            } else {
+                showInfoMessage(SubWindowOptionsEnum.INVALID_LAYER_HELP);
+            }
+        });
+        return button;
+    }
+
+    /**
      * Returns a new JMenuItem to be used as "Load spritesheet" option in the dropdown options menu.
      * The action listener for this JMenuItem, together with other attributes, are configured before
      * it is returned.
@@ -905,7 +933,8 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Sets up the whole layout for a new window. This new window contains two JTextField and two JButton to handle the "Create a new canvas" and "Export canvas" menus.
+     * Sets up the whole layout for a new window. This new window contains two JTextField and two JButton to handle
+     * the "Create a new canvas" and "Export canvas" menus.
      */
     private void subMenu(String menuName) {
         int fontSize = 15;
@@ -1074,13 +1103,18 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Runs an instance of SubWindow, calling its runInfoWindow() method. The message reported depends on the
-     * {@code SubWindowOptionsEnum} value provided as parameter.
+     * Displays an information window by invoking {@link SubWindow#runInfoWindow(SubWindowOptionsEnum)} with the
+     * specified {@code SubWindowOptionsEnum} value.
+     *
+     * @param value the option that determines the kind of message to display in the information window
      * */
     private void showInfoMessage(SubWindowOptionsEnum value) {
         SubWindow.runInfoWindow(value);
     }
 
+    /**
+     * Sets up the whole layout for the main window.
+     */
     public void windowSetup() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         final int SCREEN_HEIGHT = (int) screenSize.getHeight();
@@ -1206,23 +1240,8 @@ class UserInterface implements KeyListener {
         JPanel newLayerBPanel = newPanel(layerPanel.getMaximumSize().width
                 , (int) (layerPanel.getMaximumSize().getHeight() * 0.03), LayoutAxisEnum.X_AXIS);
 
-        newLayerB = newButton(Strings.NEW_LAYER_BUTTON, newLayerBPanel.getMaximumSize().width,
+        newLayerB = handleNewLayerButton(Strings.NEW_LAYER_BUTTON, newLayerBPanel.getMaximumSize().width,
                 newLayerBPanel.getMaximumSize().height);
-        newLayerB.addActionListener(e -> {
-            String newLayerName = TA.getText().trim();
-            if (!newLayerName.isEmpty() && newLayerName.matches("(\\w+(\\s+\\w+)*)") && !CANVAS.hasLayer(newLayerName)) {
-                newLayerName = newLayerName.replaceAll("\\s+", "_").toLowerCase();
-                addNewLayerButtons(newLayerName);
-                if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getCanvasSize() == 0) && (SPRITESHEET.getSpriteSide() == 0)) {
-                    subMenu("requestNewCanvasValues");
-                }
-                CANVAS.addNewCanvas(newLayerName);
-                actualCanvas = newLayerName;
-                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
-            } else {
-                showInfoMessage(SubWindowOptionsEnum.INVALID_LAYER_HELP);
-            }
-        });
 
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller
         layerScroller.setViewportView(layerSelector);
@@ -1231,7 +1250,6 @@ class UserInterface implements KeyListener {
         JPanel panel3 = newPanel(panel1Width, SCREEN_HEIGHT - panel2Height, LayoutAxisEnum.X_AXIS);
         panel3.addKeyListener(this);
         panel3.setFocusable(true);
-
 
         //>>> Inside panel1 > Inside panel3
         JPanel panel4 = newPanel((int) (SCREEN_WIDTH * 0.15), panel3.getMaximumSize().height,
