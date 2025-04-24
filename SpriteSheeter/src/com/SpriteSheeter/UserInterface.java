@@ -876,9 +876,6 @@ class UserInterface implements KeyListener {
         return button;
     }
 
-    Revisa porque la ventana de Create new canvas muestra los textfields con unas proporciones erroneas
-    y la ventana export canvas no
-
     /**
      * Returns a new JPanel. The size and the layout for this JPanel are configured before
      * it is returned.
@@ -908,7 +905,7 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     *
+     * Sets up the whole layout for a new window. This new window contains two JTextField and two JButton to handle the "Create a new canvas" and "Export canvas" menus.
      */
     private void subMenu(String menuName) {
         int fontSize = 15;
@@ -918,7 +915,9 @@ class UserInterface implements KeyListener {
         String firstToolTip = "";
         String secondLabelS = "";
         String secondToolTip = "";
-        int frameHeight = 170;
+        final int frameHeight = 170;
+        final int frameWidth = 400;
+        final int WIDTH_GAP = 15;
 
         switch (menuName) {
             case "exportCanvas":
@@ -941,7 +940,7 @@ class UserInterface implements KeyListener {
         subFrame.setLayout(new BoxLayout(subFrame.getContentPane(), BoxLayout.Y_AXIS));
         subFrame.setLocationRelativeTo(null);
         subFrame.setIconImage(null);
-        subFrame.setSize(new Dimension(400, frameHeight));
+        subFrame.setSize(new Dimension(frameWidth, frameHeight));
         subFrame.setResizable(false);
 
         int panelHeight = 70;
@@ -957,7 +956,7 @@ class UserInterface implements KeyListener {
         JPanel labelsP = newPanel(labelPWidth, panelHeight, LayoutAxisEnum.Y_AXIS);
 
         //Text fields Management
-        int textPWidth = subFrame.getWidth() - labelPWidth;
+        int textPWidth = subFrame.getWidth() - labelPWidth - WIDTH_GAP;
 
         JPanel textP = newPanel(textPWidth, panelHeight, LayoutAxisEnum.Y_AXIS);
 
@@ -1018,7 +1017,7 @@ class UserInterface implements KeyListener {
 
         //>>> Inside subFrame > mainPanel
         //X_AXIS
-        mainPanel.add(Box.createRigidArea(new Dimension(15, 0)));
+        mainPanel.add(Box.createRigidArea(new Dimension(WIDTH_GAP, 0)));
         mainPanel.add(labelsP);
         //>>> Inside subFrame > mainPanel > labelsP
         //Y_AXIS
@@ -1048,7 +1047,7 @@ class UserInterface implements KeyListener {
 
         //>>> Inside subFrame > mainPanel
         //X_AXIS
-        mainPanel.add(Box.createRigidArea(new Dimension(15, 0)));
+        mainPanel.add(Box.createRigidArea(new Dimension(WIDTH_GAP, 0)));
 
         //>>> Inside subFrame
         //Y_AXIS
@@ -1074,6 +1073,10 @@ class UserInterface implements KeyListener {
         subFrame.setVisible(true);
     }
 
+    /**
+     * Runs an instance of SubWindow, calling its runInfoWindow() method. The message reported depends on the
+     * {@code SubWindowOptionsEnum} value provided as parameter.
+     * */
     private void showInfoMessage(SubWindowOptionsEnum value) {
         SubWindow.runInfoWindow(value);
     }
@@ -1182,7 +1185,9 @@ class UserInterface implements KeyListener {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                String layerLabel = Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas);
+                String layerLabel = Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ?
+                        actualCanvas.substring(0, 5) + "..." +
+                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas);
                 actualLayerLabel.setText(layerLabel);
             }
         });
@@ -1224,35 +1229,26 @@ class UserInterface implements KeyListener {
 
         //>>> Inside panel1
         JPanel panel3 = newPanel(panel1Width, SCREEN_HEIGHT - panel2Height, LayoutAxisEnum.X_AXIS);
-//        panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
         panel3.addKeyListener(this);
         panel3.setFocusable(true);
-//        panel3.setMaximumSize(new Dimension(panel1Width, SCREEN_HEIGHT - panel2Height));
-//        panel3.setPreferredSize(panel3.getMaximumSize());
 
 
         //>>> Inside panel1 > Inside panel3
         JPanel panel4 = newPanel((int) (SCREEN_WIDTH * 0.15), panel3.getMaximumSize().height,
                 LayoutAxisEnum.Y_AXIS);
-//        panel4.setLayout(new BoxLayout(panel4, BoxLayout.Y_AXIS));
         panel4.addKeyListener(this);
         panel4.setFocusable(true);
-//        panel4.setMaximumSize(new Dimension((int) (SCREEN_WIDTH * 0.15), panel3.getMaximumSize().height));
 
         //>>> Inside panel1 > Inside panel3 > Inside panel4
         JPanel panel5 = newPanel(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2,
                 LayoutAxisEnum.X_AXIS);
-//        panel5.setLayout(new BoxLayout(panel5, BoxLayout.X_AXIS));
         panel5.addKeyListener(this);
         panel5.setFocusable(true);
-//        panel5.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
 
         JPanel panel6 = newPanel(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2,
                 LayoutAxisEnum.X_AXIS);
-//        panel6.setLayout(new BoxLayout(panel6, BoxLayout.X_AXIS));
         panel6.addKeyListener(this);
         panel6.setFocusable(true);
-//        panel6.setMaximumSize(new Dimension(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2));
 
         //>>> Inside panel1 > Inside panel3 > Inside panel5
 
@@ -1302,10 +1298,8 @@ class UserInterface implements KeyListener {
         int panel7Width = panel3.getMaximumSize().width - panel4.getMaximumSize().width;
         int panel7Height = panel3.getMaximumSize().height;
         JPanel panel7 = newPanel(panel7Width, panel7Height, LayoutAxisEnum.Y_AXIS);
-//        panel7.setLayout(new BoxLayout(panel7, BoxLayout.Y_AXIS));
         panel7.addKeyListener(this);
         panel7.setFocusable(true);
-//        panel7.setMaximumSize(new Dimension(panel7Width, panel7Height));
 
         //>>> Inside panel1 > Inside panel3 > panel7
         JScrollPane taScroller = new JScrollPane();
