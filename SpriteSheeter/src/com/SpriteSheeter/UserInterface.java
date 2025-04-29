@@ -157,116 +157,6 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a preconfigured dropdown options menu.
-     * This menu contains {@link JMenu} and {@link JMenuItem} items. The
-     * options menu is structured as listed below.
-     *
-     * <ul>
-     *    <li>Options</li>
-     *    <ul>
-     *        <li>Create a new canvas</li>
-     *        <li>Layer management</li>
-     *        <ul>
-     *            <li>Clear layer</li>
-     *            <ul>
-     *                <li>Clear actual layer</li>
-     *                <li>Clear all layers</li>
-     *            </ul>
-     *            <li>Delete layer</li>
-     *            <ul>
-     *                <li>Delete actual layer</li>
-     *                <li>Delete all layers</li>
-     *            </ul>
-     *        </ul>
-     *        <li>Import / export code</li>
-     *        <ul>
-     *            <li>Import</li>
-     *            <li>Export</li>
-     *        </ul>
-     *        <li>Export canvas</li>
-     *        <li>Help</li>
-     *     </ul>
-     * </ul>
-     *
-     * @return The preconfigured dropdown options menu.
-     */
-    private JMenuBar getJMenuBar() {
-        JMenuBar jMenuBar = new JMenuBar();
-        JMenu options = new JMenu("Options");
-
-        //1
-        JMenuItem newCanvas = new JMenuItem(Strings.NEW_CANVAS_MENU);
-        newCanvas.addActionListener(e -> {
-            subMenu("requestNewCanvasValues");
-            enableUI();
-        });
-        //2
-        loadSpriteSheet = handleLoadSpriteSheet();
-        //3
-        layerManagement = new JMenu(Strings.LAYER_MANAGEMENT_MENU);
-        layerManagement.setEnabled(false);
-        layerManagement.addMouseListener(mouseAdapter);
-        //3.1
-        JMenu clearLayerMenu = new JMenu(Strings.CLEAR_LAYER_MENU);
-        //3.1.1
-        JMenuItem clearLayer = new JMenuItem(Strings.CLEAR_LAYER_ITEM);
-        clearLayer.addActionListener(e -> {
-            CANVAS.clearLayer(actualCanvas);
-            updateMainCanvas(mapScale);
-        });
-        //3.1.2
-        JMenuItem clearAllLayer = new JMenuItem(Strings.CLEAR_ALL_LAYER_ITEM);
-        clearAllLayer.addActionListener(e -> {
-            CANVAS.clearAllLayers();
-            updateMainCanvas(mapScale);
-        });
-        //3.2
-        JMenu deleteLayerMenu = new JMenu(Strings.DELETE_LAYER_MENU);
-        //3.2.1
-        JMenuItem deleteLayer = handleDeleteLayer();
-        //3.2.1
-        JMenuItem deleteAllLayerMenu = new JMenuItem(Strings.DELETE_ALL_LAYER_ITEM);
-        deleteAllLayerMenu.addActionListener(e -> {
-            deleteAllLayer();
-            actualLayerLabel.setText("Actual layer: " + Strings.NO_LAYER);
-            actualCanvas = Strings.NO_LAYER;
-        });
-
-        //4
-        JMenu importExport = new JMenu(Strings.IMPORT_EXPORT_MENU);
-        //4.1
-        JMenuItem importCode = handleImportCode();
-        //4.2
-        exportCode = handleExportCode();
-        //5
-        exportCanvas = handleExportCanvas();
-        //6
-        JMenuItem help = new JMenuItem(Strings.HELP_ITEM);
-        help.addActionListener(e -> showInfoMessage(SubWindowOptionsEnum.HELP));
-
-        jMenuBar.add(options);
-        options.add(newCanvas);
-        options.add(loadSpriteSheet);
-        options.add(layerManagement);
-        layerManagement.add(clearLayerMenu);
-        clearLayerMenu.add(clearLayer);
-        clearLayerMenu.add(clearAllLayer);
-        layerManagement.add(deleteLayerMenu);
-        deleteLayerMenu.add(deleteLayer);
-        deleteLayerMenu.add(deleteAllLayerMenu);
-        options.add(importExport);
-        importExport.add(importCode);
-        importExport.add(exportCode);
-        options.add(exportCanvas);
-        options.add(help);
-
-        jMenuBar.setVisible(true);
-        options.setVisible(true);
-
-        return jMenuBar;
-    }
-
-    /**
      * <p>
      * Extracts a path string, given in a specific format, from a string. The string must be
      * wrapped by double # on each side, and it must start with a drive unit letter.
@@ -613,31 +503,113 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a new JButton to be used as {@code newLayerB} inside windowSetup(). The action listener for this
-     * JButton is configured before it is returned.
+     * Returns a preconfigured dropdown options menu.
+     * This menu contains {@link JMenu} and {@link JMenuItem} items. The
+     * options menu is structured as listed below.
      *
-     * @return The configured JButton.
+     * <ul>
+     *    <li>Options</li>
+     *    <ul>
+     *        <li>Create a new canvas</li>
+     *        <li>Layer management</li>
+     *        <ul>
+     *            <li>Clear layer</li>
+     *            <ul>
+     *                <li>Clear actual layer</li>
+     *                <li>Clear all layers</li>
+     *            </ul>
+     *            <li>Delete layer</li>
+     *            <ul>
+     *                <li>Delete actual layer</li>
+     *                <li>Delete all layers</li>
+     *            </ul>
+     *        </ul>
+     *        <li>Import / export code</li>
+     *        <ul>
+     *            <li>Import</li>
+     *            <li>Export</li>
+     *        </ul>
+     *        <li>Export canvas</li>
+     *        <li>Help</li>
+     *     </ul>
+     * </ul>
+     *
+     * @return The preconfigured dropdown options menu.
      */
-    private JButton handleNewLayerButton (String name, int width, int height){
-        JButton button = newButton(name, width, height);
-        button.addActionListener(e -> {
-            String newLayerName = TA.getText().trim();
-            if (!newLayerName.isEmpty() && newLayerName.matches("(\\w+(\\s+\\w+)*)") && !CANVAS.hasLayer(newLayerName)) {
-                newLayerName = newLayerName.replaceAll("\\s+", "_").toLowerCase();
-                addNewLayerButtons(newLayerName);
-                if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getCanvasSize() == 0) && (SPRITESHEET.getSpriteSide() == 0)) {
-                    subMenu("requestNewCanvasValues");
-                }
-                CANVAS.addNewCanvas(newLayerName);
-                actualCanvas = newLayerName;
-                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ?
-                        actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5)
-                        : actualCanvas));
-            } else {
-                showInfoMessage(SubWindowOptionsEnum.INVALID_LAYER_HELP);
-            }
+    private JMenuBar handleJMenuBar() {
+        JMenuBar jMenuBar = new JMenuBar();
+        JMenu options = new JMenu("Options");
+
+        //1
+        JMenuItem newCanvas = new JMenuItem(Strings.NEW_CANVAS_MENU);
+        newCanvas.addActionListener(e -> {
+            subMenu("requestNewCanvasValues");
+            enableUI();
         });
-        return button;
+        //2
+        loadSpriteSheet = handleLoadSpriteSheet();
+        //3
+        layerManagement = new JMenu(Strings.LAYER_MANAGEMENT_MENU);
+        layerManagement.setEnabled(false);
+        layerManagement.addMouseListener(mouseAdapter);
+        //3.1
+        JMenu clearLayerMenu = new JMenu(Strings.CLEAR_LAYER_MENU);
+        //3.1.1
+        JMenuItem clearLayer = new JMenuItem(Strings.CLEAR_LAYER_ITEM);
+        clearLayer.addActionListener(e -> {
+            CANVAS.clearLayer(actualCanvas);
+            updateMainCanvas(mapScale);
+        });
+        //3.1.2
+        JMenuItem clearAllLayer = new JMenuItem(Strings.CLEAR_ALL_LAYER_ITEM);
+        clearAllLayer.addActionListener(e -> {
+            CANVAS.clearAllLayers();
+            updateMainCanvas(mapScale);
+        });
+        //3.2
+        JMenu deleteLayerMenu = new JMenu(Strings.DELETE_LAYER_MENU);
+        //3.2.1
+        JMenuItem deleteLayer = handleDeleteLayer();
+        //3.2.1
+        JMenuItem deleteAllLayerMenu = new JMenuItem(Strings.DELETE_ALL_LAYER_ITEM);
+        deleteAllLayerMenu.addActionListener(e -> {
+            deleteAllLayer();
+            actualLayerLabel.setText("Actual layer: " + Strings.NO_LAYER);
+            actualCanvas = Strings.NO_LAYER;
+        });
+
+        //4
+        JMenu importExport = new JMenu(Strings.IMPORT_EXPORT_MENU);
+        //4.1
+        JMenuItem importCode = handleImportCode();
+        //4.2
+        exportCode = handleExportCode();
+        //5
+        exportCanvas = handleExportCanvas();
+        //6
+        JMenuItem help = new JMenuItem(Strings.HELP_ITEM);
+        help.addActionListener(e -> showInfoMessage(SubWindowOptionsEnum.HELP));
+
+        jMenuBar.add(options);
+        options.add(newCanvas);
+        options.add(loadSpriteSheet);
+        options.add(layerManagement);
+        layerManagement.add(clearLayerMenu);
+        clearLayerMenu.add(clearLayer);
+        clearLayerMenu.add(clearAllLayer);
+        layerManagement.add(deleteLayerMenu);
+        deleteLayerMenu.add(deleteLayer);
+        deleteLayerMenu.add(deleteAllLayerMenu);
+        options.add(importExport);
+        importExport.add(importCode);
+        importExport.add(exportCode);
+        options.add(exportCanvas);
+        options.add(help);
+
+        jMenuBar.setVisible(true);
+        options.setVisible(true);
+
+        return jMenuBar;
     }
 
     /**
@@ -680,6 +652,68 @@ class UserInterface implements KeyListener {
         loadSpriteSheet.setEnabled(false);
         loadSpriteSheet.addMouseListener(mouseAdapter);
         return loadSpriteSheet;
+    }
+
+    private MouseListener handleMouseListener() {
+        MouseListener mouseListener = new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                actualLayerLabel.setText(actualCanvas);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                String layerLabel = Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ?
+                        actualCanvas.substring(0, 5) + "..." +
+                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas);
+                actualLayerLabel.setText(layerLabel);
+            }
+        };
+
+        return mouseListener;
+    }
+
+    /**
+     * Returns a new JButton to be used as {@code newLayerB} inside windowSetup(). The action listener for this
+     * JButton is configured before it is returned.
+     *
+     * @return The configured JButton.
+     */
+    private JButton handleNewLayerButton (String name, int width, int height){
+        JButton button = newButton(name, width, height);
+        button.addActionListener(e -> {
+            String newLayerName = TA.getText().trim();
+            if (!newLayerName.isEmpty() && newLayerName.matches("(\\w+(\\s+\\w+)*)") && !CANVAS.hasLayer(newLayerName)) {
+                newLayerName = newLayerName.replaceAll("\\s+", "_").toLowerCase();
+                addNewLayerButtons(newLayerName);
+                if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getCanvasSize() == 0) && (SPRITESHEET.getSpriteSide() == 0)) {
+                    subMenu("requestNewCanvasValues");
+                }
+                CANVAS.addNewCanvas(newLayerName);
+                actualCanvas = newLayerName;
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ?
+                        actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5)
+                        : actualCanvas));
+            } else {
+                showInfoMessage(SubWindowOptionsEnum.INVALID_LAYER_HELP);
+            }
+        });
+        return button;
     }
 
     /**
@@ -1123,7 +1157,7 @@ class UserInterface implements KeyListener {
         int FRAME_WIDTH = (int) (SCREEN_WIDTH * 0.6);
         int FRAME_HEIGHT = (int) (SCREEN_HEIGHT * 0.6);
 
-        JMenuBar jMenuBar = getJMenuBar();
+        JMenuBar jMenuBar = handleJMenuBar();
 
         frame = new JFrame(Strings.FRAME_NAME_UI);
         frame.setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
@@ -1196,35 +1230,7 @@ class UserInterface implements KeyListener {
         layerLabelPanel.addKeyListener(this);
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerLabelPanel
         actualLayerLabel = new JLabel(Strings.ACTUAL_LAYER_LABEL + " " + actualCanvas);
-        actualLayerLabel.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                actualLayerLabel.setText(actualCanvas);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                String layerLabel = Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ?
-                        actualCanvas.substring(0, 5) + "..." +
-                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas);
-                actualLayerLabel.setText(layerLabel);
-            }
-        });
+        actualLayerLabel.addMouseListener(handleMouseListener());
 
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel
         JScrollPane layerScroller = new JScrollPane();
