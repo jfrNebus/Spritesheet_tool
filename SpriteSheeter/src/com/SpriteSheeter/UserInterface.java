@@ -237,7 +237,6 @@ class UserInterface implements KeyListener {
     }
 
     //UserInterface_notes
-
     /**
      * Turns into individual buttons each sprite in a spritesheet. Splits {@code SPRITESHEET} into smaller objects
      * BufferedImage, the sprites. These sprites are then assigned to a button, which is added to JPanel. The JPanel
@@ -607,7 +606,6 @@ class UserInterface implements KeyListener {
         options.add(help);
 
         jMenuBar.setVisible(true);
-        options.setVisible(true);
 
         return jMenuBar;
     }
@@ -654,28 +652,11 @@ class UserInterface implements KeyListener {
         return loadSpriteSheet;
     }
 
-    private MouseListener handleMouseListener() {
-        MouseListener mouseListener = new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
 
-            }
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                actualLayerLabel.setText(actualCanvas);
-            }
-
+    Write a Doc comment for the next MouseAdapter, check what is going on with the adapter that used to deal with the label showing just each layer's full name or the name plus the label Actual layer:, also check why I am using mouseExit in the next method.
+    private MouseAdapter handleMouseAdapter() {
+        return new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 String layerLabel = Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ?
@@ -684,8 +665,6 @@ class UserInterface implements KeyListener {
                 actualLayerLabel.setText(layerLabel);
             }
         };
-
-        return mouseListener;
     }
 
     /**
@@ -1230,7 +1209,7 @@ class UserInterface implements KeyListener {
         layerLabelPanel.addKeyListener(this);
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerLabelPanel
         actualLayerLabel = new JLabel(Strings.ACTUAL_LAYER_LABEL + " " + actualCanvas);
-        actualLayerLabel.addMouseListener(handleMouseListener());
+        actualLayerLabel.addMouseListener(handleMouseAdapter());
 
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel
         JScrollPane layerScroller = new JScrollPane();
