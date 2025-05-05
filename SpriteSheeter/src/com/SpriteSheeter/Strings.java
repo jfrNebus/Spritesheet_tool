@@ -29,7 +29,7 @@ public class Strings {
     public static final String IMPORTED_FIRST_REGEX = "(?<=//Sprites\\sin\\sside\\s=\\s)\\d+(?=\\n)";
     public static final String IMPORTED_SECOND_REGEX = "(?<=//Sprite\\sside\\s=\\s)\\d+(?=\\n)";
     public static final String IMPORTED_THIRD_REGEX = "(?<=//Canvas\\sside\\ssize\\s=\\s)\\d+(?=\\n)";
-    public static final String IMPORTED_FOURTH_REGEX = "(?<=//Layer:\\s)(\\w+(_+\\w+)*)(?=\\nint\\[\\]\\[\\])";
+    public static final String IMPORTED_FOURTH_REGEX = "(?<=//Layer:\\s).+(?=\\nint\\[\\]\\[\\])";
     public static final String IMPORTED_FIFTH_REGEX_1 = "(?<=};\\n//";
     public static final String IMPORTED_FIFTH_REGEX_2 = ":)((\\d)+\\s)+(?=\\n)";
     public static final String LOADED_PATH_REGEX = "(?<=\\n##)(\\w:(.*))(?=##)";
@@ -48,9 +48,7 @@ public class Strings {
     public static final String HELP = "Hotkeys:\n\n* Ctrl + directional / awsd keys:\n   Main canvas movement when zoomed." + "\n\n* Shift + directional / awsd keys:\n   Sprite canvas movement when zoomed." + "\n\n* Ctrl + key \"+\" or key \"-\":\n   Main canvas zoom + or zoom -." + "\n\n* Shift + key \"+\" or key \"-\":\n   Srite canvas zoom + or zoom -." + "\n\n* Ctrl + Enter:\n   Toggle continuous painting on / off.";
     public static final String INVALID_IMAGE = "The file must be an image file.";
     public static final String INVALID_IMAGE_PATH = "The image path in the loaded text file is invalid.";
-    public static final String INVALID_LAYER_HELP = "The layer name must be an ASCII string, or a" +
-            " combination of several ASCII strings separated by a whitespace character. " +
-            "Layer names cannot be duplicated.";
+    public static final String INVALID_LAYER_NAME = "Layer names cannot be duplicated or empty.";
     public static final String INVALID_PATH = "The path to the file is invalid.";
     public static final String INVALID_SCALE = "The scale value is not an integer value.";
     public static final String INVALID_TEXT = "The uploaded file must be a .txt file.";

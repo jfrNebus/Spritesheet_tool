@@ -653,16 +653,17 @@ class UserInterface implements KeyListener {
     }
 
 
-
-    Write a Doc comment for the next MouseAdapter, check what is going on with the adapter that used to deal with the label showing just each layer's full name or the name plus the label Actual layer:, also check why I am using mouseExit in the next method.
+    Agrega documentación aquí
     private MouseAdapter handleMouseAdapter() {
         return new MouseAdapter() {
             @Override
+            public void mouseEntered(MouseEvent e) {
+                TA.setText(actualCanvas);
+            }
+
+            @Override
             public void mouseExited(MouseEvent e) {
-                String layerLabel = Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ?
-                        actualCanvas.substring(0, 5) + "..." +
-                                actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas);
-                actualLayerLabel.setText(layerLabel);
+                TA.setText("");
             }
         };
     }
@@ -677,7 +678,7 @@ class UserInterface implements KeyListener {
         JButton button = newButton(name, width, height);
         button.addActionListener(e -> {
             String newLayerName = TA.getText().trim();
-            if (!newLayerName.isEmpty() && newLayerName.matches("(\\w+(\\s+\\w+)*)") && !CANVAS.hasLayer(newLayerName)) {
+            if (!newLayerName.isEmpty() && !CANVAS.hasLayer(newLayerName)) {
                 newLayerName = newLayerName.replaceAll("\\s+", "_").toLowerCase();
                 addNewLayerButtons(newLayerName);
                 if ((CANVAS.getSpriteSide() == 0) && (CANVAS.getCanvasSize() == 0) && (SPRITESHEET.getSpriteSide() == 0)) {

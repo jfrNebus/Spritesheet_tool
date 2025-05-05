@@ -15,7 +15,7 @@ public class SubWindow {
         String frameName = Strings.FRAME_NAME_SW;
         Font font = new Font("", Font.PLAIN, fontSize);
 
-        //REPASA EL INGLÉS
+        //todo REPASA EL INGLÉS
 
         switch (value) {
             case CORRUPTED_FILE:
@@ -34,8 +34,7 @@ public class SubWindow {
                 messageS = Strings.INVALID_IMAGE_PATH;
                 break;
             case INVALID_LAYER_HELP:
-                messageS = Strings.INVALID_LAYER_HELP;
-                textArea = true;
+                messageS = Strings.INVALID_LAYER_NAME;
                 break;
             case INVALID_PATH:
                 messageS = Strings.INVALID_PATH;
