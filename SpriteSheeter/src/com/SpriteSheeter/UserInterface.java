@@ -91,8 +91,8 @@ class UserInterface implements KeyListener {
      *    <li>The name of each layer in the canvas and their corresponding ID arrays.</li>
      * </ul>
      *
-     * @param loadedData The string read from the txt file during the importCode operation.
-     * @return The mapping between the name of layers and their IDs arrays.
+     * @param loadedData the string read from the txt file during the importCode operation.
+     * @return the mapping between the name of layers and their IDs arrays.
      */
     private Map<String, int[]> getImportedData(String loadedData) {
         //Update the existing documentation
@@ -169,7 +169,8 @@ class UserInterface implements KeyListener {
      * ## + X:path + ##<br>
      * Example: ##C:\Project\TestA##
      *
-     * @return The extracted path string.
+     * @param loadedData the string where the path will be extracted.
+     * @return the extracted path string.
      */
     private String getLoadedPath(String loadedData) {
         String path = "";
@@ -185,7 +186,7 @@ class UserInterface implements KeyListener {
      * Sets the value of {@code mapScale} by adding the specified value. The parameter of
      * this method can be either a positive or negative value.
      *
-     * @param movementIncrement The value to be added to mapScale.
+     * @param movementIncrement the value to be added to mapScale.
      */
     private void setMapScale(int movementIncrement) {
         this.mapScale += movementIncrement;
@@ -193,6 +194,8 @@ class UserInterface implements KeyListener {
 
     /**
      * Sets a new value for spriteListScale.
+     *
+     * @param spriteListScale the new value.
      */
     private void setSpriteListScale(int spriteListScale) {
         this.spriteListScale = spriteListScale;
@@ -202,7 +205,7 @@ class UserInterface implements KeyListener {
      * Builds up the whole layout to hold the layer selector button and the hide layer checkbox. This layour is
      * then added to the parent JPanel.
      *
-     * @param layerName The name of the new layer.
+     * @param layerName the name of the new layer.
      */
     private void addNewLayerButtons(String layerName) {
         JPanel panel = new JPanel();
@@ -248,7 +251,7 @@ class UserInterface implements KeyListener {
      * BufferedImage, the sprites. These sprites are then assigned to a button, which is added to JPanel. The JPanel
      * is added to {@code spritesPanel}. Each JPanel holds all the sprites in a row.
      *
-     * @param spriteListScaleRatio Each sprite dimension is multiplied by this value in order to display the sprite
+     * @param spriteListScaleRatio each sprite dimension is multiplied by this value in order to display the sprite
      *                             at the desired size.
      */
     private void buildJLabelList(int spriteListScaleRatio) {
@@ -315,7 +318,7 @@ class UserInterface implements KeyListener {
      * Adds new options buttons to layerSelector, and new layers to canvas, for each  for each layer
      * name in the set provided as parameter.
      *
-     * @param newlayers The set containing all the layer names.
+     * @param newlayers the set containing all the layer names.
      */
     private void buildNewLayers(Set<String> newlayers) {
         boolean firstLayerName = true;
@@ -378,7 +381,7 @@ class UserInterface implements KeyListener {
      * Returns a new JMenuItem to be used as "Delete actual layer" option in the dropdown options menu.
      * The action listener for this JMenuItem is configured before it is returned.
      *
-     * @return The configured "Delete actual layer" JMenuItem.
+     * @return the configured "Delete actual layer" JMenuItem.
      */
     private JMenuItem handleDeleteLayer() {
         JMenuItem deleteLayer = new JMenuItem(Strings.DELETE_LAYER_ITEM);
@@ -400,7 +403,7 @@ class UserInterface implements KeyListener {
      * The action listener for this JMenuItem, together with other attributes, are configured before
      * it is returned.
      *
-     * @return The configured "Export canvas" JMenuItem.
+     * @return the configured "Export canvas" JMenuItem.
      */
     private JMenuItem handleExportCanvas() {
         JMenuItem exportCanvas = new JMenuItem(Strings.EXPORT_CANVAS_ITEM);
@@ -415,7 +418,7 @@ class UserInterface implements KeyListener {
      * The action listener for this JMenuItem, together with other attributes, are configured before
      * it is returned.
      *
-     * @return The configured "Export" JMenuItem.
+     * @return the configured "Export" JMenuItem.
      */
     private JMenuItem handleExportCode() {
         JMenuItem exportCode = new JMenuItem("Export");
@@ -447,7 +450,7 @@ class UserInterface implements KeyListener {
      * Returns a new JMenuItem to be used as "Import" option in the dropdown options menu.
      * The action listener for this JMenuItem is configured before it is returned.
      *
-     * @return The configured "Import" JMenuItem.
+     * @return the configured "Import" JMenuItem.
      */
     private JMenuItem handleImportCode() {
         JMenuItem importCode = new JMenuItem("Import");
@@ -539,7 +542,7 @@ class UserInterface implements KeyListener {
      *     </ul>
      * </ul>
      *
-     * @return The preconfigured dropdown options menu.
+     * @return the preconfigured dropdown options menu.
      */
     private JMenuBar handleJMenuBar() {
         JMenuBar jMenuBar = new JMenuBar();
@@ -621,7 +624,7 @@ class UserInterface implements KeyListener {
      * The action listener for this JMenuItem, together with other attributes, are configured before
      * it is returned.
      *
-     * @return The configured "Load spritesheet" JMenuItem.
+     * @return the configured "Load spritesheet" JMenuItem.
      */
     private JMenuItem handleLoadSpriteSheet() {
         JMenuItem loadSpriteSheet = new JMenuItem(Strings.LOAD_SPRITESHEET_ITEM);
@@ -658,7 +661,11 @@ class UserInterface implements KeyListener {
         return loadSpriteSheet;
     }
 
-    Agrega comentario aquí.
+    /**
+     * Returns a new MouseAdapter to be used by {@code actualLayerLabel}.
+     *
+     * @return the configured MouseAdapter.
+     */
     private MouseAdapter handleMouseAdapter() {
         return new MouseAdapter() {
             @Override
@@ -677,10 +684,12 @@ class UserInterface implements KeyListener {
      * Returns a new JButton to be used as {@code newLayerB} inside windowSetup(). The action listener for this
      * JButton is configured before it is returned.
      *
-     * @return The configured JButton.
+     * @param width  the width size for the new layer button.
+     * @param height the height size for the new layer button.
+     * @return the configured JButton.
      */
-    private JButton handleNewLayerButton(String name, int width, int height) {
-        JButton button = newButton(name, width, height);
+    private JButton handleNewLayerButton(int width, int height) {
+        JButton button = newButton(Strings.NEW_LAYER_BUTTON, width, height);
         button.addActionListener(e -> {
             String newLayerName = TA.getText().trim();
             if (!newLayerName.isEmpty() && !CANVAS.hasLayer(newLayerName)) {
@@ -691,15 +700,15 @@ class UserInterface implements KeyListener {
                 }
                 CANVAS.addNewCanvas(newLayerName);
                 actualCanvas = newLayerName;
-                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ?
-                        actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5)
-                        : actualCanvas));
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
             } else {
                 showInfoMessage(SubWindowOptionsEnum.INVALID_LAYER_HELP);
             }
         });
         return button;
     }
+
+    Keep fixing the documentation
 
     /**
      * Returns a new JButton to be used as option confirmation in the window {@link #subMenu(String)}.
@@ -1182,8 +1191,7 @@ class UserInterface implements KeyListener {
 
         //>>> Inside panel1 > Inside panel2
         //Sprites management
-        JPanel spritesFather = newPanel((int) (panel2.getMaximumSize().getWidth() * 0.75)
-                , panel2Height, LayoutAxisEnum.Y_AXIS);
+        JPanel spritesFather = newPanel((int) (panel2.getMaximumSize().getWidth() * 0.75), panel2Height, LayoutAxisEnum.Y_AXIS);
         spritesFather.addKeyListener(this);
 
 
@@ -1207,8 +1215,7 @@ class UserInterface implements KeyListener {
 
         //Layer Management
         //>>> Inside panel1 > Inside panel2
-        JPanel layerPanel = newPanel((int) (panel2.getMaximumSize().getWidth() * 0.25)
-                , panel2Height, LayoutAxisEnum.Y_AXIS);
+        JPanel layerPanel = newPanel((int) (panel2.getMaximumSize().getWidth() * 0.25), panel2Height, LayoutAxisEnum.Y_AXIS);
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel
         JPanel layerLabelPanel = new JPanel();
         layerLabelPanel.setLayout(new BoxLayout(layerLabelPanel, BoxLayout.X_AXIS));
@@ -1228,11 +1235,9 @@ class UserInterface implements KeyListener {
         layerSelector.setFocusable(false);
 
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller > layerSelector
-        JPanel newLayerBPanel = newPanel(layerPanel.getMaximumSize().width
-                , (int) (layerPanel.getMaximumSize().getHeight() * 0.03), LayoutAxisEnum.X_AXIS);
+        JPanel newLayerBPanel = newPanel(layerPanel.getMaximumSize().width, (int) (layerPanel.getMaximumSize().getHeight() * 0.03), LayoutAxisEnum.X_AXIS);
 
-        newLayerB = handleNewLayerButton(Strings.NEW_LAYER_BUTTON, newLayerBPanel.getMaximumSize().width,
-                newLayerBPanel.getMaximumSize().height);
+        newLayerB = handleNewLayerButton(newLayerBPanel.getMaximumSize().width, newLayerBPanel.getMaximumSize().height);
 
         //>>> Inside panel1 > Inside panel2 > Inside layerPanel > layerScroller
         layerScroller.setViewportView(layerSelector);
@@ -1243,19 +1248,16 @@ class UserInterface implements KeyListener {
         panel3.setFocusable(true);
 
         //>>> Inside panel1 > Inside panel3
-        JPanel panel4 = newPanel((int) (SCREEN_WIDTH * 0.15), panel3.getMaximumSize().height,
-                LayoutAxisEnum.Y_AXIS);
+        JPanel panel4 = newPanel((int) (SCREEN_WIDTH * 0.15), panel3.getMaximumSize().height, LayoutAxisEnum.Y_AXIS);
         panel4.addKeyListener(this);
         panel4.setFocusable(true);
 
         //>>> Inside panel1 > Inside panel3 > Inside panel4
-        JPanel panel5 = newPanel(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2,
-                LayoutAxisEnum.X_AXIS);
+        JPanel panel5 = newPanel(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2, LayoutAxisEnum.X_AXIS);
         panel5.addKeyListener(this);
         panel5.setFocusable(true);
 
-        JPanel panel6 = newPanel(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2,
-                LayoutAxisEnum.X_AXIS);
+        JPanel panel6 = newPanel(panel4.getMaximumSize().width, panel4.getMaximumSize().height / 2, LayoutAxisEnum.X_AXIS);
         panel6.addKeyListener(this);
         panel6.setFocusable(true);
 
