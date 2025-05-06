@@ -92,7 +92,7 @@ class UserInterface implements KeyListener {
      * </ul>
      *
      * @param loadedData the string read from the txt file during the importCode operation.
-     * @return the mapping between the name of layers and their IDs arrays.
+     * @return a {@link Map}, mapping the name of layers and their IDs arrays.
      */
     private Map<String, int[]> getImportedData(String loadedData) {
         //Update the existing documentation
@@ -170,7 +170,7 @@ class UserInterface implements KeyListener {
      * Example: ##C:\Project\TestA##
      *
      * @param loadedData the string where the path will be extracted.
-     * @return the extracted path string.
+     * @return a {@link String} whose value is the extracted path.
      */
     private String getLoadedPath(String loadedData) {
         String path = "";
@@ -186,7 +186,7 @@ class UserInterface implements KeyListener {
      * Sets the value of {@code mapScale} by adding the specified value. The parameter of
      * this method can be either a positive or negative value.
      *
-     * @param movementIncrement the value to be added to mapScale.
+     * @param movementIncrement the value to be added to {@code mapScale}.
      */
     private void setMapScale(int movementIncrement) {
         this.mapScale += movementIncrement;
@@ -202,8 +202,8 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Builds up the whole layout to hold the layer selector button and the hide layer checkbox. This layour is
-     * then added to the parent JPanel.
+     * Builds up the whole layout to hold the layer selector button and the hide layer checkbox. This layout is
+     * then added to the parent {@link JPanel}.
      *
      * @param layerName the name of the new layer.
      */
@@ -248,8 +248,8 @@ class UserInterface implements KeyListener {
 
     /**
      * Turns into individual buttons each sprite in a spritesheet. Splits {@code SPRITESHEET} into smaller objects
-     * BufferedImage, the sprites. These sprites are then assigned to a button, which is added to JPanel. The JPanel
-     * is added to {@code spritesPanel}. Each JPanel holds all the sprites in a row.
+     * {@code BufferedImage}, the sprites. These sprites are then assigned to a button, which is added to a
+     * {@link JPanel}. This panel is added to {@code spritesPanel}. Each {@code JPanel} holds all the sprites in a row.
      *
      * @param spriteListScaleRatio each sprite dimension is multiplied by this value in order to display the sprite
      *                             at the desired size.
@@ -315,10 +315,10 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Adds new options buttons to layerSelector, and new layers to canvas, for each  for each layer
-     * name in the set provided as parameter.
+     * Adds new options buttons to {@code layerSelector}, and new layers to canvas, for each layer name in the set
+     * provided as parameter.
      *
-     * @param newlayers the set containing all the layer names.
+     * @param newlayers the {@link Set} containing all the layer names.
      */
     private void buildNewLayers(Set<String> newlayers) {
         boolean firstLayerName = true;
@@ -335,7 +335,7 @@ class UserInterface implements KeyListener {
 
     /**
      * This method is called in order to delete all the layers. The actual layer label is reset. The maps
-     * {@code LAYERS} and {@code ID_ARRAY_MAP} in the class {@code Canvas} are cleared. The buttons and
+     * {@code LAYERS} and {@code ID_ARRAY_MAP} in the class {@link Canvas} are cleared. The buttons and
      * checkboxes to control the layers are removed. {@code actualCanvas} is set as NO_LAYER. Finally, the main
      * canvas is updated.
      */
@@ -349,7 +349,7 @@ class UserInterface implements KeyListener {
 
     /**
      * Enables all the inactive elements of the user interface. It removes the mouse listener associated to these
-     * elements, and changes the JTextArea options.
+     * elements, and changes the {@link JTextArea} options.
      */
     private void enableUI() {
         loadSpriteSheet.setEnabled(true);
@@ -378,10 +378,10 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a new JMenuItem to be used as "Delete actual layer" option in the dropdown options menu.
-     * The action listener for this JMenuItem is configured before it is returned.
+     * Returns a new {@link JMenuItem} to be used as "Delete actual layer" option in the dropdown options menu.
+     * The action listener for this {@link JMenuItem} is configured before it is returned.
      *
-     * @return the configured "Delete actual layer" JMenuItem.
+     * @return a configured {@link JMenuItem} intended for use as {@code Delete actual layer}.
      */
     private JMenuItem handleDeleteLayer() {
         JMenuItem deleteLayer = new JMenuItem(Strings.DELETE_LAYER_ITEM);
@@ -399,11 +399,11 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a new JMenuItem to be used as "Export canvas" option in the dropdown options menu.
-     * The action listener for this JMenuItem, together with other attributes, are configured before
+     * Returns a new {@link JMenuItem} to be used as "Export canvas" option in the dropdown options menu.
+     * The action listener for this {@link JMenuItem}, together with other attributes, are configured before
      * it is returned.
      *
-     * @return the configured "Export canvas" JMenuItem.
+     * @return a configured {@link JMenuItem} intended for use as {@code Export canvas}.
      */
     private JMenuItem handleExportCanvas() {
         JMenuItem exportCanvas = new JMenuItem(Strings.EXPORT_CANVAS_ITEM);
@@ -414,11 +414,11 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a new JMenuItem to be used as "Export" option in the dropdown options menu.
-     * The action listener for this JMenuItem, together with other attributes, are configured before
+     * Returns a new {@link JMenuItem} to be used as "Export" option in the dropdown options menu.
+     * The action listener for this {@link JMenuItem}, together with other attributes, are configured before
      * it is returned.
      *
-     * @return the configured "Export" JMenuItem.
+     * @return a configured {@link JMenuItem} intended for use as {@code Export}.
      */
     private JMenuItem handleExportCode() {
         JMenuItem exportCode = new JMenuItem("Export");
@@ -447,10 +447,10 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a new JMenuItem to be used as "Import" option in the dropdown options menu.
-     * The action listener for this JMenuItem is configured before it is returned.
+     * Returns a new {@link JMenuItem} to be used as "Import" option in the dropdown options menu.
+     * The action listener for this {@link JMenuItem} is configured before it is returned.
      *
-     * @return the configured "Import" JMenuItem.
+     * @return a configured {@link JMenuItem} intended for use as {@code Import}.
      */
     private JMenuItem handleImportCode() {
         JMenuItem importCode = new JMenuItem("Import");
@@ -542,7 +542,7 @@ class UserInterface implements KeyListener {
      *     </ul>
      * </ul>
      *
-     * @return the preconfigured dropdown options menu.
+     * @return a preconfigured {@link JMenuBar}, intended for use as dropdown options menu.
      */
     private JMenuBar handleJMenuBar() {
         JMenuBar jMenuBar = new JMenuBar();
@@ -620,11 +620,11 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a new JMenuItem to be used as "Load spritesheet" option in the dropdown options menu.
-     * The action listener for this JMenuItem, together with other attributes, are configured before
+     * Returns a new {@link JMenuItem} to be used as "Load spritesheet" option in the dropdown options menu.
+     * The action listener for this {@link JMenuItem}, together with other attributes, are configured before
      * it is returned.
      *
-     * @return the configured "Load spritesheet" JMenuItem.
+     * @return a configured {@link JMenuItem} intended for use as {@code Load spritesheet}.
      */
     private JMenuItem handleLoadSpriteSheet() {
         JMenuItem loadSpriteSheet = new JMenuItem(Strings.LOAD_SPRITESHEET_ITEM);
@@ -662,9 +662,9 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a new MouseAdapter to be used by {@code actualLayerLabel}.
+     * Returns a new {@link MouseAdapter} to be used by {@code actualLayerLabel}.
      *
-     * @return the configured MouseAdapter.
+     * @return a preconfigured {@link MouseAdapter}.
      */
     private MouseAdapter handleMouseAdapter() {
         return new MouseAdapter() {
@@ -681,14 +681,14 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a new JButton to be used as {@code newLayerB} inside windowSetup(). The action listener for this
-     * JButton is configured before it is returned.
+     * Returns a new {@link JButton} to be used as {@code newLayerB} inside {@code windowSetup()}. The action listener
+     * for this {@link JButton} is configured before it is returned.
      *
-     * @param width  the width size for the new layer button.
-     * @param height the height size for the new layer button.
-     * @return the configured JButton.
+     * @param width  the width size of the button.
+     * @param height the height size of the button.
+     * @return a configured {@link JButton} intended for use as {@code newLayerB}.
      */
-    private JButton handleNewLayerButton(int width, int height) {
+    private JButton   handleNewLayerButton(int width, int height) {
         JButton button = newButton(Strings.NEW_LAYER_BUTTON, width, height);
         button.addActionListener(e -> {
             String newLayerName = TA.getText().trim();
@@ -708,14 +708,16 @@ class UserInterface implements KeyListener {
         return button;
     }
 
-    Keep fixing the documentation
 
     /**
-     * Returns a new JButton to be used as option confirmation in the window {@link #subMenu(String)}.
-     * The action listener for this JMenuItem, together with other attributes, are configured before
+     * Returns a new {@link JButton} to be used as option confirmation in the window {@code subMenu(String)}.
+     * The action listener for this {@link JMenuItem}, together with other attributes, are configured before
      * it is returned.
      *
-     * @return The configured "Load spritesheet" JMenuItem.
+     * @param width  the width size of the button.
+     * @param height the height size of the button.
+     * @param menuName the kind of action to be performed once the returned button is pressed.
+     * @return a configured {@link JMenuItem} intended for use as {@code Load spritesheet}.
      */
     private JButton handleOkButton(int width, int height, String menuName) {
         JButton ok = new JButton("OK");
@@ -774,7 +776,7 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Initializes and configures the JLabel to be shown in the JScrollPane that holds the main canvas.
+     * Initializes and configures the {@link JLabel} to be shown in the {@link JScrollPane} that holds the main canvas.
      */
     private void initializePicLabel() {
         picLabel = new JLabel(new ImageIcon(CANVAS.getFramedCanvas()));
@@ -821,10 +823,10 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Method used to move the square used as pointer to a new location. A square BufferedImage is created.
+     * Method used to move the square used as pointer to a new location. A square {@link BufferedImage} is created.
      * The image uses the TYPE_INT_ARGB pixel format, which supports alpha transparency. Upon creation,
      * all pixels are initialized to fully transparent black (ARGB = 0x00000000), meaning the image starts
-     * as entirely transparent. The current location of the pointer is painted with this new BufferedImage,
+     * as entirely transparent. The current location of the pointer is painted with this new {@link BufferedImage},
      * in the {@code POINTER_LAYER}. After getting the new coordinates, the pointer will be printed in the
      * new location.
      * <br>If {@code fillingBrush} is true, the {@code previousSprite} will  be printed in the
@@ -872,9 +874,9 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Method used to move the position of JViewPort for each JScrollPane, {@code picScroller} and
+     * Method used to move the position of {@link JViewport} for each {@link JScrollPane}, {@code picScroller} and
      * {@code spriteListScroller}.
-     * <br>The method moves the specified JViewPort according to the value "true" of
+     * <br>The method moves the specified {@link JViewport} according to the value "true" of
      * {@code toggleMapMovement} or {@code toggleSpriteMovement}.
      */
     private void moveViewPort() {
@@ -917,9 +919,9 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a new JButton. The JButton is returned only after it is fully configured.
+     * Returns a new {@link JButton}. The {@link JButton} is returned only after it is fully configured.
      *
-     * @return The configured JButton.
+     * @return a configured {@link JButton}.
      */
     private JButton newButton(String name, int width, int height) {
         JButton button = new JButton(name);
@@ -933,10 +935,10 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a new JPanel. The size and the layout for this JPanel are configured before
+     * Returns a new {@link JPanel}. The size and the layout for this {@link JPanel} are configured before
      * it is returned.
      *
-     * @return The configured JPanel.
+     * @return a configured {@link JPanel}.
      */
     private JPanel newPanel(int width, int height, LayoutAxisEnum boxLayoutAxis) {
         JPanel panel = new JPanel();
@@ -947,10 +949,10 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Returns a new JTextField. The size and the layout for this JTextField are configured before
+     * Returns a new {@link JTextField}. The size and the layout for this {@link JTextField} are configured before
      * it is returned.
      *
-     * @return The configured JTextField.
+     * @return a configured {@link JTextField}.
      */
     private JTextField newTextField(int width, int height, String tooltip) {
         JTextField textField = new JTextField();
@@ -961,8 +963,8 @@ class UserInterface implements KeyListener {
     }
 
     /**
-     * Sets up the whole layout for a new window. This new window contains two JTextField and two JButton to handle
-     * the "Create a new canvas" and "Export canvas" menus.
+     * Sets up the whole layout for a new window. This new window contains two {@link JTextField} and two
+     * {@link JButton} to handle the {@code Create a new canvas} and {@code Export canvas} menus.
      */
     private void subMenu(String menuName) {
         int fontSize = 15;
@@ -1132,7 +1134,7 @@ class UserInterface implements KeyListener {
 
     /**
      * Displays an information window by invoking {@link SubWindow#runInfoWindow(SubWindowOptionsEnum)} with the
-     * specified {@code SubWindowOptionsEnum} value.
+     * specified {@link SubWindowOptionsEnum} value.
      *
      * @param value the option that determines the kind of message to display in the information window
      */
@@ -1433,6 +1435,12 @@ class UserInterface implements KeyListener {
         frame.setVisible(true);
     }
 
+    /**
+     * Updates the main canvas display by scaling its current framed image according to the given scale factor.
+     * The scaled image is then set as the icon of {@code picLabel}.
+     *
+     * @param scale the scale factor to apply to the framed canvas image.
+     */
     private void updateMainCanvas(int scale) {
         picLabel.setIcon(new ImageIcon(CANVAS.getScaledCanvas(CANVAS.getFramedCanvas(), scale)));
     }
@@ -1508,7 +1516,6 @@ class UserInterface implements KeyListener {
         }
     }
 
-    //    Removed unnecesary setVisible
     @Override
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
@@ -1523,3 +1530,6 @@ class UserInterface implements KeyListener {
         }
     }
 }
+
+
+Update the comments for all the other classes, following the formant in this class. Link for classes and code for parts of the code in the class
