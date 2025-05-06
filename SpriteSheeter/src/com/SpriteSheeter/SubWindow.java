@@ -5,8 +5,17 @@ import com.SpriteSheeter.Enums.SubWindowOptionsEnum;
 import javax.swing.*;
 import java.awt.*;
 
-
+/**
+ * This class is used to Pop up a dialog window to display an informative message.
+ */
 public class SubWindow {
+
+    /**
+     * Pops up a dialog window to display an informative message. The message is specified throught the parameter.
+     *
+     * @param value the SubWindowOptionsEnum item used to specify the kind of message to be shown by the pop up window
+     *              privided by this method.
+     * */
     public static void runInfoWindow(SubWindowOptionsEnum value) {
         boolean textArea = false;
         String messageS = "";

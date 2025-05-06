@@ -22,6 +22,11 @@ import java.util.regex.Pattern;
 
 //        To explain layout for frame > https://stackoverflow.com/questions/24840860/boxlayout-for-a-jframe
 
+/**
+ * Class used to build the whole window of the program. It deals with all the layout related matters, and it is used
+ * as main frame for the whole back-end processes of all classes in used in this project.
+ */
+
 class UserInterface implements KeyListener {
 
     private boolean fillingBrush = false;
@@ -237,6 +242,7 @@ class UserInterface implements KeyListener {
     }
 
     //UserInterface_notes
+
     /**
      * Turns into individual buttons each sprite in a spritesheet. Splits {@code SPRITESHEET} into smaller objects
      * BufferedImage, the sprites. These sprites are then assigned to a button, which is added to JPanel. The JPanel
@@ -652,8 +658,7 @@ class UserInterface implements KeyListener {
         return loadSpriteSheet;
     }
 
-
-    Agrega documentación aquí
+    Agrega comentario aquí.
     private MouseAdapter handleMouseAdapter() {
         return new MouseAdapter() {
             @Override
@@ -674,7 +679,7 @@ class UserInterface implements KeyListener {
      *
      * @return The configured JButton.
      */
-    private JButton handleNewLayerButton (String name, int width, int height){
+    private JButton handleNewLayerButton(String name, int width, int height) {
         JButton button = newButton(name, width, height);
         button.addActionListener(e -> {
             String newLayerName = TA.getText().trim();
@@ -1121,7 +1126,7 @@ class UserInterface implements KeyListener {
      * specified {@code SubWindowOptionsEnum} value.
      *
      * @param value the option that determines the kind of message to display in the information window
-     * */
+     */
     private void showInfoMessage(SubWindowOptionsEnum value) {
         SubWindow.runInfoWindow(value);
     }

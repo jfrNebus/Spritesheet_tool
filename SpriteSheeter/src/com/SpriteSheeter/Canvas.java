@@ -170,22 +170,6 @@ public class Canvas {
      * @return The int sprite side size.
      */
     public int getSpriteSide() {
-        /*Necesario para los sistemas de chequeo de datos antes de empezar. Es decir, cuando inicias la aplicación y
-        te pide que crees el canvas, se asegura de que Canvas y SpriteSheet tengan sus valores bien configurados.
-
-        Si pasa esto
-
-        if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) &&
-                (spriteSheet.getSpriteSide() == 0)) {
-
-        entonces carga el bloque interior a la hora de importar datos, o lanza el popup solicitando datos si se
-        intenta realizar una acción que no sea la de crear un nuevo canvas.
-
-        getSpriteSide son necesarios tanto en Canvas como en SpriteSheet porque se debe evaluar que cada uno tiene
-        este método de consulta.
-         */
-
-//        Revisa este comentario y sigue modificando el texto de todos los bloques return de los comentarios. Actualmente hechos UserInterface, en proceso Canvas.
         return spriteSide;
     }
 
