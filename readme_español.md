@@ -1,14 +1,13 @@
 # Introducción
 
-SpriteSheeter es una herramienta pensada para poder gestionar, de una forma más sencilla, un aspecto de uno de los proyectos en los que estoy 
-trabajando.
+SpriteSheeter es una herramienta pensada para poder gestionar, de una forma más sencilla, un aspecto de uno de los proyectos en los que trabajé.
 
 Empecé un juego 2D de gráficos de tipo pixel art, lo estaba desarrollando para Android con una interfaz de usuario básica a modo de prueba. Aunque 
-el proyecto estaba en una etapa muy inicial, desarrollé el sistema para convertir en objetos individuales cada uno de los sprites de un sprite sheet 
+el proyecto estaba en una etapa muy inicial, desarrollé el sistema para convertir en objetos individuales cada uno de los sprites de un spritesheet 
 dado. Adicionalmente, este sistema me permite gestionar un canvas de X medidas, adecuando la resolución del mismo a la pantalla del dispositivo, 
 teniendo en cuenta el valor DPI de la misma.
 
-Hace poco recuperé este proyecto después de dejarlo abandonado por un tiempo largo. Al intentar acordarme de cómo funcionaba todo, lo primero en lo 
+Al tiempo, recuperé este proyecto después de dejarlo abandonado por un tiempo largo. Al intentar acordarme de cómo funcionaba todo, lo primero en lo 
 que pensé fue que la forma de crear el mapa era muy tediosa, necesitaba una herramienta para gestionarlo.
 
 <br>
@@ -135,12 +134,14 @@ cientos de sprites por lado e incluso más, queda descartado.
 
 <br>
 
-A la vista queda que no soy ningún profesional a la hora de crear interfaces de usuario 😆. Pese a ello, cumple
-con lo que buscaba.
+A la vista queda que no soy ningún profesional a la hora de crear interfaces de usuario 😆. Pese a ello, cumple con lo que buscaba.
 
+>>> Todo este parrafo hay que eliminarlo.
 Lo primero que se nos muestra al ejecutar la aplicación, es una ventana pequeña donde se podrá seleccionar, mediante un cuadro
 de búsqueda al hacer clic sobre el campo de texto del apartado path, la imagen que deseamos usar como sprite sheet. Adicionalmente,
 se tendrá que establecer el lado en pixels de cada sprite, y el lado en pixels del canvas con el que vamos a trabajar.
+>>>
+
 
 Una vez se han rellenado los campos solicitados y se accede a la pantalla principal, se observan una serie de partes bien definidas. 
 A la izquierda se encuentra un apartado en el que se muestran un conjunto de botones con la imagen de cada sprite, del sprite sheet 
@@ -154,19 +155,23 @@ Adicionalmente, manteniendo la tecla Shift y presionando alguna de las teclas de
 mover el sprite sheet dentro del apartado _Sprites list_. Presionando Shift más la tecla +, se aumentará el tamaño de visualización
 de los sprite dentro de la lista de sprites; ocurrirá lo contrario si la combinación de teclas es Shift y la tecla -. Se podrá 
 modificar el tamaño del canvas si se presiona la tecla Ctrl y las teclas + y -. La tecla Enter modificará el estado del cursor,
-pasando de color rojo a color verde. Esto indica, que se imprimirá, automáticamente, el último sprite que se haya seleccionado
+pasando de color rojo a color verde. Esto indica que se imprimirá, automáticamente, el último sprite que se haya seleccionado
 con el ratón en la lista de sprites, en cualquier ubicación a la que se mueva el cursor, hasta que el cursor vuelva a ser de color rojo.
 
+>>> Todo este parrafo hay que editarlo incorporando las nuevas modificaciones.
 En la parte superior izquierda se encuentra un menú desplegable que permitirá realizar diversas acciones. Se podrá cargar un nuevo 
 sprite sheet; gestionar las capas, pudiendo borrar o eliminar la capa actual, o todas las capas a la vez; importar o exportar un 
 archivo de texto _.txt_ para poder guardar o cargar el trabajo realizado; exportar en formato .png el canvas actual, 
 siendo que las capas ocultas no se imprimirán; o leer una pequeña leyenda donde se informa de los atajos de teclado.
+>>>
 
+>>> En este párrafo se tiene que modificar lo de que se genera texto en el campo de texto al exportar el código.
 Por último, en la parte inferior izquierda se encuentran una serie de botones para controlar el nivel de zoom aplicado 
 sobre la lista de sprites y sobre el mapa; un bloque de texto donde podremos escribir el nombre de las capas que deseemos 
 agregar, o donde se mostrará el texto generado cuando se seleccione la opción de exportar código; y el botón de nueva 
 capa, que creará una nueva capa tomando como nombre el texto que hayamos introducido, en formato ASCII, en el campo de
 texto.
+>>> 
 
 <br>
 
@@ -179,65 +184,72 @@ el mapa. El objetivo final es obtener el bloque de código generado en el archiv
 
 <br>
 
+>>>Est
 ```
 //Sprites in side = 5
+
+//Sprite side = 16
+
+//Canvas side size = 80
 
 ##PATH##
 
 -
-//Layer: default_layer
-int[][] default_layer = {
-{169,169,169,169,169},
-{169,169,169,169,169},
-{169,169,169,169,169},
-{169,169,169,169,169},
-{169,169,169,169,169}
+//Layer: water
+int[][] water = {
+{170,170,170,170,170},
+{170,170,170,170,170},
+{170,170,170,170,170},
+{170,170,170,170,170},
+{170,170,170,170,170}
 };
-//default_layer:169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 
+//water:170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 
 -
 -
-//Layer: new_layer
-int[][] new_layer = {
+//Layer: ground
+int[][] ground = {
 {0,0,0,0,0},
-{104,104,104,108,56},
-{209,209,209,159,56},
-{311,311,311,312,0},
-{412,412,412,413,0}
+{108,108,108,109,0},
+{159,159,159,262,0},
+{310,310,310,313,0},
+{411,412,413,414,0}
 };
-//new_layer:0 0 0 0 0 104 104 104 108 56 209 209 209 159 56 311 311 311 312 0 412 412 412 413 0 
+//ground:0 0 0 0 0 108 108 108 109 0 159 159 159 262 0 310 310 310 313 0 411 412 413 414 0 
 -
 -
-//Layer: new_layer_2
-int[][] new_layer_2 = {
-{216,216,216,0,0},
-{216,377,378,0,0},
-{216,428,429,474,475},
-{216,216,216,525,526},
+//Layer: bridge
+int[][] bridge = {
+{0,0,0,0,0},
+{0,378,379,0,0},
+{0,429,430,475,476},
+{0,0,0,526,527},
 {0,0,0,0,0}
 };
-//new_layer_2:216 216 216 0 0 216 377 378 0 0 216 428 429 474 475 216 216 216 525 526 0 0 0 0 0 
+//bridge:0 0 0 0 0 0 378 379 0 0 0 429 430 475 476 0 0 0 526 527 0 0 0 0 0 
 -
 -
-//Layer: new_layer_3
-int[][] new_layer_3 = {
-{71,72,216,216,66},
-{122,123,124,0,0},
-{173,174,0,0,0},
-{224,227,0,0,0},
+//Layer: tree
+int[][] tree = {
+{72,73,0,0,0},
+{123,124,125,0,0},
+{174,175,0,0,0},
+{225,228,0,0,0},
 {0,0,0,0,0}
 };
-//new_layer_3:71 72 216 216 66 122 123 124 0 0 173 174 0 0 0 224 227 0 0 0 0 0 0 0 0 
+//tree:72 73 0 0 0 123 124 125 0 0 174 175 0 0 0 225 228 0 0 0 0 0 0 0 0 
 -
 -
 ```
 
 <br>
 
+>>> Hay que adecuar el siguiente texto al nuevo contenido de los archivos de guardado
 Este es el contenido del archivo .txt para la imagen Test Canvas arriba mostrada. El campo ##Path## mostrará la ruta hacia
 el directorio donde tengamos almacenado el sprite sheet en nuestro equipo. La línea "//Sprites in side = 5", la línea donde
 se muestra la ruta al directorio del sprite sheet, y las líneas "//nombre_de_capa=sucesión_de_numeros", son las que se usan
 para reconstruir el trabajo, al importar el archivo. Y finalmente, la declaración del array, así como el comentario con el 
 nombre de capa, es lo que se copiará y pegará en la declaración de mapas en el proyecto del juego mencionado en laintroducción.
+>>> 
 
 <br>
 
