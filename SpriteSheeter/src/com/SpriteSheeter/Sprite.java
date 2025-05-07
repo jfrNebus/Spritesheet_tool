@@ -3,21 +3,22 @@ package com.SpriteSheeter;
 import java.awt.image.BufferedImage;
 
 /**
- * The {@code Sprite} class is meant to create a {@code BufferedImage}, out of a region
- * of another {@code BufferedImage}.
+ * The {@link Sprite} class is meant to create a {@link BufferedImage}, out of a region
+ * of another {@link BufferedImage}.
  */
 public class Sprite {
     private final int id;
     private final BufferedImage sprite;
 
     /**
-     * Constructs a {@code BufferedImage} as the result of calling the method getSubimage,
-     * by the provided BufferedImage parameter of this class. The parameters provided to the
-     * class must include the top X and Y coordinates of the region in the main BufferedImage
-     * parameter, that will be used as subimage. The parameters will also include the side, in
-     * pixels, of the square made by the region, and the ID of the sprite.
+     * Constructs a {@link BufferedImage} as the result of calling the method getSubimage,
+     * by the provided {@link BufferedImage} parameter of this class. The parameters provided
+     * to the class must include the top X and Y coordinates of the region in the main
+     * {@link BufferedImage} parameter, that will be used as subimage. The parameters will
+     * also include the side, in pixels, of the square made by the region, and the ID of the
+     * sprite.
      *
-     * @param spriteSheet the BufferedImage that will be used to create the subimage.
+     * @param spriteSheet the {@link BufferedImage} that will be used to create the subimage.
      * @param topXCoordinate The top X coordinate of the subimage region in the spriteSheet.
      * @param topYCoordinate The top Y coordinate of the subimage region in the spriteSheet.
      * @param spriteSide The side, in pixels, of the subimage region.
@@ -36,7 +37,7 @@ public class Sprite {
     }
 
     /**
-     * Returns the {@code sprite} item, the BufferedImage, of this Sprite.
+     * Returns the {@code sprite} item, the {@link BufferedImage}, of this Sprite.
      * */
     public BufferedImage getSprite() {
         return sprite;

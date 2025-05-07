@@ -254,7 +254,7 @@ class UserInterface implements KeyListener {
      * @param spriteListScaleRatio each sprite dimension is multiplied by this value in order to display the sprite
      *                             at the desired size.
      */
-    private void buildJLabelList(int spriteListScaleRatio) {
+    private void buildSpritesList(int spriteListScaleRatio) {
         int spriteSide = SPRITESHEET.getSpriteSide();
         int targetSide = spriteSide * spriteListScaleRatio;
         int j = 0;
@@ -477,12 +477,14 @@ class UserInterface implements KeyListener {
                         if (loadedMap != null && validPictureFile) {
                             enableUI();
                             initializePicLabel();
-                            deleteAllLayer();//todo mira si puedes hacer que esto sea condicional en función de si hay capas o no
+                            if(!CANVAS.getLAYERS().isEmpty()) {
+                                deleteAllLayer();
+                            }
                             buildNewLayers(loadedMap.keySet());
                             spritesPanel.removeAll();
                             SPRITESHEET.setPicturePath(newPicturePath);
                             SPRITESHEET.loadSpriteSheet(newSpriteSheet);
-                            buildJLabelList(spriteListScale);
+                            buildSpritesList(spriteListScale);
                             CANVAS.buildLayers(loadedMap, SPRITESHEET.getSPRITES_HASHMAP());
                             updateMainCanvas(mapScale);
                         } else {
@@ -552,7 +554,6 @@ class UserInterface implements KeyListener {
         JMenuItem newCanvas = new JMenuItem(Strings.NEW_CANVAS_MENU);
         newCanvas.addActionListener(e -> {
             subMenu("requestNewCanvasValues");
-            enableUI();
         });
         //2
         loadSpriteSheet = handleLoadSpriteSheet();
@@ -648,7 +649,7 @@ class UserInterface implements KeyListener {
                     }
                     SPRITESHEET.setPicturePath(newPicturePath);
                     SPRITESHEET.loadSpriteSheet(newPicture);
-                    buildJLabelList(spriteListScale);
+                    buildSpritesList(spriteListScale);
                     spritesPanel.updateUI();
                 } else {
                     showInfoMessage(SubWindowOptionsEnum.INVALID_IMAGE);
@@ -769,6 +770,7 @@ class UserInterface implements KeyListener {
                     SPRITESHEET.setSpriteSide(side);
                     movementIncrement = side;
                     initializePicLabel();
+                    enableUI();
                 }
             }
         });
@@ -1275,7 +1277,7 @@ class UserInterface implements KeyListener {
             int size = CANVAS.getCanvasSize() * spriteListScale;
             spritesPanel.setSize(new Dimension(size, size));
             spritesPanel.removeAll();
-            buildJLabelList(spriteListScale);
+            buildSpritesList(spriteListScale);
             spritesPanel.updateUI();
         });
 
@@ -1288,7 +1290,7 @@ class UserInterface implements KeyListener {
             int size = CANVAS.getCanvasSize() * spriteListScale;
             spritesPanel.setSize(new Dimension(size, size));
             spritesPanel.removeAll();
-            buildJLabelList(spriteListScale);
+            buildSpritesList(spriteListScale);
             spritesPanel.updateUI();
         });
 
@@ -1299,7 +1301,7 @@ class UserInterface implements KeyListener {
             updateMainCanvas(mapScale);
         });
 
-        smallerMap = newButton(Strings.SMALLER_MAP_BUTTTON, buttonsWidth, buttonsHeight);
+        smallerMap = newButton(Strings.SMALLER_MAP_BUTTON, buttonsWidth, buttonsHeight);
         smallerMap.addActionListener(e -> {
             if ((mapScale - MAP_SCALE_RATIO) > 0) {
                 setMapScale(-MAP_SCALE_RATIO);
@@ -1532,4 +1534,3 @@ class UserInterface implements KeyListener {
 }
 
 
-Update the comments for all the other classes, following the formant in this class. Link for classes and code for parts of the code in the class

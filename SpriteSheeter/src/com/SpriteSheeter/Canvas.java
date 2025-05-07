@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 
+
 public class Canvas {
     private BufferedImage POINTER_LAYER;
     private int arraySize;
@@ -14,6 +15,7 @@ public class Canvas {
     private final Map<String, int[][]> ID_ARRAY_MAP = new LinkedHashMap<>();
     private final Map<String, BufferedImage> LAYERS = new LinkedHashMap<>();
 
+    Keep checking this documentation, and add new class doc
 
     /**
      * Builds a new BufferedImage out of the unhidden layers.

@@ -12,7 +12,7 @@ public class Strings {
     public static final String BIGGER_SPRITE_BUTTON = "Sprite zoom +";
     public static final String SMALLER_SPRITE_BUTTON = "Sprite zoom -";
     public static final String BIGGER_MAP_BUTTON = " Map zoom +  ";
-    public static final String SMALLER_MAP_BUTTTON = " Map zoom -  ";
+    public static final String SMALLER_MAP_BUTTON = " Map zoom -  ";
     public static final String NEW_CANVAS_MENU = "Create a new canvas           ";
     public static final String LOAD_SPRITESHEET_ITEM = "Load spritesheet";
     public static final String LAYER_MANAGEMENT_MENU = "Layer management           ";
@@ -34,18 +34,18 @@ public class Strings {
     public static final String IMPORTED_FIFTH_REGEX_2 = ":)((\\d)+\\s)+(?=\\n)";
     public static final String LOADED_PATH_REGEX = "(?<=\\n##)(\\w:(.*))(?=##)";
     public static final String NEW_LAYER_REQUIRED = "You have to create a new canvas. Create a new" +
-            " canvas throught the \"Options\" menu.";
+            " canvas through the \"Options\" menu.";
 
     //runSubMenu
 
-    public static final String SUBMENU_EXPORTCANVAS_TOOLTIP = "Eenter a valid scale factor. Type an integer greater than 0.\nThe actual canvas size will be multiplied by the scale.\nActual canvas size: ";
+    public static final String SUBMENU_EXPORTCANVAS_TOOLTIP = "Enter a valid scale factor. Type an integer greater than 0.\nThe actual canvas size will be multiplied by the scale.\nActual canvas size: ";
 
 
     //SubWindow
 
     public static final String FRAME_NAME_SW = "Alert";
-    public static final String CORRUPED_FILE = "The file loaded is corrupted.";
-    public static final String HELP = "Hotkeys:\n\n* Ctrl + directional / awsd keys:\n   Main canvas movement when zoomed." + "\n\n* Shift + directional / awsd keys:\n   Sprite canvas movement when zoomed." + "\n\n* Ctrl + key \"+\" or key \"-\":\n   Main canvas zoom + or zoom -." + "\n\n* Shift + key \"+\" or key \"-\":\n   Srite canvas zoom + or zoom -." + "\n\n* Ctrl + Enter:\n   Toggle continuous painting on / off.";
+    public static final String CORRUPTED_FILE = "The file loaded is corrupted.";
+    public static final String HELP = "Hotkeys:\n\n* Ctrl + directional / a-w-s-d keys:\n   Main canvas movement when zoomed." + "\n\n* Shift + directional / a-w-s-d keys:\n   Sprite canvas movement when zoomed." + "\n\n* Ctrl + key \"+\" or key \"-\":\n   Main canvas zoom + or zoom -." + "\n\n* Shift + key \"+\" or key \"-\":\n   Sprite canvas zoom + or zoom -." + "\n\n* Ctrl + Enter:\n   Toggle continuous painting on / off.";
     public static final String INVALID_IMAGE = "The file must be an image file.";
     public static final String INVALID_IMAGE_PATH = "The image path in the loaded text file is invalid.";
     public static final String INVALID_LAYER_NAME = "Layer names cannot be duplicated or empty.";

@@ -11,10 +11,10 @@ import java.awt.*;
 public class SubWindow {
 
     /**
-     * Pops up a dialog window to display an informative message. The message is specified throught the parameter.
+     * Pops up a dialog window to display an informative message. The message is specified through the parameter.
      *
-     * @param value the SubWindowOptionsEnum item used to specify the kind of message to be shown by the pop up window
-     *              privided by this method.
+     * @param value the SubWindowOptionsEnum item used to specify the kind of message to be shown by the pop-up window
+     *              provided by this method.
      * */
     public static void runInfoWindow(SubWindowOptionsEnum value) {
         boolean textArea = false;
@@ -28,7 +28,7 @@ public class SubWindow {
 
         switch (value) {
             case CORRUPTED_FILE:
-                messageS = Strings.CORRUPED_FILE;
+                messageS = Strings.CORRUPTED_FILE;
                 break;
             case HELP:
                 frameHeight = 400;
@@ -72,7 +72,7 @@ public class SubWindow {
                 messageS = Strings.UNSUPPORTED_IMAGE;
                 break;
             default:
-                System.out.println("Default point reached for Subwindow.");
+                System.out.println("Default point reached for sub window.");
                 break;
         }
 

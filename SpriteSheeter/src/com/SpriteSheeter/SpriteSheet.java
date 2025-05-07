@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * This class is used to handle each sprite in a spritesheet, as individual {@code Sprite} objects.
+ * Class used to handle each sprite in a spritesheet, as individual {@link Sprite} objects.
  */
 public class SpriteSheet {
 
@@ -20,16 +20,16 @@ public class SpriteSheet {
     /**
      * Returns a string of the absolute path to the spritesheet picture.
      *
-     * @return {@code picturePath}
+     * @return the absolute path to the spritesheet picture as {@link String}.
      */
     public String getPicturePath() {
         return picturePath;
     }
 
     /**
-     * Returns the HashMap associated to the Spritesheet object.
+     * Returns the {@link HashMap} associated to the {@link SpriteSheet} object.
      *
-     * @return {@code SPRITES_HASHMAP}
+     * @return the {@link HashMap} called {@code SPRITES_HASHMAP}
      */
     public HashMap<Integer, Sprite> getSPRITES_HASHMAP() {
         return SPRITES_HASHMAP;
@@ -38,7 +38,7 @@ public class SpriteSheet {
     /**
      * Returns an int value showing the size of the current sprite side.
      *
-     * @return {@code spriteSide}
+     * @return the current sprite side value, {@code spriteSide}.
      */
     public int getSpriteSide() {
         return spriteSide;
@@ -47,7 +47,7 @@ public class SpriteSheet {
     /**
      * Returns an int value showing the current amount of tiles in each column.
      *
-     * @return {@code tilesInColumn}
+     * @return the current amount of tiles in each column, {@code tilesInColumn}
      */
     public int getTilesInColumn() {
         return tilesInColumn;
@@ -56,7 +56,7 @@ public class SpriteSheet {
     /**
      * Returns an int value showing the current amount of tiles in each row.
      *
-     * @return {@code tilesInRow}
+     * @return the current amount of tiles in each row, {@code tilesInRow}.
      */
     public int getTilesInRow() {
         return tilesInRow;
@@ -65,7 +65,7 @@ public class SpriteSheet {
     /**
      * Sets the specified string as the path to the spritesheet picture.
      *
-     * @param picturePath The absolute path to the new spritesheet picture.
+     * @param picturePath the absolute path to the new spritesheet picture.
      */
     public void setPicturePath(String picturePath) {
         this.picturePath = picturePath;
@@ -74,15 +74,17 @@ public class SpriteSheet {
     /**
      * Sets the sprite side size with the specified value.
      *
-     * @param spriteSide The desired new sprite side size.
+     * @param spriteSide the desired new sprite side size.
      */
     public void setSpriteSide(int spriteSide) {
         this.spriteSide = spriteSide;
     }
 
     /**
-     * Splits the spriteSheet BufferedImage in objects {@code Sprite}. The sprites will
+     * Splits the spriteSheet {@link BufferedImage} in objects {@link Sprite}. The sprites will
      * be stored in {@code SPRITES_HASHMAP}.
+     *
+     * @param picture the spritesheet image.
      */
     public void loadSpriteSheet(BufferedImage picture) {
         if(picture != null) {

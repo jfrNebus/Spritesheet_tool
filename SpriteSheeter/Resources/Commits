@@ -1,0 +1,6 @@
+List of changes done before commit:
+- Refactor: fixed multiple spelling mistakes over the documentation
+- Bug fix: enableUI() moved to the actions to be performed when the OK button was pressed successfully while creating
+ a new canvas.
+- Feature: Added a conditional to check if there are layers to when the process to import a saved file is started. This
+way, if there are layers they will be deleted, and if there are no layeres there won't be any call to deleteAllLayers().
