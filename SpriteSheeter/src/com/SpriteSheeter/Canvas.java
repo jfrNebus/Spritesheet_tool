@@ -15,12 +15,10 @@ public class Canvas {
     private final Map<String, int[][]> ID_ARRAY_MAP = new LinkedHashMap<>();
     private final Map<String, BufferedImage> LAYERS = new LinkedHashMap<>();
 
-    Keep checking this documentation, and add new class doc
-
     /**
-     * Builds a new BufferedImage out of the unhidden layers.
+     * Builds a new {@link BufferedImage} out of the unhidden layers.
      *
-     * @return The buffered image that will be used as main canvas.
+     * @return a {@link BufferedImage} that is used as main canvas.
      */
     public BufferedImage getCanvas() {
         //Mixing of all bufferedImages in layers in one single image.
@@ -43,7 +41,7 @@ public class Canvas {
      *    <li>The name of each layer in the canvas and their corresponding ID arrays.</li>
      * </ul>
      *
-     * @return The string to be written in a txt file during the exportCode operation.
+     * @return a {@link String} to be written in a txt file during the export code operation.
      */
     public String getExportString(String picturePath) {
         int x = 0;
@@ -78,10 +76,10 @@ public class Canvas {
     }
 
     /**
-     * Returns the BufferedImage resulted by mixing the value returned by {@link #getCanvas()} with
+     * Returns the {@link BufferedImage} resulted by mixing the value returned by {@code getCanvas()} with
      * {@code POINTER_LAYER}.
      *
-     * @return The BufferedImage used as canvas with an extra layer used as frame.
+     * @return a {@link BufferedImage} used as canvas with an extra layer used as frame.
      */
     public BufferedImage getFramedCanvas() {
         /*
@@ -107,8 +105,8 @@ public class Canvas {
      * Returns the value to which the specified key is mapped in {@code ID_ARRAY_MAP}, or null if
      * this map contains no mapping for the key,
      *
-     * @param idArrayName The key for the desired mapped value.
-     * @return A two-dimensional array of integers or null.
+     * @param idArrayName the key for the desired mapped value.
+     * @return a two-dimensional array of integers or null.
      */
     public int[][] getID_ARRAY_MAP(String idArrayName) {
         return ID_ARRAY_MAP.get(idArrayName);
@@ -117,7 +115,7 @@ public class Canvas {
     /**
      * Returns the size of canvas side.
      *
-     * @return The size of canvas as an integer value.
+     * @return an integer which value is the size of canvas.
      */
     public int getCanvasSize() {
         return canvasSize;
@@ -128,7 +126,7 @@ public class Canvas {
      * this map contains no mapping for the key,
      *
      * @param layerName The key for the desired mapped value.
-     * @return A BufferedImage for the specified layer name.
+     * @return a {@link BufferedImage} for the specified layer name.
      */
     public BufferedImage getLayer(String layerName) {
         return LAYERS.get(layerName);
@@ -137,7 +135,7 @@ public class Canvas {
     /**
      * Returns the map {@code LAYERS}.
      *
-     * @return A Map<String, BufferedImage> object.
+     * @return the {@link Map} object {@code LAYERS}.
      */
     public Map<String, BufferedImage> getLAYERS() {
         return LAYERS;
@@ -146,18 +144,18 @@ public class Canvas {
     /**
      * Returns the layer which displays the square pointer and the frame.
      *
-     * @return {@code BufferedImage}
+     * @return the {@code BufferedImage} {@code POINTER_LAYER} which represents the frame layer.
      */
     public BufferedImage getPOINTER_LAYER() {
         return POINTER_LAYER;
     }
 
     /**
-     * Returns a scaled copy of the provided BufferedImage, using the specified scale ratio.
+     * Returns a scaled copy of the provided {@link BufferedImage}, using the specified scale ratio.
      *
-     * @param canvasToScale The BufferedImage to scale.
+     * @param canvasToScale The {@link BufferedImage} to scale.
      * @param scaleRatio    The ratio to be used to scale {@code canvasToScale}.
-     * @return A scaled {@code BufferedImage} version of the provided BufferedImage.
+     * @return a scaled {@link BufferedImage} version of the provided {@link BufferedImage}.
      */
     public BufferedImage getScaledCanvas(BufferedImage canvasToScale, int scaleRatio) {
         int targetSide = (canvasSize * scaleRatio) + 2;
@@ -169,17 +167,17 @@ public class Canvas {
     /**
      * Returns an int value showing the current sprite side size.
      *
-     * @return The int sprite side size.
+     * @return the int that represents {@code spriteSide}.
      */
     public int getSpriteSide() {
         return spriteSide;
     }
 
     /**
-     * Adds a new BufferedImage to the map LAYERS, and a new ID array to the MAP ID_ARRAY_MAP,
+     * Adds a new {@link BufferedImage} to the map {@code LAYERS}, and a new ID array to the {@code MAP ID_ARRAY_MAP},
      * under the specified String.
      *
-     * @param layerName The name key for the new layer.
+     * @param layerName the name key for the new layer.
      */
     public void addNewCanvas(String layerName) {
         BufferedImage canvas = new BufferedImage(canvasSize, canvasSize, BufferedImage.TYPE_INT_ARGB);
@@ -190,8 +188,8 @@ public class Canvas {
     /**
      * Builds {@code LAYERS} out of previously imported ID arrays.
      *
-     * @param IDArray The map which stores each array of IDs for each layer.
-     * @param spritesHashmap The map of sprites and their IDs.
+     * @param IDArray the map which stores each array of IDs for each layer.
+     * @param spritesHashmap the map of sprites and their IDs.
      */
     public void buildLayers(Map<String, int[]> IDArray, HashMap<Integer, Sprite> spritesHashmap) {
         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC);
@@ -223,9 +221,9 @@ public class Canvas {
     }
 
     /**
-     * Clears the bufferedImage for the specified layer.
+     * Clears the {@link BufferedImage} for the specified layer.
      *
-     * @param layerToClear Name of the layer to clear
+     * @param layerToClear name of the layer to clear
      */
     public void clearLayer(String layerToClear) {
         LAYERS.put(layerToClear, new BufferedImage(canvasSize, canvasSize,
@@ -233,7 +231,7 @@ public class Canvas {
     }
 
     /**
-     * Clears the bufferedImage for each layer.
+     * Clears the {@link BufferedImage} for each layer.
      */
     public void clearAllLayers() {
         for (Map.Entry<String, BufferedImage> entry : LAYERS.entrySet()) {
@@ -244,7 +242,7 @@ public class Canvas {
     /**
      * Removes the mapping for the specified key in {@code LAYERS}.
      *
-     * @param layerToDelete Name of the layer to be deleted.
+     * @param layerToDelete name of the layer to be deleted.
      */
     public void deleteLayer(String layerToDelete) {
         LAYERS.remove(layerToDelete);
@@ -252,7 +250,7 @@ public class Canvas {
     }
 
     /**
-     * Removes all the mappings from LAYERS.
+     * Removes all the mappings from {@code LAYERS}.
      */
     public void deleteAllLayers() {
         LAYERS.clear();
@@ -260,9 +258,9 @@ public class Canvas {
     }
 
     /**
-     * Adds the specified layer to the List<String> HIDDEN_LAYERS.
+     * Adds the specified layer to the {@link List} {@code HIDDEN_LAYERS}.
      *
-     * @param layerName Name of the layer to be hidden.
+     * @param layerName name of the layer to be hidden.
      */
     public void hideLayer(String layerName) {
         HIDDEN_LAYERS.add(layerName);
@@ -271,8 +269,8 @@ public class Canvas {
     /**
      * Checks if {@code LAYERS} contains any value mapped for the specified key.
      *
-     * @param layerName Name of the layer.
-     * @return True if there is any mapping in {@code LAYERS} for the specified key, or null if there is not.
+     * @param layerName name of the layer.
+     * @return true if there is any mapping in {@code LAYERS} for the specified key, or null if there is not.
      */
     public boolean hasLayer(String layerName) {
         return LAYERS.containsKey(layerName);
@@ -282,8 +280,8 @@ public class Canvas {
      * Initializes the values {@code spriteSide} and {@code canvasSize}, with the specified parameters. It
      * also creates the {@code POINTER_LAYER} layer.
      *
-     * @param side          The sprite side size.
-     * @param newCanvasSize The canvas side size.
+     * @param side the sprite side size.
+     * @param newCanvasSize the canvas side size.
      */
     public void initializeCanvas(int side, int newCanvasSize) {
         spriteSide = side;
@@ -304,9 +302,9 @@ public class Canvas {
     }
 
     /**
-     * Removes the specified layer from List<String> {@code HIDDEN_LAYERS}.
+     * Removes the specified layer from {@link List} {@code HIDDEN_LAYERS}.
      *
-     * @param layerName The name of the layer to be removed.
+     * @param layerName the name of the layer to be removed.
      */
     public void showLayer(String layerName) {
         HIDDEN_LAYERS.remove(layerName);

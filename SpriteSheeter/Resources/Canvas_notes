@@ -1,0 +1,21 @@
+public BufferedImage getFramedCanvas() {
+        /*
+         * En b es + 2 porque se establece el ancho y el alto del canvas. Es decir, debe tener x initial pixels
+         * más 2 porque en cada lado del canvas tiene que haber un pixel extra para el marco.
+         * (Lado izquierdo = 1) + canvas = 80 + (lado derecho = 1) > todo suma 82
+         * (Parte superior) = 1 + canvas = 80 + (parte inferior = 1) > todo suma 82
+         * */
+
+        BufferedImage b = new BufferedImage(canvasSize + 2, canvasSize + 2, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D graphics2D = b.createGraphics();
+        graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+        graphics2D.drawImage(getCanvas(), 1, 1, canvasSize,
+                canvasSize, null);
+        graphics2D.drawImage(POINTER_LAYER, 0, 0, canvasSize + 2,
+                canvasSize + 2, null);
+        graphics2D.dispose();
+        return b;
+    }
+
+    ---------------------------
