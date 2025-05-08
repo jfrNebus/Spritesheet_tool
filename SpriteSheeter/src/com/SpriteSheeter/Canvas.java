@@ -15,6 +15,10 @@ public class Canvas {
     private final Map<String, int[][]> ID_ARRAY_MAP = new LinkedHashMap<>();
     private final Map<String, BufferedImage> LAYERS = new LinkedHashMap<>();
 
+    Modifica el cuadro de ayuda indicando lo de que se tiene que crear un canvas antes de poder realizar cualquier acción
+
+    Añade al mensaje de error lanzado al introducir un valor negativo en el tamaño del side del canvas y de sprite al crear un canvas nuevo, el tema de que debe ser positivo.
+
     /**
      * Builds a new {@link BufferedImage} out of the unhidden layers.
      *
@@ -50,7 +54,6 @@ public class Canvas {
         StringBuilder arrayNumbers = new StringBuilder();
         data.append("//Sprites in side = ").append(arraySize).append("\n");
         data.append("\n//Sprite side = ").append(spriteSide).append("\n");
-        data.append("\n//Canvas side size = ").append(canvasSize).append("\n");
         data.append("\n##").append(picturePath).append("##\n\n");
         for (Map.Entry<String, int[][]> array : ID_ARRAY_MAP.entrySet()) {
             data.append("-\n//Layer: ").append(array.getKey()).append("\nint[][] ")

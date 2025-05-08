@@ -117,12 +117,9 @@ class UserInterface implements KeyListener {
 
         if (keep) {
             if ((CANVAS.getCanvasSize() == 0) && (CANVAS.getSpriteSide() == 0) && (SPRITESHEET.getSpriteSide() == 0)) {
-                matchedString = matcherFunction.apply(Strings.IMPORTED_SECOND_REGEX);
-                int side = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
-
-                matchedString = matcherFunction.apply(Strings.IMPORTED_THIRD_REGEX);
-                int newCanvasSize = matchedString.matches("\\d+") ? Integer.parseInt(matchedString) : 0;
-
+                String matchedString2 = matcherFunction.apply(Strings.IMPORTED_SECOND_REGEX);
+                int side = matchedString2.matches("\\d+") ? Integer.parseInt(matchedString2) : 0;
+                int newCanvasSize = Integer.parseInt(matchedString) * side;
                 if (side != 0 && newCanvasSize != 0) {
                     CANVAS.initializeCanvas(side, newCanvasSize);
                     SPRITESHEET.setSpriteSide(side);
