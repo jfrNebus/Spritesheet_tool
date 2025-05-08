@@ -129,26 +129,22 @@ cientos de sprites por lado e incluso más, queda descartado.
 <br>
   
 <p align="center">
- <img src="docs/Main_window.png"/>
+ <img src="docs/Main_window_not_enabled.png"/>
 </p>
+
 
 <br>
 
 A la vista queda que no soy ningún profesional a la hora de crear interfaces de usuario 😆. Pese a ello, cumple con lo que buscaba.
 
->>> Todo este parrafo hay que eliminarlo.
-Lo primero que se nos muestra al ejecutar la aplicación, es una ventana pequeña donde se podrá seleccionar, mediante un cuadro
-de búsqueda al hacer clic sobre el campo de texto del apartado path, la imagen que deseamos usar como sprite sheet. Adicionalmente,
-se tendrá que establecer el lado en pixels de cada sprite, y el lado en pixels del canvas con el que vamos a trabajar.
+>>> Esto ha cambiado.
+Lo primero que se nos muestra al ejecutar la aplicación, es una ventana donde aparecen como inactivos todos los campos menos las opciones: _Create a new canva_, la opción _Import_ dentro del menú _Import / export code_ y _Help_. Esto es debido a que el programa limita las acciones del usuario a la creación del canvas en primer lugar, para poder ejecutar el resto de acciones, o a importartar algún archivo guardado previamente. Por último, se puede consultar el cuadro de ayuda, donde se indica lo anteriormente comentado.
 >>>
 
-
-Una vez se han rellenado los campos solicitados y se accede a la pantalla principal, se observan una serie de partes bien definidas. 
-A la izquierda se encuentra un apartado en el que se muestran un conjunto de botones con la imagen de cada sprite, del sprite sheet 
-facilitado. En este caso se está usando un [sprite sheet](SpriteSheeter/Resources/tiles.png) del artista ![Buch](docs/CreditsToBuch.txt). 
-Haciendo clic en cada uno de ellos, se podrá imprimir dicho sprite en el cuadrado rojo dentro del canvas que aparece en la parte 
-derecha de programa. En el medio, se encuentra una lista con los botones de acción de cada capa. Cada check box radial ocultará la capa 
-a la que acompañe, y cada botón de capa establecerá la capa actual sobre la que se imprimirá cada sprite.
+>>> Esto ha cambiado.
+Cuando se importa un archivo de guardado, el programa toma del archivo todos los datos necesarios para la configuración del canvas, del spritesheet y de las capas ya creadas. Cuando se crea un nuevo canvas, se nos abre una nueva ventana donde se solicita el tamaño del lado del sprite y del canvas. Al introducir valores numéricos válidos, es decir valores positivos, se crea el canvas. El siguiente paso sería añadir un sprite sheet válido, es decir, un archivo de tipo imagén. Hecho esto, a la izquierda se encontramos un apartado en el que se muestran un conjunto de botones con la imagen de cada sprite, del sprite sheet 
+facilitado. En la parte superior del conjunto de botones, encontramos un único botón de mayor tamaño con el nombre _Empty sprite_, el cual servirá para imprimir un "espacio vacío" en el canvas. En este caso se está usando un [sprite sheet](SpriteSheeter/Resources/tiles.png) del artista ![Buch](docs/CreditsToBuch.txt). Haciendo clic en cada uno de ellos, se podrá imprimir dicho sprite en el cuadrado rojo dentro del canvas que aparece en la parte derecha de programa. En el medio, se encuentra una lista con los botones de acción de cada capa. Cada check box radial ocultará la capa a la que acompañe, y cada botón de capa establecerá la capa actual sobre la que se imprimirá cada sprite.
+>>>
 
 Se podrá mover el cursor, el cuadrado rojo, sobre el mapa, mediante las teclas de dirección o mediante las teclas _a w s d_. 
 Adicionalmente, manteniendo la tecla Shift y presionando alguna de las teclas de dirección mencionadas anteriormente, se podrá
@@ -172,6 +168,10 @@ agregar, o donde se mostrará el texto generado cuando se seleccione la opción 
 capa, que creará una nueva capa tomando como nombre el texto que hayamos introducido, en formato ASCII, en el campo de
 texto.
 >>> 
+
+<p align="center">
+ <img src="docs/Main_window.png"/>
+</p>
 
 <br>
 
