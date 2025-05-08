@@ -114,7 +114,7 @@ Como se puede apreciar, intentar crear los arrays bidimensionales de una imagen 
 A la vista queda que no soy ningún profesional a la hora de crear interfaces de usuario 😆. Pese a ello, cumple con lo que buscaba.
 
 >>> Esto ha cambiado.
-Lo primero que se nos muestra al ejecutar la aplicación es una ventana donde aparecen como inactivos todos los campos, excepto las opciones: _Create a new canva_, la opción _Import_ dentro del menú _Import / export code_ y _Help_. Esto se debe a que el programa limita las acciones del usuario a la creación del canvas en primer lugar, para poder ejecutar el resto de acciones, o a importar algún archivo guardado previamente. Por último, se puede consultar el cuadro de ayuda, donde se indica lo anteriormente comentado.
+Lo primero que se nos muestra al ejecutar la aplicación es una ventana donde aparecen como inactivos todos los campos, excepto las opciones: _Create a new canvas_, la opción _Import_ dentro del menú _Import / export code_ y _Help_. Esto se debe a que el programa limita las acciones del usuario a la creación del canvas en primer lugar, para poder ejecutar el resto de acciones, o a importar algún archivo guardado previamente. Por último, se puede consultar el cuadro de ayuda, donde se indica lo anteriormente comentado así cómo indicaciones acerca de los atajos de teclado.
 >>>
 
 >>> Esto ha cambiado.
@@ -130,6 +130,8 @@ En la parte superior izquierda se encuentra un menú desplegable que permite rea
 >>> Esto ha cambiado.
 Por último, en la parte inferior izquierda se encuentran una serie de botones para controlar el nivel de zoom aplicado sobre la lista de sprites y sobre el mapa; un bloque de texto donde podemos escribir el nombre de las capas que deseemos agregar, o donde se mostrará el texto generado cuando se seleccione la opción de exportar código; y el botón de _New layer_, que creará una nueva capa tomando como nombre el texto que hayamos introducido en el campo de texto.
 >>> 
+
+<br>
 
 <p align="center">
  <img src="docs/Main_window.png"/>
