@@ -127,8 +127,7 @@ The first thing shown when the program starts is an window with all its fields a
 >>> 
 
 >>> This has changed.
-When a file is loaded, the program takes from the file all the necessary data in order to configure the canvas, the spritesheet, and the layers. When a new canvas is created, a new window pops up requesting the sprite side size and the canvas side size. After introducing valid values, positive ones, the canvas is made. The next step is to add a valid spritesheet, a image file. Once the spritesheet is loaded, on the left side, there's an area where all the buttons, with each sprite of the spritesheet as icon, are located. On the top of the list there's a bigger sprite button with the name _Empty sprite_, which will be used whenever the user needs to print an "empty field" on the canvas. For this example it was used the [spritesheet](SpriteSheeter/Resources/tiles.png) whose author is ![Buch](docs/CreditsToBuch.txt). By clicking on them, each sprite will be printed in the red square which is inside the canvas on the right part of the program, squared in black. In between the sprite list and the canvas, there's a list with each layer's buttons. Each radial checkbox will hide the layer which it is attached to, and each layer's button will set the canvas where the sprites will
-be drawn.
+When a file is loaded, the program takes from the file all the necessary data in order to configure the canvas, the spritesheet, and the layers. When a new canvas is created, a new window pops up requesting the sprite side size and the canvas side size. After introducing valid values, positive ones, the canvas is made. The next step is to add a valid spritesheet, a image file. Once the spritesheet is loaded, on the left side, there's an area where all the buttons, with each sprite of the spritesheet as icon, are located. On the top of the list there's a bigger sprite button with the name _Empty sprite_, which will be used whenever the user needs to print an "empty field" on the canvas. For this example it was used the [spritesheet](SpriteSheeter/Resources/tiles.png) whose author is ![Buch](docs/CreditsToBuch.txt). By clicking on them, each sprite will be printed in the red square which is inside the canvas on the right part of the program, squared in black. In between the sprite list and the canvas, there's a list with each layer's buttons. Each radial checkbox will hide the layer which it is attached to, and each layer's button will set the canvas where the sprites will be drawn.
 >>> 
 
 The cursor will be moved by using the directional keys, or by using the keys _a w s d_. Using the key Shift together with
@@ -137,15 +136,9 @@ by using the key Ctrl together with the keys + and -. The Intro key will change 
 behaviour, which will print in the canvas, the last mouse clicked sprite in the _Sprites List, each time the cursor is moved
 to a new location. This behaviour will remain till the intro key is pressed again, setting the cursor state back to red mode.
 
-In the top left corner of the window there's a dropdown menu. This menu offers the option load a new spritesheet; to clear or
-delete the current layer, or all the layers at onces; the option to import or export a _.txt_ file in order to save or load 
-the work done; it allows to export the current canvas as a _.png_ file, keeping in mind that any hidden layer won't be printed; 
-or the option to read a brief list of keyboard shortcuts.
+In the top left corner of the window there's a dropdown menu. This menu offers the option to make a new canvas; to load a new spritesheet; to clear or delete the current layer, or all the layers at onces; the option to import or export a _.txt_ file in order to save or load the work done; it allows to export the current canvas as a _.png_ file, keeping in mind that any hidden layer won't be printed; or the option to read a brief list of keyboard shortcuts.
 
-Finally, in the bottom left part of the window there are buttons to control the zoom level applied to the spritesheet and
-to the canvas; a text field where the name of new layers will be written, or where the text generated when the option to export
-code has been selected will be written; and the new layer button, which will generate the new layer, setting as its name 
-the text written in the text block, in ASCII format.
+Finally, in the bottom left part of the window there are buttons to control the zoom level applied to the spritesheet and to the canvas; a text field where the name of new layers will be written, or where the text generated will be written, when the code is exported; and the new layer button, which will generate the new layer, setting as its name the text written in the text block.
 
 <br>
 
@@ -167,62 +160,62 @@ picture. The final goal is to get the code bloc written in the _.txt_ file, once
 ```
 //Sprites in side = 5
 
+//Sprite side = 16
+
 ##PATH##
 
 -
-//Layer: default_layer
-int[][] default_layer = {
-{169,169,169,169,169},
-{169,169,169,169,169},
-{169,169,169,169,169},
-{169,169,169,169,169},
-{169,169,169,169,169}
+//Layer: water
+int[][] water = {
+{170,170,170,170,170},
+{170,170,170,170,170},
+{170,170,170,170,170},
+{170,170,170,170,170},
+{170,170,170,170,170}
 };
-//default_layer:169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 169 
+//water:170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 170 
 -
 -
-//Layer: new_layer
-int[][] new_layer = {
+//Layer: ground
+int[][] ground = {
 {0,0,0,0,0},
-{104,104,104,108,56},
-{209,209,209,159,56},
-{311,311,311,312,0},
-{412,412,412,413,0}
+{108,108,108,109,0},
+{159,159,159,262,0},
+{310,310,310,313,0},
+{411,412,413,414,0}
 };
-//new_layer:0 0 0 0 0 104 104 104 108 56 209 209 209 159 56 311 311 311 312 0 412 412 412 413 0 
+//ground:0 0 0 0 0 108 108 108 109 0 159 159 159 262 0 310 310 310 313 0 411 412 413 414 0 
 -
 -
-//Layer: new_layer_2
-int[][] new_layer_2 = {
-{216,216,216,0,0},
-{216,377,378,0,0},
-{216,428,429,474,475},
-{216,216,216,525,526},
+//Layer: bridge
+int[][] bridge = {
+{0,0,0,0,0},
+{0,378,379,0,0},
+{0,429,430,475,476},
+{0,0,0,526,527},
 {0,0,0,0,0}
 };
-//new_layer_2:216 216 216 0 0 216 377 378 0 0 216 428 429 474 475 216 216 216 525 526 0 0 0 0 0 
+//bridge:0 0 0 0 0 0 378 379 0 0 0 429 430 475 476 0 0 0 526 527 0 0 0 0 0 
 -
 -
-//Layer: new_layer_3
-int[][] new_layer_3 = {
-{71,72,216,216,66},
-{122,123,124,0,0},
-{173,174,0,0,0},
-{224,227,0,0,0},
+//Layer: tree
+int[][] tree = {
+{72,73,0,0,0},
+{123,124,125,0,0},
+{174,175,0,0,0},
+{225,228,0,0,0},
 {0,0,0,0,0}
 };
-//new_layer_3:71 72 216 216 66 122 123 124 0 0 173 174 0 0 0 224 227 0 0 0 0 0 0 0 0 
+//tree:72 73 0 0 0 123 124 125 0 0 174 175 0 0 0 225 228 0 0 0 0 0 0 0 0 
 -
 -
 ```
 
 <br>
 
-The previous code was written in the _.txt_ file generated for the _**Test canvas**_ picture shown above. The field ##Path## 
-will show the path to the directory where the spritesheet is located. The line "//Sprites in side = 5", the line showing the
-path to the spritesheet, and the lines "//name_of_layer=array_of_numbers", are the lines that will be used to rebuild 
-the spritesheet, the layer list, and the canvas, when the file has been imported. And finally, all the arrays and the 
-commented layer names, are the fields that will be copied and pasted in the game project.
+>>> This has changed.
+The previous code was written in the _.txt_ file generated for the _Test canvas_ picture shown above. The first field indicates the number of pixels on each side of the canvas. The second field shows the number of pixels on each side of each sprite. The field ##Path## will show the path to the directory where the spritesheet is located. The first three lines, and the lines "//name_of_layer:array_of_numbers", are the lines that will be used to rebuild the work process in the program. Finally, all the arrays and the commented layer names, are the fields that will be copied and pasted in the game project.
+>>>
 
 <br>
 
@@ -230,13 +223,10 @@ commented layer names, are the fields that will be copied and pasted in the game
 
 <br>
 
-This proyect is not a masterpiece, there are still lots of points in the _todo_ list and mistakes to fix and to improve.
-There are features to be added or to be removed, and a long etc of considerations that any professional could add to it.
-Actually, this tool could even be not needed, because maybe the way to make game maps is not like the one I got. Nevertheless,
-even when there are already professional tools to achieve the goal of this program, this project allowed me to keep improving my
-coding skills and my poor layout programming. It allowed me to learn a bit more about how to browse and deal with files, and it 
-allowed me to keep improving my _best practices_. And, in case I am in the mood to keep developing this game, which is not my 
-priority, this tool will be a great help 😃.
+>>> This has changed.
+This proyect is not a masterpiece; each time a check the code I find lots of points to improve and mistakes to fix. There are features to be added or to be removed, and a long etc of considerations that any professional could add. Actually, I feel it is incomplete. I usually finish the project once I've done an in-depth documentation, explaining line by line, and this project, as well as others in my Github, won't have this kind of documentation, mainly because I have no time to do it. . 
+Nevertheless, even when there are already professional tools to achieve the goal of this program, this project allowed me to keep improving my coding skills and my poor layout programming. It allowed me to learn a bit more about how to browse and deal with files, and it allowed me to keep improving my _best practices_. And, in case I am in the mood to keep developing this game, which is not my priority, this tool will be a great help 😃.
+>>>
 
 <br>
 
