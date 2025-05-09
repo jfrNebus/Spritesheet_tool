@@ -12,10 +12,3 @@ The following labels allow you to review all explanations, descriptions, and mat
     <a href="readme_español.md"><img src="https://img.shields.io/badge/Readme%20espa%C3%B1ol-cb1111?style=plastic"/></a>
     <a href="readme_english.md"><img src="https://img.shields.io/badge/Readme%20english-2e77ff?style=plastic"/></a>
 </p>
-
-<br>
-
-> [!IMPORTANT]
-> El proyecto no está terminado. Aun queda mucho código que limpiar y corregir.
-> 
-> The proyect is still under development. There's still a lot of code to clean up and fix.> 
