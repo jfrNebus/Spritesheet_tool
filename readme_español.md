@@ -128,7 +128,7 @@ En la parte superior izquierda se encuentra un menú desplegable que permite rea
 >>>
 
 >>> Esto ha cambiado.
-Por último, en la parte inferior izquierda se encuentran una serie de botones para controlar el nivel de zoom aplicado sobre la lista de sprites y sobre el mapa; un bloque de texto donde podemos escribir el nombre de las capas que deseemos agregar, o donde se mostrará el texto generado cuando se seleccione la opción de exportar código; y el botón de _New layer_, que creará una nueva capa tomando como nombre el texto que hayamos introducido en el campo de texto.
+Por último, en la parte inferior izquierda se encuentran una serie de botones para controlar el nivel de zoom aplicado sobre la lista de sprites y sobre el canvas; un bloque de texto donde podemos escribir el nombre de las capas que deseemos agregar, o donde se mostrará el texto generado cuando se seleccione la opción de exportar código; y el botón de _New layer_, que creará una nueva capa tomando como nombre el texto que hayamos introducido en el campo de texto.
 >>> 
 
 <br>
