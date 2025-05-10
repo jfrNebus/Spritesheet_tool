@@ -70,35 +70,39 @@ The last picture on the right shown above, is created by mixing all the previous
 <br>
 
 ```
-int[][] default_layer = {
-{169,169,169,169,169},
-{169,169,169,169,169},
-{169,169,169,169,169},
-{169,169,169,169,169},
-{169,169,169,169,169}
+//Layer: water
+int[][] water = {
+{170,170,170,170,170},
+{170,170,170,170,170},
+{170,170,170,170,170},
+{170,170,170,170,170},
+{170,170,170,170,170}
 };
 
-int[][] new_layer = {
+//Layer: ground
+int[][] ground = {
 {0,0,0,0,0},
-{104,104,104,108,56},
-{209,209,209,159,56},
-{311,311,311,312,0},
-{412,412,412,413,0}
+{108,108,108,109,0},
+{159,159,159,262,0},
+{310,310,310,313,0},
+{411,412,413,414,0}
 };
 
-int[][] new_layer_2 = {
-{216,216,216,0,0},
-{216,377,378,0,0},
-{216,428,429,474,475},
-{216,216,216,525,526},
+//Layer: bridge
+int[][] bridge = {
+{0,0,0,0,0},
+{0,378,379,0,0},
+{0,429,430,475,476},
+{0,0,0,526,527},
 {0,0,0,0,0}
 };
 
-int[][] new_layer_3 = {
-{71,72,216,216,66},
-{122,123,124,0,0},
-{173,174,0,0,0},
-{224,227,0,0,0},
+//Layer: tree
+int[][] tree = {
+{72,73,0,0,0},
+{123,124,125,0,0},
+{174,175,0,0,0},
+{225,228,0,0,0},
 {0,0,0,0,0}
 };
 
@@ -122,13 +126,9 @@ It's easy to realize that, trying to make all the two-dimensional arrays of such
 
 Yep, I am absolutely not a professional making user interfaces 😆. Nevertheless, it works!
 
->>> This has changed.
 The first thing shown when the program starts is a window with all its fields and options inactive, except for the following options: _Create a new canvas_, the option _Import_ inside the menu _Import / export code_ and _Help_. This is because the program restricts the user's actions to creating the canvas first, in order to activate all the actions, or to import any previously saved file. Finally, the user can check the help window, where everything mentioned above is explained , as well as the list of hotkeys.
->>> 
 
->>> This has changed.
 When a file is loaded, the program takes from the file all the necessary data in order to configure the canvas, the spritesheet, and the layers. When a new canvas is created, a new window pops up requesting the sprite side size and the canvas side size. After entering valid positive values, the canvas is created. The next step is to add a valid spritesheet, an image file. Once the spritesheet is loaded, on the left side, there's an area where all the buttons, with each sprite of the spritesheet as an icon, are located. On the top of the list there's a bigger sprite button with the name _Empty sprite_, which will be used whenever the user needs to print an "empty field" on the canvas. For this example it was used the [spritesheet](SpriteSheeter/Resources/tiles.png) whose author is ![Buch](docs/CreditsToBuch.txt). By clicking on a sprite, the sprite will be displayed in the red square inside the canvas on the right part of the program, outlined in black. In between the sprite list and the canvas, there's a list with each layer's buttons. Each radial checkbox will hide the layer it is associated with, and each layer's button will set the canvas where the sprites will be drawn.
->>> 
 
 The cursor will be moved by using the directional keys, or by using the keys _a w s d_. Using the key Shift together with the keys + or - will zoom the spritesheet in and out inside the _Sprites list_ area. The same will happen to the canvas by using the key Ctrl together with the keys + and -. The Intro key will change the cursor's state, toggling the green behaviour, which will print in the canvas, the last mouse clicked sprite in the _Sprites List, each time the cursor is moved to a new location. This behaviour will remain till the intro key is pressed again, setting the cursor state back to red mode.
 
@@ -208,9 +208,7 @@ int[][] tree = {
 
 <br>
 
->>> This has changed.
 The previous code was written in the _.txt_ file generated for the _Test canvas_ picture shown above. The first field indicates the number of pixels on each side of the canvas. The second field shows the number of pixels on each side of each sprite. The field ##Path## will show the path to the directory where the spritesheet is located. The first three lines, and the lines "//name_of_layer:array_of_numbers", are the lines that will be used to rebuild the workflow in the program. Finally, all the arrays and the commented layer names, are the elements that will be copied and pasted in the game project.
->>>
 
 <br>
 
@@ -218,11 +216,7 @@ The previous code was written in the _.txt_ file generated for the _Test canvas_
 
 <br>
 
->>> This has changed.
 This project is not a masterpiece; each time I check the code I find lots of points to improve and mistakes to fix. There are features to be added or removed, and a long etc of considerations that any professional could add. Honestly, I feel it is incomplete. I usually finish the project once I've done an in-depth documentation, explaining line by line, and this project, as well as others in my GitHub, won't have this kind of documentation, mainly because I have no time to do it. . 
 Nevertheless, even when there are already professional tools to achieve the goal of this program, this project allowed me to keep improving my coding skills and my poor layout programming. It allowed me to learn a bit more about how to browse and deal with files, and it allowed me to keep improving my _best practices_. And, in case I ever feel like continuing to develop this game, which is not my priority, this tool will be a great help 😃.
->>>
 
 <br>
-
-
