@@ -1,15 +1,28 @@
 # Late todo list:
 
--[x] 
 -[x] Check the layer name system, and the regex involved.
 -[x] Layer system. Layer selector.
 -[x] Save canvas.
   - Save Layers
   - Save sprite sheet path
 -[x] Load saved canvas.
--[ ] Set alfa sprites on those locations which id array data has sprite ids not availables in the sprite sheet.
-  - Still considering if it is really needed.
+-[X] Set alfa sprites on those locations which id array data has sprite ids not availables in the sprite sheet.
+  - Still considering if it is really needed. >> It is. Added.
 -[x] Load an empty canvas / sprite sheet in case there's no user initial parameters.
 -[x] Save canvas as a ".png" file.
 -[x] Remove the movement of sprites buttons when movement keys are pressed.
   - Fixed by setting buttons as not focusable.
+
+
+
+# Old todo list:
+-[x] Save and load maps.
+  - Saving and loading the map through the generated gode.
+-[x] Generate an empty canvas after introducing X command.
+-[x] Block the sprite list movement when pressing arrow keys.
+-[x] Create a layer system.
+-[x] Check the layer name system, and the regex restrictions.
+-[x] Add to the save file the path to the spritesheet.
+-[x] Deal with the exception when there's no path in the saving file.
+
+
