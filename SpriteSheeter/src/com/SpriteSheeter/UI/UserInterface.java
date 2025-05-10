@@ -1,7 +1,9 @@
-package com.SpriteSheeter;
+package com.SpriteSheeter.UI;
 
 import com.SpriteSheeter.Enums.LayoutAxisEnum;
 import com.SpriteSheeter.Enums.SubWindowOptionsEnum;
+import com.SpriteSheeter.Sprites.SpriteSheet;
+import com.SpriteSheeter.Strings;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,14 +22,12 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//        To explain layout for frame > https://stackoverflow.com/questions/24840860/boxlayout-for-a-jframe
-
 /**
  * Class used to build the whole window of the program. It deals with all the layout related matters, and it is used
  * as main frame for the whole back-end processes of all classes in used in this project.
  */
 
-class UserInterface implements KeyListener {
+public class UserInterface implements KeyListener {
 
     private boolean fillingBrush = false;
     private boolean toggleMapMovement = false;
@@ -42,11 +42,12 @@ class UserInterface implements KeyListener {
     private int y = 0; //UserInterface_notes
     private int x = 0; //UserInterface_notes
     private final int FRAME_GAP = 1; //UserInterface_notes
-    private final int MAX_LABEL_LENGHT = 17;
+    private final int MAX_LABEL_LENGTH = 17;
     private final int MAP_SCALE_RATIO = 1;
     //User interface
     private JFrame frame;
     private JScrollPane picScroller;
+    private JLabel spriteLabel;
     private JScrollPane spriteListScroller;
     private JPanel spritesPanel;
     private final JViewport SPRITE_VIEW = new JViewport();
@@ -213,7 +214,7 @@ class UserInterface implements KeyListener {
         layerButton.setFocusable(false);
         layerButton.addActionListener(e -> {
             actualCanvas = layerName;
-            actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+            actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGTH ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
         });
 
         JRadioButton radioButton = new JRadioButton();
@@ -298,6 +299,7 @@ class UserInterface implements KeyListener {
                         id = innerId;
                         updateMainCanvas(mapScale);
                         previousSprite = spriteToPrint;
+                        spriteLabel.setText(Strings.SPRITE_LABEL_NAME + " - Sprite selected: " + id);
                     } else {
                         TA.setText("No layer selected.");
                     }
@@ -324,7 +326,7 @@ class UserInterface implements KeyListener {
             CANVAS.addNewCanvas(newLayer);
             if (firstLayerName) {
                 actualCanvas = newLayer;
-                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGTH ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
                 firstLayerName = false;
             }
         }
@@ -698,7 +700,7 @@ class UserInterface implements KeyListener {
                 }
                 CANVAS.addNewCanvas(newLayerName);
                 actualCanvas = newLayerName;
-                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGHT ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
+                actualLayerLabel.setText(Strings.ACTUAL_LAYER_LABEL + " " + (actualCanvas.length() > MAX_LABEL_LENGTH ? actualCanvas.substring(0, 5) + "..." + actualCanvas.substring(actualCanvas.length() - 5) : actualCanvas));
             } else {
                 showInfoMessage(SubWindowOptionsEnum.INVALID_LAYER_HELP);
             }
@@ -748,7 +750,7 @@ class UserInterface implements KeyListener {
                     boolean firstNumber = firstTFS.matches("\\d+");
                     boolean secondNumber = secondTFS.matches("\\d+");
                     if (firstNumber && secondNumber) {
-                        condition = true;//todo revisa si puedes bajar esta línea debajo de side y newCanvasSize
+                        condition = true;
                         side = Integer.parseInt(firstTFS);
                         newCanvasSize = Integer.parseInt(secondTFS);
                     } else {
@@ -1123,9 +1125,12 @@ class UserInterface implements KeyListener {
         //>>> Inside subFrame
         subFrame.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        //Todo These sentences have to be removed. Developing purposes.
-        firstTF.setText("16");
-        secondTF.setText("80");
+        /*
+        Uncomment the next lines while developing, in order to get the fields Sprite side and Canvas Side autofilled
+        with default values.
+        */
+        //firstTF.setText("16");
+        //secondTF.setText("80");
 
         //Component visibility
         subFrame.setVisible(true);
@@ -1201,7 +1206,7 @@ class UserInterface implements KeyListener {
         spriteLabelPanel.setLayout(new BoxLayout(spriteLabelPanel, BoxLayout.X_AXIS));
         spriteLabelPanel.addKeyListener(this);
         //>>> Inside panel1 > Inside panel2 > Inside spritesFather > Inside spriteLabelPanel
-        JLabel spriteLabel = new JLabel(Strings.SPRITE_LABEL_NAME);
+        spriteLabel = new JLabel(Strings.SPRITE_LABEL_NAME);
 
         //>>> Inside panel1 > Inside spritesFather
         spriteListScroller = new JScrollPane();

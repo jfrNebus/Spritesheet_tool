@@ -1,4 +1,6 @@
-package com.SpriteSheeter;
+package com.SpriteSheeter.UI;
+
+import com.SpriteSheeter.Sprites.Sprite;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -6,7 +8,7 @@ import java.util.*;
 import java.util.List;
 
 
-public class Canvas {
+ class Canvas {
     private BufferedImage POINTER_LAYER;
     private int arraySize;
     private int canvasSize = 0;
@@ -15,17 +17,12 @@ public class Canvas {
     private final Map<String, int[][]> ID_ARRAY_MAP = new LinkedHashMap<>();
     private final Map<String, BufferedImage> LAYERS = new LinkedHashMap<>();
 
-    Modifica el cuadro de ayuda indicando lo de que se tiene que crear un canvas antes de poder realizar cualquier acción
-
-    Añade al mensaje de error lanzado al introducir un valor negativo en el tamaño del side del canvas y de sprite al crear un canvas nuevo, el tema de que debe ser positivo.
-
     /**
      * Builds a new {@link BufferedImage} out of the unhidden layers.
      *
      * @return a {@link BufferedImage} that is used as main canvas.
      */
     public BufferedImage getCanvas() {
-        //Mixing of all bufferedImages in layers in one single image.
         BufferedImage b = new BufferedImage(canvasSize, canvasSize, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics2D = b.createGraphics();
         for (Map.Entry<String, BufferedImage> entry : LAYERS.entrySet()) {
@@ -85,13 +82,6 @@ public class Canvas {
      * @return a {@link BufferedImage} used as canvas with an extra layer used as frame.
      */
     public BufferedImage getFramedCanvas() {
-        /*
-         * En b es + 2 porque se establece el ancho y el alto del canvas. Es decir, debe tener x initial pixels
-         * más 2 porque en cada lado del canvas tiene que haber un pixel extra para el marco.
-         * (Lado izquierdo = 1) + canvas = 80 + (lado derecho = 1) > todo suma 82
-         * (Parte superior) = 1 + canvas = 80 + (parte inferior = 1) > todo suma 82
-         * */
-
         BufferedImage b = new BufferedImage(canvasSize + 2, canvasSize + 2, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D graphics2D = b.createGraphics();
@@ -207,7 +197,7 @@ public class Canvas {
             pictureGraphics.setComposite(ac);
             for (int y = 0; y < sideSprites; y++) {
                 for (int x = 0; x < sideSprites; x++) {
-                    int newId = currentLayerIds[idCount];
+                    int newId = currentLayerIds[idCount] <= spritesHashmap.size() ? currentLayerIds[idCount] : 0;
                     if (newId > 0) {
                         pictureGraphics.drawImage(spritesHashmap.get(newId).getSprite(), xSprite, ySprite, null);
                         loadedIdArray[y][x] = newId;

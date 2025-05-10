@@ -1,6 +1,7 @@
-package com.SpriteSheeter;
+package com.SpriteSheeter.UI;
 
 import com.SpriteSheeter.Enums.SubWindowOptionsEnum;
+import com.SpriteSheeter.Strings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +9,7 @@ import java.awt.*;
 /**
  * This class is used to Pop up a dialog window to display an informative message.
  */
-public class SubWindow {
+class SubWindow {
 
     /**
      * Pops up a dialog window to display an informative message. The message is specified through the parameter.
@@ -20,18 +21,18 @@ public class SubWindow {
         boolean textArea = false;
         String messageS = "";
         int frameHeight = 150;
+        int frameWidth = 400;
         int fontSize = 15;
         String frameName = Strings.FRAME_NAME_SW;
         Font font = new Font("", Font.PLAIN, fontSize);
-
-        //todo REPASA EL INGLÉS
 
         switch (value) {
             case CORRUPTED_FILE:
                 messageS = Strings.CORRUPTED_FILE;
                 break;
             case HELP:
-                frameHeight = 400;
+                frameHeight = 490;
+                frameWidth = 600;
                 frameName = "Info";
                 messageS = Strings.HELP;
                 textArea = true;
@@ -60,9 +61,11 @@ public class SubWindow {
                 break;
             case SPRITESHEET_FAIL:
                 messageS = Strings.SPRITE_SHEET_FAIL;
+                textArea = true;
                 break;
             case SPRITE_SIDE_FAIL:
                 messageS = Strings.SPRITE_SIDE_FAIL;
+                textArea = true;
                 break;
             case SQUARE_ERROR:
                 messageS = Strings.SQUARE_ERROR;
@@ -80,7 +83,7 @@ public class SubWindow {
         infoFrame.setLayout(new BoxLayout(infoFrame.getContentPane(), BoxLayout.Y_AXIS));
         infoFrame.setLocationRelativeTo(null);
         infoFrame.setIconImage(null);
-        infoFrame.setSize(new Dimension(400, frameHeight));
+        infoFrame.setSize(new Dimension(frameWidth, frameHeight));
         infoFrame.setResizable(false);
 
         Component messageObject;

@@ -1,2 +1,12 @@
 List of changes done before commit:
+- Feature: Now, the ID of any sprite selected will be displayed close to the Sprite list: label.
+- Removed: IMPORTED_THIRD_REGEX, not in used anymore.
+- Fixed: Fixed the NullPointerException generated while trying to import a saved file with IDs not present in the spritesheet.
+- Refactor: Edited the dimensions for the SubWindow Help option. Edited the Strings.HELP string.
+- Refactor: SHEET_AND_SPRITE and SPRITE_SIDE_FAIL were edited to indicate that these values must be positive. The kind of JText for this messages were changed from JTextField to JTextArea.
+- Rebuild: Organized main classes in different packages.
+   * UserInterface, SubWindow and Canvas got included in the package UI. UserInterface got public; SubWindow and Canvas became non public.
+   * SpriteSheet and Sprite  got included in the package Sprites.
+- Refactor: Strings values were edited. It's been done in order to achive a more natural fluency in English.
+
 

@@ -19,3 +19,56 @@ public BufferedImage getFramedCanvas() {
     }
 
     ---------------------------
+
+    public void buildLayers(Map<String, int[]> IDArray, HashMap<Integer, Sprite> spritesHashmap) {
+            AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC);
+            for (Map.Entry<String, int[]> newLayers : IDArray.entrySet()) {
+                int sideSprites = (int) Math.sqrt(newLayers.getValue().length);
+                int[] currentLayerIds = newLayers.getValue();
+                int idCount = 0;
+                int xSprite = 0;
+                int ySprite = 0;
+                int[][] loadedIdArray = new int[sideSprites][sideSprites];
+                Graphics2D pictureGraphics = LAYERS.get(newLayers.getKey()).createGraphics();
+                pictureGraphics.setComposite(ac);
+                for (int y = 0; y < sideSprites; y++) {
+                    for (int x = 0; x < sideSprites; x++) {
+                        /*
+                        The next line controls the NullPointerException generated while trying to load a saved file with
+                        sprite IDs not available in the spritesheet. Let's suppose that the spritesheet has only 20 sprites,
+                        and somehow one of the sprites IDs in the saved file has been changed to ID 34, for example. If
+                        newId is equals to currentLayerIds[idCount],
+                        pictureGraphics.drawImage(spritesHashmap.get(newId).getSprite()... will throw an exception because
+                        it'll try to load the sprite of an ID which is not inside spritesHashmap.
+                        This way, if currentLayerIds[idCount] is bigger than spritesHashmap.size(), newId will be equals to
+                        0, which is the ID of an empty sprite.
+                         */
+                        int newId = currentLayerIds[idCount] <= spritesHashmap.size() ? currentLayerIds[idCount] : 0;
+                        if (newId > 0) {
+                            pictureGraphics.drawImage(spritesHashmap.get(newId).getSprite(), xSprite, ySprite, null);
+                            loadedIdArray[y][x] = newId;
+                        }
+                        idCount++;
+                        xSprite += spriteSide;
+                    }
+                    xSprite = 0;
+                    ySprite += spriteSide;
+                }
+                pictureGraphics.dispose();
+                ID_ARRAY_MAP.put(newLayers.getKey(), loadedIdArray);
+            }
+        }
+
+    ---------------------------
+
+    public BufferedImage getCanvas() {
+                    //Mixing of all bufferedImages in layers in one single image.
+                    BufferedImage b = new BufferedImage(canvasSize, canvasSize, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D graphics2D = b.createGraphics();
+                    for (Map.Entry<String, BufferedImage> entry : LAYERS.entrySet()) {
+                        if (!HIDDEN_LAYERS.contains(entry.getKey())) {
+                            graphics2D.drawImage(LAYERS.get(entry.getKey()), null, 0, 0);
+                        }
+                    }
+                    return b;
+                }

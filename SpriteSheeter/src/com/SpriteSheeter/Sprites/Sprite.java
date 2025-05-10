@@ -1,4 +1,4 @@
-package com.SpriteSheeter;
+package com.SpriteSheeter.Sprites;
 
 import java.awt.image.BufferedImage;
 
@@ -11,7 +11,7 @@ public class Sprite {
     private final BufferedImage sprite;
 
     /**
-     * Constructs a {@link BufferedImage} as the result of calling the method getSubimage,
+     * Constructs a {@link BufferedImage} as the result of calling the method getSubimage(),
      * by the provided {@link BufferedImage} parameter of this class. The parameters provided
      * to the class must include the top X and Y coordinates of the region in the main
      * {@link BufferedImage} parameter, that will be used as subimage. The parameters will
